@@ -13,6 +13,7 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
+// #define _DEBUG_
 
 using namespace std;
 
@@ -55,6 +56,12 @@ public:
 
 //!	Output bar element data
 	void OutputBarElements(unsigned int EleGrp);
+
+//!	Output CST element data
+	void OutputCSTElements(unsigned int EleGrp);
+
+//!	Output Q4 element data
+	void OutputQ4Elements(unsigned int EleGrp);
 
 //!	Output load data 
 	void OutputLoadInfo(); 

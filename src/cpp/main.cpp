@@ -10,6 +10,8 @@
 
 #include "Domain.h"
 #include "Bar.h"
+#include "CST.h"
+#include "Q4.h"
 #include "Outputter.h"
 #include "Clock.h"
 
@@ -88,21 +90,26 @@ int main(int argc, char *argv[])
     {
 //      Assemble righ-hand-side vector (force vector)
         FEMData->AssembleForce(lcase + 1);
-            
-//      Reduce right-hand-side force vector and back substitute
-        Solver->BackSubstitution(FEMData->GetForce());
+    }
 
-        *Output << " LOAD CASE" << setw(5) << lcase + 1 << endl << endl << endl;
+#ifdef _DEBUG_
+        Output->PrintDisplacement();
+#endif
+
+//      Reduce right-hand-side force vector and back substitute
+    Solver->BackSubstitution(FEMData->GetForce());
+
+    // *Output << " LOAD CASE" << setw(5) << lcase + 1 << endl << endl << endl;
 
 #ifdef _DEBUG_
         Output->PrintDisplacement();
 #endif
             
-        Output->OutputNodalDisplacement();
+    Output->OutputNodalDisplacement();
 
 //      Calculate and output stresses of all elements
-        Output->OutputElementStress();
-    }
+    Output->OutputElementStress();
+    
 
     double time_solution = timer.ElapsedTime();
     

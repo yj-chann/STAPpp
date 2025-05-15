@@ -19,19 +19,65 @@ CLoadCaseData :: ~CLoadCaseData()
 {
 	delete [] node;
 	delete [] dof;
+	delete [] coordinate;
 	delete [] load;
 }
 
-void CLoadCaseData :: Allocate(unsigned int num)
+void CLoadCaseData :: Allocate(unsigned int LL, unsigned int num)
 {
-	nloads = num;
-	node = new unsigned int[nloads];
-	dof = new unsigned int[nloads];
-	load = new double[nloads];
+	switch (LL)
+	{
+	case 1:	// All concentrated loads in node points
+		nloads = num;
+		node = new unsigned int[nloads];
+		dof = new unsigned int[nloads];
+		coordinate = nullptr;	// In case 1, coordinate is useless
+		load = new double[nloads];
+		break;	
+	case 2:	// All concentrated loads in inner point of CST element(Dirac delta function)
+		nloads = num;
+		node = nullptr;	// In case 2, node is useless
+		dof = nullptr;  // In case 2, dof is useless
+		coordinate = new double[2*nloads];	// In case 2, coordinate means x and y coordinates
+		load = new double[2*nloads];
+		break;
+	case 3:	// All body forces of CST element
+		nloads = num;
+		node = new unsigned int[nloads];	// In case 3, node is element number(CST elements with body forces)
+		dof = nullptr;  // In case 3, dof is useless
+		coordinate = nullptr;	// In case 3, coordinate is useless
+		load = new double[6*nloads];	// In case 3, every element body force must be input in order of element node number, b_x1 b_y1 b_x2 b_y2 b_x3 b_y3
+		break;
+	case 4:	// All surface forces of CST element
+		nloads = num;
+		node = new unsigned int[2*nloads];
+		dof = new unsigned int[nloads];  // In case 4, dof is element number(CST elements with surface forces)
+		coordinate = nullptr;	// In case 4, coordinate is useless
+		load = new double[4*nloads];	// In case 4, every element surface force must be input in order of element node number, t_x1 t_y1 t_x2 t_y2
+		break;
+	case 5:	// All body forces of Q4 element
+		nloads = num;
+		node = new unsigned int[nloads];	// In case 5, node is element number(CST elements with body forces)
+		dof = nullptr;  // In case 5, dof is useless
+		coordinate = nullptr;	// In case 5, coordinate is useless
+		load = new double[8*nloads];	// In case 5, every element body force must be input in order of element node number, b_x1 b_y1 b_x2 b_y2 b_x3 b_y3 b_x4 b_y4
+		break;
+	case 6:	// All surface forces of Q4 element
+		nloads = num;
+		node = new unsigned int[2*nloads];
+		dof = new unsigned int[nloads];  // In case 6, dof is element number(CST elements with surface forces)
+		coordinate = nullptr;	// In case 6, coordinate is useless
+		load = new double[4*nloads];	// In case 6, every element surface force must be input in order of element node number, t_x1 t_y1 t_x2 t_y2
+		break;
+	default:
+		std::cerr << "LodaCase " << LL << " not available. See CLoadCaseData::Allocate." << std::endl;
+		exit(5);
+		break;
+	}	
 }; 
 
 //	Read load case data from stream Input
-bool CLoadCaseData :: Read(ifstream& Input)
+bool CLoadCaseData :: Read(unsigned int LL, ifstream& Input)
 {
 //	Load case number (LL) and number of concentrated loads in this load case(NL)
 	
@@ -39,17 +85,76 @@ bool CLoadCaseData :: Read(ifstream& Input)
 
 	Input >> NL;
 
-	Allocate(NL);
+	LoadCaseType_ = LL;
+	Allocate(LL, NL);
 
-	for (unsigned int i = 0; i < NL; i++)
-		Input >> node[i] >> dof[i] >> load[i];
-
+	switch (LL)
+	{
+	case 1:	// All concentrated loads in node points
+		for (unsigned int i = 0; i < NL; i++)
+			Input >> node[i] >> dof[i] >> load[i];
+		break;	
+	case 2:	// All concentrated loads in inner point of CST element(Dirac delta function)
+		for (unsigned int i = 0; i < NL; i++)
+			Input >> coordinate[2*i] >> coordinate[2*i+1] >> load[2*i] >> load[2*i+1];
+		break;
+	case 3:	// All body forces of CST element
+		for (unsigned int i = 0; i < NL; i++)
+			Input >> node[i] >> load[6*i] >> load[6*i+1] >> load[6*i+2] >> load[6*i+3] >> load[6*i+4] >> load[6*i+5];
+		break;
+	case 4:	// All surface forces of CST element
+		for (unsigned int i = 0; i < NL; i++)
+			Input >> dof[i] >> node[2*i] >> node[2*i+1] >> load[4*i] >> load[4*i+1] >> load[4*i+2] >> load[4*i+3];
+		break;
+	case 5:	// All body forces of Q4 element
+		for (unsigned int i = 0; i < NL; i++)
+			Input >> node[i] >> load[8*i] >> load[8*i+1] >> load[8*i+2] >> load[8*i+3] >> load[8*i+4] >> load[8*i+5] >> load[8*i+6] >> load[8*i+7];
+		break;
+	case 6:	// All surface forces of Q4 element
+		for (unsigned int i = 0; i < NL; i++)
+			Input >> dof[i] >> node[2*i] >> node[2*i+1] >> load[4*i] >> load[4*i+1] >> load[4*i+2] >> load[4*i+3];
+		break;
+	default:
+		std::cerr << "LodaCase " << LL << " not available. See CLoadCaseData::Read." << std::endl;
+		exit(5);
+		break;
+	}
+	
 	return true;
 }
 
 //	Write load case data to stream
-void CLoadCaseData::Write(COutputter& output)
+void CLoadCaseData::Write(unsigned int lcase, COutputter& output)
 {
-	for (unsigned int i = 0; i < nloads; i++)
-		output << setw(7) << node[i] << setw(13) << dof[i]  << setw(19) << load[i] << endl;
+	switch (lcase)
+	{
+	case 1:	// All concentrated loads in node points
+		for (unsigned int i = 0; i < nloads; i++)
+			output << setw(7) << node[i] << setw(13) << dof[i] << setw(19) << load[i] << endl;
+		break;	
+	case 2:	// All concentrated loads in inner point of CST element(Dirac delta function)
+		for (unsigned int i = 0; i < nloads; i++)
+			output << setw(13) << coordinate[2*i] << setw(13) << coordinate[2*i+1] << setw(19) << load[2*i] << setw(19) << load[2*i+1] << endl;	
+		break;
+	case 3:	// All body forces of CST element
+		for (unsigned int i = 0; i < nloads; i++)
+			output << setw(4) << node[i] << setw(18) << load[6*i] << setw(18) << load[6*i+1] << setw(18) << load[6*i+2] << setw(18) << load[6*i+3] << setw(18) << load[6*i+4] << setw(18) << load[6*i+5] << endl;	
+		break;
+	case 4:	// All surface forces of CST element
+		for (unsigned int i = 0; i < nloads; i++)
+			output << setw(4) << dof[i] << setw(13) << node[2*i] << setw(13) << node[2*i+1] << setw(18) << load[4*i] << setw(18) << load[4*i+1] << setw(18) << load[4*i+2] << setw(18) << load[4*i+3] << endl;	
+		break;
+	case 5:	// All body forces of Q4 element
+		for (unsigned int i = 0; i < nloads; i++)
+			output << setw(4) << node[i] << setw(18) << load[8*i] << setw(18) << load[8*i+1] << setw(18) << load[8*i+2] << setw(18) << load[8*i+3] << setw(18) << load[8*i+4] << setw(18) << load[8*i+5] << setw(18) << load[8*i+6] << setw(18) << load[8*i+7] << endl;	
+		break;
+	case 6:	// All surface forces of Q4 element
+		for (unsigned int i = 0; i < nloads; i++)
+			output << setw(4) << dof[i] << setw(13) << node[2*i] << setw(13) << node[2*i+1] << setw(18) << load[4*i] << setw(18) << load[4*i+1] << setw(18) << load[4*i+2] << setw(18) << load[4*i+3] << endl;	
+		break;
+	default:
+		std::cerr << "LodaCase " << lcase << " not available. See CLoadCaseData::Write." << std::endl;
+		exit(5);
+		break;
+	}	
 }

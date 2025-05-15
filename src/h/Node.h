@@ -23,7 +23,7 @@ public:
 /*!	For 3D bar and solid elements, NDF = 3. For 3D beam or shell elements, NDF = 5 or 6 */
 	const static unsigned int NDF = 3;
 
-//!	Node numer
+//!	Node number
 	unsigned int NodeNumber;
 
 //!	x, y and z coordinates of the node

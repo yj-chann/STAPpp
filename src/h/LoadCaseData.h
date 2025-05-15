@@ -19,22 +19,24 @@ class CLoadCaseData
 {
 public:
 
-	unsigned int nloads;	//!< Number of concentrated loads in this load case
-	unsigned int* node;		//!< Node number to which this load is applied
-	unsigned int* dof;		//!< Degree of freedom number for this load component
-	double* load;			//!< Magnitude of load
+	unsigned int LoadCaseType_;	//!< Load case 
+	unsigned int nloads;		//!< Number of concentrated loads in this load case
+	unsigned int* node;			//!< Node number to which this load is applied
+	unsigned int* dof;			//!< Degree of freedom number for this load component
+	double* coordinate;			//!< X and Y coordinates of concentrated loads in inner point
+	double* load;				//!< Magnitude of load
 
 public:
 
-	CLoadCaseData() : nloads(0), node(NULL), dof(NULL), load(NULL) {};
+	CLoadCaseData() : nloads(0), node(NULL), dof(NULL), coordinate(NULL), load(NULL) {};
 	~CLoadCaseData();
 
 //!	Set nloads, and new array node, dof and load
-	void Allocate(unsigned int num);
+	void Allocate(unsigned int LL, unsigned int num);
 
 //!	Read load case data from stream Input
-	bool Read(ifstream& Input);
+	bool Read(unsigned int LL, ifstream& Input);
 
 //!	Write load case data to stream
-	void Write(COutputter& output);
+	void Write(unsigned int lcase, COutputter& output);
 };

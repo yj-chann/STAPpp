@@ -52,3 +52,61 @@ public:
 //!	Write material data to Stream
 	virtual void Write(COutputter& output);
 };
+
+//!	Material class for CST element
+class CCSTMaterial : public CMaterial
+{
+public:
+
+	double nu;        //!< Poisson's ratio of a CST element
+	double t;	      //!< Element thickness of a CST element
+	int plane_strain; //!< Plane Strain or not
+
+public:
+	
+//!	Read material data from stream Input
+	virtual bool Read(ifstream& Input);
+
+//!	Write material data to Stream
+	virtual void Write(COutputter& output);
+};
+
+//!	Material class for Q4 element
+class CQ4Material : public CMaterial
+{
+public:
+
+	double nu;        //!< Poisson's ratio of a Q4 element
+	double t;	      //!< Element thickness of a Q4 element
+	int plane_strain; //!< Plane Strain or not
+
+public:
+	
+//!	Read material data from stream Input
+	virtual bool Read(ifstream& Input);
+
+//!	Write material data to Stream
+	virtual void Write(COutputter& output);
+};
+
+//!	Material class for Q8 element
+class CQ8Material : public CMaterial
+{
+public:
+
+	double nu;        //!< Poisson's ratio of a Q8 element
+	double t;	      //!< Element thickness of a Q8 element
+	int plane_strain; //!< Plane Strain or not
+
+public:
+
+	//!	Read material data from stream Input
+	virtual bool Read(ifstream& Input);
+
+	//!	Write material data to Stream
+	virtual void Write(COutputter& output);
+};
+
+
+
+
