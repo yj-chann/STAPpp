@@ -66,8 +66,13 @@ public:
     virtual void GenerateLocationMatrix()
     {
         unsigned int i = 0;
+        unsigned int Node_NDF = ND_ / NEN_;
+        // for (unsigned int N = 0; N < NEN_; N++)
+        //     for (unsigned int D = 0; D < CNode::NDF; D++)
+        //         LocationMatrix_[i++] = nodes_[N]->bcode[D];
+        
         for (unsigned int N = 0; N < NEN_; N++)
-            for (unsigned int D = 0; D < CNode::NDF; D++)
+            for (unsigned int D = 0; D < Node_NDF; D++)
                 LocationMatrix_[i++] = nodes_[N]->bcode[D];
     }
 

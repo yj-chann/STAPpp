@@ -31,3 +31,51 @@ void CBarMaterial::Write(COutputter& output)
 {
 	output << setw(16) << E << setw(16) << Area << endl;
 }
+
+//	Read material data from stream Input
+bool CCSTMaterial::Read(ifstream& Input)
+{
+	Input >> nset;	// Number of property set
+
+	Input >> E >> nu >> t >> plane_strain;	// Young's modulus, Poisson's ratio, element thickness and Plane Strain or not
+
+	return true;
+}
+
+//	Write material data to Stream
+void CCSTMaterial::Write(COutputter& output)
+{
+	output << setw(16) << E << setw(16) << nu << setw(16) << t << setw(8) << plane_strain << endl;
+}
+
+//	Read material data from stream Input
+bool CQ4Material::Read(ifstream& Input)
+{
+	Input >> nset;	// Number of property set
+
+	Input >> E >> nu >> t >> plane_strain;	// Young's modulus, Poisson's ratio, element thickness and Plane Strain or not
+
+	return true;
+}
+
+//	Write material data to Stream
+void CQ4Material::Write(COutputter& output)
+{
+	output << setw(16) << E << setw(16) << nu << setw(16) << t << setw(8) << plane_strain << endl;
+}
+
+//	Read material data from stream Input
+bool CQ8Material::Read(ifstream& Input)
+{
+	Input >> nset;	// Number of property set
+
+	Input >> E >> nu >> t >> plane_strain;	// Young's modulus, Poisson's ratio, element thickness and Plane Strain or not
+
+	return true;
+}
+
+//	Write material data to Stream
+void CQ8Material::Write(COutputter& output)
+{
+	output << setw(16) << E << setw(16) << nu << setw(16) << t << setw(8) << plane_strain << endl;
+}

@@ -1,0 +1,170 @@
+TITLE :  STAP90 input data for example 4.1 with 2 Q4 elements, together with benchmark-10
+        (22:9:20 on May 11, 2025, Sunday)
+
+C O N T R O L   I N F O R M A T I O N
+
+      NUMBER OF NODAL POINTS . . . . . . . . . . (NUMNP)  =     6
+      NUMBER OF ELEMENT GROUPS . . . . . . . . . (NUMEG)  =     1
+      NUMBER OF LOAD CASES . . . . . . . . . . . (NLCASE) =     1
+      SOLUTION MODE  . . . . . . . . . . . . . . (MODEX)  =     1
+         EQ.0, DATA CHECK
+         EQ.1, EXECUTION
+
+ N O D A L   P O I N T   D A T A
+
+    NODE       BOUNDARY                         NODAL POINT
+   NUMBER  CONDITION  CODES                     COORDINATES
+        1    1    1    1       0.00000e+00    1.00000e+00    0.00000e+00
+        2    1    1    1       0.00000e+00    0.00000e+00    0.00000e+00
+        3    0    0    1       1.00000e+00    2.50000e-01    0.00000e+00
+        4    0    0    1       1.00000e+00    1.00000e+00    0.00000e+00
+        5    0    0    1       2.00000e+00    5.00000e-01    0.00000e+00
+        6    0    0    1       2.00000e+00    1.00000e+00    0.00000e+00
+
+ EQUATION NUMBERS
+
+   NODE NUMBER   DEGREES OF FREEDOM
+        N           X    Y    Z
+        1           0    0
+        2           0    0
+        3           1    2
+        4           3    4
+        5           5    6
+        6           7    8
+
+ L O A D   C A S E   D A T A
+
+     LOAD CASE NUMBER . . . . . . . =     1
+     NUMBER OF CONCENTRATED LOADS . =     3
+
+    NODE       DIRECTION      LOAD
+   NUMBER                   MAGNITUDE
+      1            2       -1.00000e+01
+      4            2       -2.00000e+01
+      6            2       -1.00000e+01
+
+ E L E M E N T   G R O U P   D A T A
+
+
+ E L E M E N T   D E F I N I T I O N
+
+ ELEMENT TYPE  . . . . . . . . . . . . .( NPAR(1) ) . . =    3
+     EQ.1, TRUSS ELEMENTS
+     EQ.2, ELEMENTS CURRENTLY
+     EQ.3, NOT AVAILABLE
+
+ NUMBER OF ELEMENTS. . . . . . . . . . .( NPAR(2) ) . . =    2
+
+ M A T E R I A L   D E F I N I T I O N
+
+ NUMBER OF DIFFERENT SETS OF MATERIAL
+ AND CROSS-SECTIONAL  CONSTANTS  . . . .( NPAR(3) ) . . =    1
+
+  SET       YOUNG'S        POISSON'S        THICK        PLANE-
+ NUMBER     MODULUS          RATIO          -NESS        STRAIN
+               E              nu              t           FLAG
+    1     3.00000e+07     3.00000e-01     1.00000e+00       0
+
+
+ E L E M E N T   I N F O R M A T I O N
+ ELEMENT     NODE       NODE     	NODE     NODE       MATERIAL
+ NUMBER-N      I          J        K        L       SET NUMBER
+    1          1          2          3        4           1
+    2          4          3          5        6           1
+
+   Ele =        Location Matrix
+        1    0    0    0    0    1    2    3    4
+        2    3    4    1    2    5    6    7    8
+
+*** _Debug_ *** Column Heights
+       0       1       2       3       4       5       6       7
+
+*** _Debug_ *** Address of Diagonal Element
+       1       2       4       7      11      16      22      29      37
+
+	TOTAL SYSTEM DATA
+
+     NUMBER OF EQUATIONS . . . . . . . . . . . . . .(NEQ) = 8
+     NUMBER OF MATRIX ELEMENTS . . . . . . . . . . .(NWK) = 36
+     MAXIMUM HALF BANDWIDTH  . . . . . . . . . . . .(MK ) = 8
+     MEAN HALF BANDWIDTH . . . . . . . . . . . . . .(MM ) = 4
+
+
+*** _Debug_ *** Banded stiffness matrix
+   2.74550e+07   3.55711e+07  -2.40387e+06   2.74550e+07   2.40387e+06  -2.72976e+06
+   3.55711e+07  -2.40387e+06  -2.69172e+07   2.40387e+06   1.68845e+07   6.08108e+06
+  -8.79863e+06  -3.11850e+05  -3.56400e+06   2.31103e+07  -6.94981e+06  -1.08981e+07
+   6.08108e+06   6.57113e+06  -1.13603e+06   1.27636e+07   2.00475e+06  -4.52183e+06
+  -1.13603e+06  -3.56400e+06  -4.63320e+06  -4.67775e+06   2.16680e+07   3.76448e+06
+  -1.87834e+07   1.18058e+06   6.57113e+06  -3.11850e+05  -9.45575e+06  -4.63320e+06
+
+
+*** _Debug_ *** Full stiffness matrix
+   2.74550e+07  -2.40387e+06  -2.72976e+06   2.40387e+06  -3.56400e+06  -1.13603e+06  -4.67775e+06  -4.63320e+06
+  -2.40387e+06   3.55711e+07   2.40387e+06  -2.69172e+07  -3.11850e+05   6.57113e+06  -4.63320e+06  -9.45575e+06
+  -2.72976e+06   2.40387e+06   2.74550e+07  -2.40387e+06  -8.79863e+06   6.08108e+06  -3.56400e+06  -3.11850e+05
+   2.40387e+06  -2.69172e+07  -2.40387e+06   3.55711e+07   6.08108e+06  -1.08981e+07  -1.13603e+06   6.57113e+06
+  -3.56400e+06  -3.11850e+05  -8.79863e+06   6.08108e+06   1.68845e+07  -6.94981e+06  -4.52183e+06   1.18058e+06
+  -1.13603e+06   6.57113e+06   6.08108e+06  -1.08981e+07  -6.94981e+06   2.31103e+07   2.00475e+06  -1.87834e+07
+  -4.67775e+06  -4.63320e+06  -3.56400e+06  -1.13603e+06  -4.52183e+06   2.00475e+06   1.27636e+07   3.76448e+06
+  -4.63320e+06  -9.45575e+06  -3.11850e+05   6.57113e+06   1.18058e+06  -1.87834e+07   3.76448e+06   2.16680e+07
+
+*** _Debug_ *** Banded stiffness matrix
+   2.74550e+07   3.53606e+07  -8.75567e-02   2.70511e+07   6.12225e-02  -9.94265e-02
+   1.51794e+07  -1.95855e-02  -7.55269e-01   8.75567e-02   1.11665e+07   3.78367e-01
+  -3.36947e-01  -1.76440e-02  -1.29812e-01   1.77552e+07  -2.60647e-01  -3.82202e-01
+   2.05978e-01   1.83019e-01  -4.13777e-02   7.32052e+06   2.85491e-02  -4.23419e-01
+  -3.03566e-01  -1.37531e-01  -1.42610e-01  -1.70379e-01   8.61720e+05   2.88971e-01
+  -9.67566e-01   4.72673e-02  -3.12609e-02  -6.23907e-03  -2.78881e-01  -1.68756e-01
+
+
+*** _Debug_ *** Full stiffness matrix
+   2.74550e+07  -8.75567e-02  -9.94265e-02   8.75567e-02  -1.29812e-01  -4.13777e-02  -1.70379e-01  -1.68756e-01
+  -8.75567e-02   3.53606e+07   6.12225e-02  -7.55269e-01  -1.76440e-02   1.83019e-01  -1.42610e-01  -2.78881e-01
+  -9.94265e-02   6.12225e-02   2.70511e+07  -1.95855e-02  -3.36947e-01   2.05978e-01  -1.37531e-01  -6.23907e-03
+   8.75567e-02  -7.55269e-01  -1.95855e-02   1.51794e+07   3.78367e-01  -3.82202e-01  -3.03566e-01  -3.12609e-02
+  -1.29812e-01  -1.76440e-02  -3.36947e-01   3.78367e-01   1.11665e+07  -2.60647e-01  -4.23419e-01   4.72673e-02
+  -4.13777e-02   1.83019e-01   2.05978e-01  -3.82202e-01  -2.60647e-01   1.77552e+07   2.85491e-02  -9.67566e-01
+  -1.70379e-01  -1.42610e-01  -1.37531e-01  -3.03566e-01  -4.23419e-01   2.85491e-02   7.32052e+06   2.88971e-01
+  -1.68756e-01  -2.78881e-01  -6.23907e-03  -3.12609e-02   4.72673e-02  -9.67566e-01   2.88971e-01   8.61720e+05
+
+*** _Debug_ *** Displacement vector
+   0.00000e+00   0.00000e+00   0.00000e+00  -2.00000e+01   0.00000e+00
+   0.00000e+00   0.00000e+00  -1.00000e+01
+
+*** _Debug_ *** Displacement vector
+  -2.72259e-06  -6.52863e-06   3.77596e-06  -6.89323e-06  -1.10175e-06
+  -1.80750e-05   4.89159e-06  -1.82064e-05
+
+ D I S P L A C E M E N T S
+
+  NODE            X-DISPLACEMENT    Y-DISPLACEMENT    Z-DISPLACEMENT
+    1               0.00000e+00       0.00000e+00
+    2               0.00000e+00       0.00000e+00
+    3              -2.72259e-06      -6.52863e-06
+    4               3.77596e-06      -6.89323e-06
+    5              -1.10175e-06      -1.80750e-05
+    6               4.89159e-06      -1.82064e-05
+
+ S T R E S S  C A L C U L A T I O N S  F O R  E L E M E N T  G R O U P    1
+
+ELEMENT NUMBER	  	x-coord	    	    y-coord           Sigma_xx             sigma_yy               Sigma_xy
+GAUSSPOINT NUMBER
+       1-1           2.11325e-01           7.99840e-01       7.58786e+01           2.03232e+01          -6.18690e+01
+       1-2           7.88675e-01           8.30342e-01       6.45472e+01           8.61894e+00          -4.76877e+00
+       1-3           2.11325e-01           2.52992e-01      -5.47109e+01          -1.88537e+01          -5.93046e+01
+       1-4           7.88675e-01           3.66827e-01      -8.95205e+01          -3.76014e+01          -1.74337e+00
+       2-1           1.42265e+00           1.65251e+00       9.57359e+01           1.27115e+01          -8.69117e+01
+       2-2           2.57735e+00           1.71351e+00       8.23948e+01           4.16736e+00          -8.35615e+00
+       2-3           1.42265e+00           7.03152e-01      -6.88635e+01          -3.66683e+01          -8.51474e+01
+       2-4           2.57735e+00           9.30823e-01      -1.14562e+02          -5.49198e+01          -6.33976e+00
+
+
+ S O L U T I O N   T I M E   L O G   I N   S E C 
+
+     TIME FOR INPUT PHASE = 4.10000e-02
+     TIME FOR CALCULATION OF STIFFNESS MATRIX = 3.70000e-02
+     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 6.20000e-02
+
+     T O T A L   S O L U T I O N   T I M E = 1.40000e-01
+

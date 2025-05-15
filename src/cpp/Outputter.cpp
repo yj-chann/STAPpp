@@ -161,12 +161,19 @@ void COutputter::OutputElementInfo()
 			case ElementTypes::Bar: // Bar element
 				OutputBarElements(EleGrp);
 				break;
+			case ElementTypes::CST: // CST element
+				OutputCSTElements(EleGrp);
+				break;
+			case ElementTypes::Q4: // Q4 element
+				OutputQ4Elements(EleGrp);
+				break;
 		    default:
 		        *this << ElementType << " has not been implemented yet." << endl;
 		        break;
 		}
 	}
 }
+
 //	Output bar element data
 void COutputter::OutputBarElements(unsigned int EleGrp)
 {
@@ -213,6 +220,98 @@ void COutputter::OutputBarElements(unsigned int EleGrp)
 	*this << endl;
 }
 
+//	Output CST element data
+void COutputter::OutputCSTElements(unsigned int EleGrp)
+{
+	CDomain* FEMData = CDomain::GetInstance();
+
+	CElementGroup& ElementGroup = FEMData->GetEleGrpList()[EleGrp];
+	unsigned int NUMMAT = ElementGroup.GetNUMMAT();
+
+	*this << " M A T E R I A L   D E F I N I T I O N" << endl
+		  << endl;
+	*this << " NUMBER OF DIFFERENT SETS OF MATERIAL" << endl;
+	*this << " AND CROSS-SECTIONAL  CONSTANTS  . . . .( NPAR(3) ) . . =" << setw(5) << NUMMAT
+		  << endl
+		  << endl;
+
+	*this << "  SET       YOUNG'S        POISSON'S        THICK        PLANE-" << endl
+		  << " NUMBER     MODULUS          RATIO          -NESS        STRAIN" << endl
+		  << "               E              nu              t           FLAG" << endl;
+
+	*this << setiosflags(ios::scientific) << setprecision(5);
+
+	//	Loop over for all property sets
+	for (unsigned int mset = 0; mset < NUMMAT; mset++)
+    {
+        *this << setw(5) << mset+1;
+		ElementGroup.GetMaterial(mset).Write(*this);
+    }
+
+	*this << endl << endl
+		  << " E L E M E N T   I N F O R M A T I O N" << endl;
+    
+	*this << " ELEMENT     NODE       NODE     NODE       MATERIAL" << endl
+		  << " NUMBER-N      I          J        K       SET NUMBER" << endl;
+
+	unsigned int NUME = ElementGroup.GetNUME();
+
+	//	Loop over for all elements in group EleGrp
+	for (unsigned int Ele = 0; Ele < NUME; Ele++)
+    {
+        *this << setw(5) << Ele+1;
+		ElementGroup[Ele].Write(*this);
+    }
+
+	*this << endl;
+}
+
+//	Output Q4 element data
+void COutputter::OutputQ4Elements(unsigned int EleGrp)
+{
+	CDomain* FEMData = CDomain::GetInstance();
+
+	CElementGroup& ElementGroup = FEMData->GetEleGrpList()[EleGrp];
+	unsigned int NUMMAT = ElementGroup.GetNUMMAT();
+
+	*this << " M A T E R I A L   D E F I N I T I O N" << endl
+		  << endl;
+	*this << " NUMBER OF DIFFERENT SETS OF MATERIAL" << endl;
+	*this << " AND CROSS-SECTIONAL  CONSTANTS  . . . .( NPAR(3) ) . . =" << setw(5) << NUMMAT
+		  << endl
+		  << endl;
+
+	*this << "  SET       YOUNG'S        POISSON'S        THICK        PLANE-" << endl
+		  << " NUMBER     MODULUS          RATIO          -NESS        STRAIN" << endl
+		  << "               E              nu              t           FLAG" << endl;
+
+	*this << setiosflags(ios::scientific) << setprecision(5);
+
+	//	Loop over for all property sets
+	for (unsigned int mset = 0; mset < NUMMAT; mset++)
+    {
+        *this << setw(5) << mset+1;
+		ElementGroup.GetMaterial(mset).Write(*this);
+    }
+
+	*this << endl << endl
+		  << " E L E M E N T   I N F O R M A T I O N" << endl;
+    
+	*this << " ELEMENT     NODE       NODE     	NODE     NODE       MATERIAL" << endl
+		  << " NUMBER-N      I          J        K        L       SET NUMBER" << endl;
+
+	unsigned int NUME = ElementGroup.GetNUME();
+
+	//	Loop over for all elements in group EleGrp
+	for (unsigned int Ele = 0; Ele < NUME; Ele++)
+    {
+        *this << setw(5) << Ele+1;
+		ElementGroup[Ele].Write(*this);
+    }
+
+	*this << endl;
+}
+
 //	Print load data
 void COutputter::OutputLoadInfo()
 {
@@ -221,18 +320,81 @@ void COutputter::OutputLoadInfo()
 	for (unsigned int lcase = 1; lcase <= FEMData->GetNLCASE(); lcase++)
 	{
 		CLoadCaseData* LoadData = &FEMData->GetLoadCases()[lcase - 1];
+		switch (LoadData->LoadCaseType_)
+		{
+		case 1:	// All concentrated loads in node points
+			*this << setiosflags(ios::scientific);
+			*this << " L O A D   C A S E   D A T A" << endl
+				<< endl;
 
-		*this << setiosflags(ios::scientific);
-		*this << " L O A D   C A S E   D A T A" << endl
-			  << endl;
+			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
+			*this << "     NUMBER OF CONCENTRATED LOADS . =" << setw(6) << LoadData->nloads << endl
+				<< endl;
+			*this << "    NODE       DIRECTION      LOAD" << endl
+				<< "   NUMBER                   MAGNITUDE" << endl;
+			break;	
+		case 2:	// All concentrated loads in inner point of CST element(Dirac delta function)
+			*this << setiosflags(ios::scientific);
+			*this << " L O A D   C A S E   D A T A" << endl
+				<< endl;
 
-		*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
-		*this << "     NUMBER OF CONCENTRATED LOADS . =" << setw(6) << LoadData->nloads << endl
-			  << endl;
-		*this << "    NODE       DIRECTION      LOAD" << endl
-			  << "   NUMBER                   MAGNITUDE" << endl;
+			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
+			*this << "     NUMBER OF CONCENTRATED LOADS IN INNER POINT OF CST ELEMENTS . =" << setw(6) << LoadData->nloads << endl
+				<< endl;
+			*this << "     X-       		Y-      	 X-LOAD      	 Y-LOAD" << endl
+				<< "   COORDINATE		COORDINATE		MAGNITUDE		MAGNITUDE" << endl;
+			break;	
+		case 3:	// All body forces of CST element
+			*this << setiosflags(ios::scientific);
+			*this << " L O A D   C A S E   D A T A" << endl
+				<< endl;
 
-		LoadData->Write(*this);
+			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
+			*this << "     NUMBER OF BODY FORCES OF CST ELEMENTS . =" << setw(6) << LoadData->nloads << endl
+				<< endl;
+			*this << " ELEMENT      BX1-LOAD      	BY1-LOAD      	BX2-LOAD      	BY2-LOAD      	BX3-LOAD      	BY3-LOAD" << endl
+				<< " NUMBER	MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE" << endl;
+			break;
+		case 4:	// All surface forces of CST element
+			*this << setiosflags(ios::scientific);
+			*this << " L O A D   C A S E   D A T A" << endl
+				<< endl;
+
+			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
+			*this << "     NUMBER OF BODY FORCES OF CST ELEMENTS . =" << setw(6) << LoadData->nloads << endl
+				<< endl;
+			*this << " ELEMENT       1-NODE       2-NODE     	TX1-LOAD      	TY1-LOAD      	TX2-LOAD      	TY2-LOAD" << endl
+				<< " NUMBER	       NUMBER       NUMBER      MAGNITUDE	MAGNITUDE	MAGNITUDE	 MAGNITUDE" << endl;
+			break;
+		case 5:	// All body forces of Q4 element
+			*this << setiosflags(ios::scientific);
+			*this << " L O A D   C A S E   D A T A" << endl
+				<< endl;
+
+			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
+			*this << "     NUMBER OF BODY FORCES OF Q4 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
+				<< endl;
+			*this << " ELEMENT      BX1-LOAD      	BY1-LOAD      	BX2-LOAD      	BY2-LOAD      	BX3-LOAD      	BY3-LOAD      	BX4-LOAD      	BY4-LOAD" << endl
+				<< " NUMBER	MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE" << endl;
+			break;
+		case 6:	// All surface forces of Q4 element
+			*this << setiosflags(ios::scientific);
+			*this << " L O A D   C A S E   D A T A" << endl
+				<< endl;
+
+			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
+			*this << "     NUMBER OF BODY FORCES OF Q4 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
+				<< endl;
+			*this << " ELEMENT       1-NODE       2-NODE     	TX1-LOAD      	TY1-LOAD      	TX2-LOAD      	TY2-LOAD" << endl
+				<< " NUMBER	       NUMBER       NUMBER      MAGNITUDE	MAGNITUDE	MAGNITUDE	 MAGNITUDE" << endl;
+			break;
+		default:
+			std::cerr << "LodaCase " << LoadData->LoadCaseType_ << " not available. See COutputter::OutputLoadInfo." << std::endl;
+			exit(5);
+			break;
+		}		
+
+		LoadData->Write(LoadData->LoadCaseType_, *this);
 
 		*this << endl;
 	}
@@ -249,7 +411,7 @@ void COutputter::OutputNodalDisplacement()
 
 	*this << " D I S P L A C E M E N T S" << endl
 		  << endl;
-	*this << "  NODE           X-DISPLACEMENT    Y-DISPLACEMENT    Z-DISPLACEMENT" << endl;
+	*this << "  NODE            X-DISPLACEMENT    Y-DISPLACEMENT    Z-DISPLACEMENT" << endl;
 
 	for (unsigned int np = 0; np < FEMData->GetNUMNP(); np++)
 		NodeList[np].WriteNodalDisplacement(*this, Displacement);
@@ -279,6 +441,7 @@ void COutputter::OutputElementStress()
 		switch (ElementType)
 		{
 			case ElementTypes::Bar: // Bar element
+			{
 				*this << "  ELEMENT             FORCE            STRESS" << endl
 					<< "  NUMBER" << endl;
 
@@ -297,6 +460,51 @@ void COutputter::OutputElementStress()
 				*this << endl;
 
 				break;
+			}
+				
+			case ElementTypes::CST: // CST element
+			{
+				*this << "  ELEMENT        Sigma_xx          sigma_yy              Sigma_xy" << endl
+					<< "  NUMBER" << endl;
+
+				double stress_CST[3];
+
+				for (unsigned int Ele = 0; Ele < NUME; Ele++)
+				{
+					CElement& Element = EleGrp[Ele];
+					Element.ElementStress(stress_CST, Displacement);
+
+					*this << setw(5) << Ele + 1 << setw(22) << stress_CST[0] << setw(18)
+						<< stress_CST[1] << setw(22) << stress_CST[2] << endl;
+				}
+
+				*this << endl;
+
+				break;
+			}	
+
+			case ElementTypes::Q4: // Q4 element
+			{
+			    *this << "ELEMENT NUMBER	  	x-coord	    	    y-coord           Sigma_xx             sigma_yy               Sigma_xy" << endl
+					<< "GAUSSPOINT NUMBER" << endl;
+
+				double coord_stress_Q4[20] = {0};
+
+				for (unsigned int Ele = 0; Ele < NUME; Ele++)
+				{
+					CElement& Element = EleGrp[Ele];
+					Element.ElementStress(coord_stress_Q4, Displacement);
+					for (unsigned int i = 0; i < 4; i++)
+					{
+						*this << setw(8) << Ele + 1 << "-" << setw(1) << i+1 << setw(22) << coord_stress_Q4[5*i] << setw(22) << coord_stress_Q4[5*i+1] 
+					        << setw(18) << coord_stress_Q4[5*i+2] << setw(22) << coord_stress_Q4[5*i+3] << setw(22) << coord_stress_Q4[5*i+4] << endl;
+					}					
+				}
+
+				*this << endl;
+
+				break;
+			}				
 
 			default: // Invalid element type
 				cerr << "*** Error *** Elment type " << ElementType
@@ -323,6 +531,8 @@ void COutputter::OutputTotalSystemData()
 		  << endl
 		  << endl;
 }
+
+
 
 #ifdef _DEBUG_
 
