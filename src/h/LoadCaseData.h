@@ -23,7 +23,7 @@ public:
 	unsigned int nloads;		//!< Number of concentrated loads in this load case
 	unsigned int* node;			//!< Node number to which this load is applied
 	unsigned int* dof;			//!< Degree of freedom number for this load component
-	double* coordinate;			//!< X and Y coordinates of concentrated loads in inner point
+	double* coordinate;			//!< X Y Z coordinates of concentrated loads in inner point
 	double* load;				//!< Magnitude of load
 
 public:

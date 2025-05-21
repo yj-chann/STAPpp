@@ -22,7 +22,7 @@ CQ8::CQ8()
     NEN_ = 8;	// Each element has 8 nodes
     nodes_ = new CNode * [NEN_]; // pointer array to CNode objs 
 
-    ND_ = 16;
+    ND_ = 16; //    LM Height
     LocationMatrix_ = new unsigned int[ND_];
 
     ElementMaterial_ = nullptr;
@@ -63,7 +63,8 @@ void CQ8::Write(COutputter& output)
         << setw(11) << nodes_[4]->NodeNumber
         << setw(11) << nodes_[5]->NodeNumber
         << setw(11) << nodes_[6]->NodeNumber
-        << setw(11) << nodes_[7]->NodeNumber<<setw(12) << ElementMaterial_->nset << endl;
+        << setw(11) << nodes_[7]->NodeNumber
+        <<setw(12) << ElementMaterial_->nset << endl;
 }
 
 //	Calculate element stiffness matrix 
@@ -83,18 +84,18 @@ void CQ8::ElementStiffness(double* Matrix)  // use reduced integration (2*2)
 
     if (plane_strain)
     {
-        E = E / (1 - nu * nu);
-        nu = nu / (1 - nu);
+        E = E / (1.0 - nu * nu);
+        nu = nu / (1.0 - nu);
     }
 
-    double k = E / (1 - nu * nu);
+    double k = E / (1.0 - nu * nu);
 
     double D[3][3] = { 0 };	// Build the constitutive matrix D (3x3) for plane stress    
     D[0][0] = k;
     D[0][1] = k * nu;
     D[1][0] = k * nu;
     D[1][1] = k;
-    D[2][2] = k * (1 - nu) / 2.0;
+    D[2][2] = k * (1.0 - nu) / 2.0;
 
     double GaussPoints[2] = {
         -sqrt(3) / 3.0,
@@ -117,7 +118,7 @@ void CQ8::ElementStiffness(double* Matrix)  // use reduced integration (2*2)
     }
 
     int index = 0;
-    for (int j = 0; j < 8; j++)	// Column-major order
+    for (int j = 0; j < 16; j++)	// Column-major order
     {
         for (int i = j; i >= 0; i--) {    // Upper triangle (i ¡Ü j)
             Matrix[index++] = Ke[i][j];   // Pack into one dimensional element stiffness matrix
@@ -215,8 +216,8 @@ void CQ8::ElementStrainFunction(double(&B)[3][16], double* det, double xi, doubl
 {
     // Calculate the Grad(N) matrix, natural coordinate (scalar=4)
 	double GN[2][8] = {
-		{-(eta + 2 * xi) * (eta - 1), (eta - 2 * xi) * (eta - 1), (eta + 2 * xi) * (1 + eta), (eta - 2 * xi) * (-eta - 1),4 * xi * (eta - 1),2 * (1 - eta * eta),-4 * xi * (eta + 1),2 * (eta * eta - 1)},
-		{-(2 * eta + xi) * (xi - 1), (2 * eta - xi) * (xi + 1), (2 * eta + xi) * (1 + xi), (2 * eta - xi) * (1 - xi),2 * (xi * xi - 1),-4 * eta * (xi + 1),2 * (1 - xi * xi),4 * eta * (xi - 1)},
+		{-(eta + 2.0 * xi) * (eta - 1), (eta - 2.0 * xi) * (eta - 1), (eta + 2.0 * xi) * (1 + eta), (eta - 2.0 * xi) * (-eta - 1),4.0 * xi * (eta - 1),2.0 * (1 - eta * eta),-4.0 * xi * (eta + 1),2.0 * (eta * eta - 1)},
+		{-(2.0 * eta + xi) * (xi - 1), (2.0 * eta - xi) * (xi + 1), (2.0 * eta + xi) * (1 + xi), (2.0 * eta - xi) * (1 - xi),2.0 * (xi * xi - 1),-4.0 * eta * (xi + 1),2.0 * (1 - xi * xi),4.0 * eta * (xi - 1)},
 	};
     
     // x and y coordinates
@@ -248,42 +249,42 @@ void CQ8::ElementStrainFunction(double(&B)[3][16], double* det, double xi, doubl
     double y86 = C[7][1] - C[5][1]; // y8 - y6 
 
 
-    J[0][0] = x21 * eta * (eta - 1) - x43 * eta * (eta + 1)
-        - 2 * xi * (eta - 1) * (C[0][0] + C[1][0])
-        + 2 * xi * (eta + 1) * (C[2][0] + C[3][0])
-        + 2 * (1 - eta * eta) * x68
-        + 4 * xi * eta * x57
-        - 4 * xi * (C[4][0] + C[6][0]);
+    J[0][0] = x21 * eta * (eta - 1.0) - x43 * eta * (eta + 1)
+        - 2.0 * xi * (eta - 1) * (C[0][0] + C[1][0])
+        + 2.0 * xi * (eta + 1) * (C[2][0] + C[3][0])
+        + 2.0 * (1 - eta * eta) * x68
+        + 4.0 * xi * eta * x57
+        - 4.0 * xi * (C[4][0] + C[6][0]);
 
 
-    J[0][1] = y21 * eta * (eta - 1) - y43 * eta * (eta + 1)
-        - 2 * xi * (eta - 1) * (C[0][1] + C[1][1])
-        + 2 * xi * (eta + 1) * (C[2][1] + C[3][1])
-        + 2 * (1 - eta * eta) * y68
-        + 4 * xi * eta * y57
-        - 4 * xi * (C[4][1] + C[6][1]);
+    J[0][1] = y21 * eta * (eta - 1.0) - y43 * eta * (eta + 1)
+        - 2.0 * xi * (eta - 1) * (C[0][1] + C[1][1])
+        + 2.0 * xi * (eta + 1) * (C[2][1] + C[3][1])
+        + 2.0 * (1 - eta * eta) * y68
+        + 4.0 * xi * eta * y57
+        - 4.0 * xi * (C[4][1] + C[6][1]);
 
 
-    J[1][0] = x41 * xi * (xi - 1) + x32 * xi * (xi + 1)
-        - 2 * eta * (xi - 1) * (C[0][0] + C[3][0])
-        + 2 * eta * (xi + 1) * (C[1][0] + C[2][0])
-        + 2 * (xi * xi - 1) * x57
-        + 4 * xi * eta * x86
-        - 4 * eta * (C[5][0] + C[7][0]);
+    J[1][0] = x41 * xi * (xi - 1.0) + x32 * xi * (xi + 1)
+        - 2.0 * eta * (xi - 1) * (C[0][0] + C[3][0])
+        + 2.0 * eta * (xi + 1) * (C[1][0] + C[2][0])
+        + 2.0 * (xi * xi - 1) * x57
+        + 4.0 * xi * eta * x86
+        - 4.0 * eta * (C[5][0] + C[7][0]);
 
 
-    J[1][1] = y41 * xi * (xi - 1) + y32 * xi * (xi + 1)
-        - 2 * eta * (xi - 1) * (C[0][1] + C[3][1])
-        + 2 * eta * (xi + 1) * (C[1][1] + C[2][1])
-        + 2 * (xi * xi - 1) * y57
-        + 4 * xi * eta * y86
-        - 4 * eta * (C[5][1] + C[7][1]);
+    J[1][1] = y41 * xi * (xi - 1.0) + y32 * xi * (xi + 1)
+        - 2.0 * eta * (xi - 1) * (C[0][1] + C[3][1])
+        + 2.0 * eta * (xi + 1) * (C[1][1] + C[2][1])
+        + 2.0 * (xi * xi - 1) * y57
+        + 4.0 * xi * eta * y86
+        - 4.0 * eta * (C[5][1] + C[7][1]);
     // Calculate determinant of Jacobian
 	*det = 1.0 / 16.0 * (J[0][0] * J[1][1] - J[0][1] * J[1][0]); // exact
 
     // Calculate inverse matrix of Jacobian
     double invJ[2][2];
-	double invDet = 1.0 / 16.0 * (*det);
+	double invDet = 1.0 / (16.0 * (*det));
     invJ[0][0] = J[1][1] * invDet;
     invJ[0][1] = -J[0][1] * invDet;
     invJ[1][0] = -J[1][0] * invDet;

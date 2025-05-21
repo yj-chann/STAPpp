@@ -1,0 +1,113 @@
+TITLE :  STAP90 input data for example 4.1 with 1 Q4 element, together with benchmark-8
+        (10:36:53 on May 21, 2025, Wednesday)
+
+C O N T R O L   I N F O R M A T I O N
+
+      NUMBER OF NODAL POINTS . . . . . . . . . . (NUMNP)  =     8
+      NUMBER OF ELEMENT GROUPS . . . . . . . . . (NUMEG)  =     1
+      NUMBER OF LOAD CASES . . . . . . . . . . . (NLCASE) =     1
+      SOLUTION MODE  . . . . . . . . . . . . . . (MODEX)  =     1
+         EQ.0, DATA CHECK
+         EQ.1, EXECUTION
+
+ N O D A L   P O I N T   D A T A
+
+    NODE       BOUNDARY                         NODAL POINT
+   NUMBER  CONDITION  CODES                     COORDINATES
+        1    1    1    1       0.00000e+00    1.00000e+00    0.00000e+00
+        2    1    1    1       0.00000e+00    0.00000e+00    0.00000e+00
+        3    0    0    1       2.00000e+00    5.00000e-01    0.00000e+00
+        4    0    0    1       2.00000e+00    1.00000e+00    0.00000e+00
+        5    1    1    1       0.00000e+00    5.00000e-01    0.00000e+00
+        6    0    0    1       1.00000e+00    2.50000e-01    0.00000e+00
+        7    0    0    1       2.00000e+00    7.50000e-01    0.00000e+00
+        8    0    0    1       1.00000e+00    1.00000e+00    0.00000e+00
+
+ EQUATION NUMBERS
+
+   NODE NUMBER   DEGREES OF FREEDOM
+        N           X    Y    Z
+        1           0    0    0
+        2           0    0    0
+        3           1    2    0
+        4           3    4    0
+        5           0    0    0
+        6           5    6    0
+        7           7    8    0
+        8           9   10    0
+
+ L O A D   C A S E   D A T A
+
+     LOAD CASE NUMBER . . . . . . . =     1
+     NUMBER OF SURFACE  FORCES OF Q8 ELEMENTS . =     1
+
+ ELEMENT       1-NODE       2-NODE       3-NODE     	TX1-LOAD      	TY1-LOAD      	TX2-LOAD      	TY2-LOAD      	TX3-LOAD      	TY3-LOAD
+ NUMBER	       NUMBER       NUMBER       NUMBER         MAGNITUDE	  MAGNITUDE     MAGNITUDE     MAGNITUDE	    MAGNITUDE	   MAGNITUDE
+   1            1            4            8       0.00000e+00      -2.00000e+01       0.00000e+00      -2.00000e+01       0.00000e+00      -2.00000e+01
+
+ E L E M E N T   G R O U P   D A T A
+
+
+ E L E M E N T   D E F I N I T I O N
+
+ ELEMENT TYPE  . . . . . . . . . . . . .( NPAR(1) ) . . =    4
+     EQ.1, TRUSS ELEMENTS
+     EQ.2, ELEMENTS CURRENTLY
+     EQ.3, NOT AVAILABLE
+
+ NUMBER OF ELEMENTS. . . . . . . . . . .( NPAR(2) ) . . =    1
+
+ M A T E R I A L   D E F I N I T I O N
+
+ NUMBER OF DIFFERENT SETS OF MATERIAL
+ AND CROSS-SECTIONAL  CONSTANTS  . . . .( NPAR(3) ) . . =    1
+
+  SET       YOUNG'S        POISSON'S        THICK        PLANE-
+ NUMBER     MODULUS          RATIO          -NESS        STRAIN
+               E              nu              t           FLAG
+    1     3.00000e+07     3.00000e-01     1.00000e+00       0
+
+
+ E L E M E N T   I N F O R M A T I O N
+ ELEMENT     NODE       NODE     	NODE     NODE       MATERIAL
+ NUMBER-N      I          J        K        L       SET NUMBER
+    1          1          2          3          4          5          6          7          8           1
+
+	TOTAL SYSTEM DATA
+
+     NUMBER OF EQUATIONS . . . . . . . . . . . . . .(NEQ) = 10
+     NUMBER OF MATRIX ELEMENTS . . . . . . . . . . .(NWK) = 55
+     MAXIMUM HALF BANDWIDTH  . . . . . . . . . . . .(MK ) = 10
+     MEAN HALF BANDWIDTH . . . . . . . . . . . . . .(MM ) = 5
+
+
+ D I S P L A C E M E N T S
+
+  NODE            X-DISPLACEMENT    Y-DISPLACEMENT    Z-DISPLACEMENT
+    1               0.00000e+00       0.00000e+00       0.00000e+00
+    2               0.00000e+00       0.00000e+00       0.00000e+00
+    3              -1.36510e-06      -2.66801e-05       0.00000e+00
+    4               7.49918e-06      -2.66424e-05       0.00000e+00
+    5               0.00000e+00       0.00000e+00       0.00000e+00
+    6              -3.61095e-06      -9.11138e-06       0.00000e+00
+    7               2.94382e-06      -2.64483e-05       0.00000e+00
+    8               5.46305e-06      -9.55840e-06       0.00000e+00
+
+ S T R E S S  C A L C U L A T I O N S  F O R  E L E M E N T  G R O U P    1
+
+ELEMENT NUMBER	  	x-coord	    	    y-coord           Sigma_xx             sigma_yy               Sigma_xy
+GAUSSPOINT NUMBER
+       1-1           4.22650e-01           8.11004e-01       1.04978e+02           1.78556e+01          -3.63414e+01
+       1-2           1.57735e+00           8.72008e-01       2.29270e+01          -2.62483e+01          -7.28865e+00
+       1-3           4.22650e-01           2.94658e-01      -1.04978e+02          -3.81575e+01          -3.42069e+01
+       1-4           1.57735e+00           5.22329e-01      -2.29270e+01          -1.57284e+00          -2.06246e+01
+
+
+ S O L U T I O N   T I M E   L O G   I N   S E C 
+
+     TIME FOR INPUT PHASE = 4.10000e-02
+     TIME FOR CALCULATION OF STIFFNESS MATRIX = 1.00000e-03
+     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 1.90000e-02
+
+     T O T A L   S O L U T I O N   T I M E = 6.10000e-02
+

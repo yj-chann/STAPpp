@@ -167,6 +167,9 @@ void COutputter::OutputElementInfo()
 			case ElementTypes::Q4: // Q4 element
 				OutputQ4Elements(EleGrp);
 				break;
+			case ElementTypes::Q8: // Q8 element
+				OutputQ8Elements(EleGrp);
+				break;
 		    default:
 		        *this << ElementType << " has not been implemented yet." << endl;
 		        break;
@@ -275,41 +278,88 @@ void COutputter::OutputQ4Elements(unsigned int EleGrp)
 	unsigned int NUMMAT = ElementGroup.GetNUMMAT();
 
 	*this << " M A T E R I A L   D E F I N I T I O N" << endl
-		  << endl;
+		<< endl;
 	*this << " NUMBER OF DIFFERENT SETS OF MATERIAL" << endl;
 	*this << " AND CROSS-SECTIONAL  CONSTANTS  . . . .( NPAR(3) ) . . =" << setw(5) << NUMMAT
-		  << endl
-		  << endl;
+		<< endl
+		<< endl;
 
 	*this << "  SET       YOUNG'S        POISSON'S        THICK        PLANE-" << endl
-		  << " NUMBER     MODULUS          RATIO          -NESS        STRAIN" << endl
-		  << "               E              nu              t           FLAG" << endl;
+		<< " NUMBER     MODULUS          RATIO          -NESS        STRAIN" << endl
+		<< "               E              nu              t           FLAG" << endl;
 
 	*this << setiosflags(ios::scientific) << setprecision(5);
 
 	//	Loop over for all property sets
 	for (unsigned int mset = 0; mset < NUMMAT; mset++)
-    {
-        *this << setw(5) << mset+1;
+	{
+		*this << setw(5) << mset + 1;
 		ElementGroup.GetMaterial(mset).Write(*this);
-    }
+	}
 
 	*this << endl << endl
-		  << " E L E M E N T   I N F O R M A T I O N" << endl;
-    
+		<< " E L E M E N T   I N F O R M A T I O N" << endl;
+
 	*this << " ELEMENT     NODE       NODE     	NODE     NODE       MATERIAL" << endl
-		  << " NUMBER-N      I          J        K        L       SET NUMBER" << endl;
+		<< " NUMBER-N      I          J        K        L       SET NUMBER" << endl;
 
 	unsigned int NUME = ElementGroup.GetNUME();
 
 	//	Loop over for all elements in group EleGrp
 	for (unsigned int Ele = 0; Ele < NUME; Ele++)
-    {
-        *this << setw(5) << Ele+1;
+	{
+		*this << setw(5) << Ele + 1;
 		ElementGroup[Ele].Write(*this);
-    }
+	}
 
 	*this << endl;
+}
+
+	//	Output Q8 element data
+	void COutputter::OutputQ8Elements(unsigned int EleGrp)
+	{
+		CDomain* FEMData = CDomain::GetInstance();
+
+		CElementGroup& ElementGroup = FEMData->GetEleGrpList()[EleGrp];
+		unsigned int NUMMAT = ElementGroup.GetNUMMAT();
+
+		*this << " M A T E R I A L   D E F I N I T I O N" << endl
+			<< endl;
+		*this << " NUMBER OF DIFFERENT SETS OF MATERIAL" << endl;
+		*this << " AND CROSS-SECTIONAL  CONSTANTS  . . . .( NPAR(3) ) . . =" << setw(5) << NUMMAT
+			<< endl
+			<< endl;
+
+		*this << "  SET       YOUNG'S        POISSON'S        THICK        PLANE-" << endl
+			<< " NUMBER     MODULUS          RATIO          -NESS        STRAIN" << endl
+			<< "               E              nu              t           FLAG" << endl;
+
+		*this << setiosflags(ios::scientific) << setprecision(5);
+
+		//	Loop over for all property sets
+		for (unsigned int mset = 0; mset < NUMMAT; mset++)
+		{
+			*this << setw(5) << mset + 1;
+			ElementGroup.GetMaterial(mset).Write(*this);
+		}
+
+		*this << endl << endl
+			<< " E L E M E N T   I N F O R M A T I O N" << endl;
+
+		*this << " ELEMENT     NODE       NODE     	NODE     NODE       MATERIAL" << endl
+			<< " NUMBER-N      I          J        K        L       SET NUMBER" << endl;
+
+		unsigned int NUME = ElementGroup.GetNUME();
+
+		//	Loop over for all elements in group EleGrp
+		for (unsigned int Ele = 0; Ele < NUME; Ele++)
+		{
+			*this << setw(5) << Ele + 1;
+			ElementGroup[Ele].Write(*this);
+		}
+
+		*this << endl;
+	
 }
 
 //	Print load data
@@ -320,7 +370,8 @@ void COutputter::OutputLoadInfo()
 	for (unsigned int lcase = 1; lcase <= FEMData->GetNLCASE(); lcase++)
 	{
 		CLoadCaseData* LoadData = &FEMData->GetLoadCases()[lcase - 1];
-		switch (LoadData->LoadCaseType_)
+		//cout << LoadData->LoadCaseType_ << endl;
+		switch (LoadData->LoadCaseType_)	
 		{
 		case 1:	// All concentrated loads in node points
 			*this << setiosflags(ios::scientific);
@@ -388,6 +439,29 @@ void COutputter::OutputLoadInfo()
 			*this << " ELEMENT       1-NODE       2-NODE     	TX1-LOAD      	TY1-LOAD      	TX2-LOAD      	TY2-LOAD" << endl
 				<< " NUMBER	       NUMBER       NUMBER      MAGNITUDE	MAGNITUDE	MAGNITUDE	 MAGNITUDE" << endl;
 			break;
+		case 7:	// All body forces of Q8 element
+			*this << setiosflags(ios::scientific);
+			*this << " L O A D   C A S E   D A T A" << endl
+				<< endl;
+
+			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
+			*this << "     NUMBER OF BODY FORCES OF Q8 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
+				<< endl;
+			*this << " ELEMENT      BX1-LOAD      	BY1-LOAD      	BX2-LOAD      	BY2-LOAD      	BX3-LOAD      	BY3-LOAD      	BX4-LOAD      	BY4-LOAD      	BX5-LOAD      	BY5-LOAD      	BX6-LOAD      	BY6-LOAD      	BX7-LOAD      	BY7-LOAD      	BX8-LOAD      	BY8-LOAD" << endl
+				<< " NUMBER	MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE" << endl;
+			break;
+		case 8:	// All surface forces of Q8 element
+			*this << setiosflags(ios::scientific);
+			*this << " L O A D   C A S E   D A T A" << endl
+				<< endl;
+
+			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
+			*this << "     NUMBER OF SURFACE  FORCES OF Q8 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
+				<< endl;
+			*this << " ELEMENT       1-NODE       2-NODE       3-NODE     	TX1-LOAD      	TY1-LOAD      	TX2-LOAD      	TY2-LOAD      	TX3-LOAD      	TY3-LOAD" << endl
+				<< " NUMBER	       NUMBER       NUMBER       NUMBER         MAGNITUDE	  MAGNITUDE     MAGNITUDE     MAGNITUDE	    MAGNITUDE	   MAGNITUDE" << endl;
+			break;
+
 		default:
 			std::cerr << "LodaCase " << LoadData->LoadCaseType_ << " not available. See COutputter::OutputLoadInfo." << std::endl;
 			exit(5);
@@ -504,7 +578,29 @@ void COutputter::OutputElementStress()
 				*this << endl;
 
 				break;
-			}				
+			}	
+			case ElementTypes::Q8: // Q8 element
+			{
+				*this << "ELEMENT NUMBER	  	x-coord	    	    y-coord           Sigma_xx             sigma_yy               Sigma_xy" << endl
+					<< "GAUSSPOINT NUMBER" << endl;
+
+				double coord_stress_Q4[20] = { 0 };// 2x2 Gauss Points
+
+				for (unsigned int Ele = 0; Ele < NUME; Ele++)
+				{
+					CElement& Element = EleGrp[Ele];
+					Element.ElementStress(coord_stress_Q4, Displacement);
+					for (unsigned int i = 0; i < 4; i++)
+					{
+						*this << setw(8) << Ele + 1 << "-" << setw(1) << i + 1 << setw(22) << coord_stress_Q4[5 * i] << setw(22) << coord_stress_Q4[5 * i + 1]
+							<< setw(18) << coord_stress_Q4[5 * i + 2] << setw(22) << coord_stress_Q4[5 * i + 3] << setw(22) << coord_stress_Q4[5 * i + 4] << endl;
+					}
+				}
+
+				*this << endl;
+
+				break;
+			}
 
 			default: // Invalid element type
 				cerr << "*** Error *** Elment type " << ElementType

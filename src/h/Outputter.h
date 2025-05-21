@@ -63,6 +63,9 @@ public:
 //!	Output Q4 element data
 	void OutputQ4Elements(unsigned int EleGrp);
 
+//!	Output Q8 element data
+	void OutputQ8Elements(unsigned int EleGrp);
+
 //!	Output load data 
 	void OutputLoadInfo(); 
 

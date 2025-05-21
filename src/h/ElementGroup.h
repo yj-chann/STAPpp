@@ -16,6 +16,7 @@
 #include "Bar.h"
 #include "CST.h"
 #include "Q4.h"
+#include "Q8.h"
 #include "Material.h"
 #include "Node.h"
 
@@ -27,7 +28,8 @@ enum ElementTypes
     UNDEFINED = 0,
     Bar,    // Bar element
     CST,    // T3 element, constant-strain triangle
-    Q4,     // 4Q element
+    Q4,     // Q4 element
+    Q8,     // Q8 element
     T3,     // 3T element
     H8,     // 8H element
     Beam,   // Beam element

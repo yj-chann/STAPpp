@@ -473,7 +473,7 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 				LoadData->load[8*LoadOrder+7],
 			};
 
-			// Calculate area of the CST element
+			
             CElement& Element = ElementGrp[Ele-1];
 			CQ4* Element_ = dynamic_cast<CQ4*>(&Element);
 			CMaterial* ElementMaterial = Element.GetElementMaterial();
@@ -579,6 +579,179 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 					Force[dof[i] - 1] += f_Gamma[i];			
 		}	
 		break;		
+	}
+	
+	case 7:	// All body forces of Q8 element
+	{
+		unsigned int EleGrp = 0;
+		for (; EleGrp < NUMEG; EleGrp++)
+		{
+			CElementGroup& ElementGrp = EleGrpList[EleGrp];
+			unsigned int ElementType = ElementGrp.GetElementType();
+			if (ElementType == 4)
+				break;
+		}
+		CElementGroup& ElementGrp = EleGrpList[EleGrp];
+
+		for (unsigned int LoadOrder = 0; LoadOrder < LoadData->nloads; LoadOrder++)
+		{
+			unsigned int Ele = LoadData->node[LoadOrder];
+			double b[16] = {
+				LoadData->load[16 * LoadOrder],
+				LoadData->load[16 * LoadOrder + 1],
+				LoadData->load[16 * LoadOrder + 2],
+				LoadData->load[16 * LoadOrder + 3],
+				LoadData->load[16 * LoadOrder + 4],
+				LoadData->load[16 * LoadOrder + 5],
+				LoadData->load[16 * LoadOrder + 6],
+				LoadData->load[16 * LoadOrder + 7],
+				LoadData->load[16 * LoadOrder + 8],
+				LoadData->load[16 * LoadOrder + 9],
+				LoadData->load[16 * LoadOrder + 10],
+				LoadData->load[16 * LoadOrder + 11],
+				LoadData->load[16 * LoadOrder + 12],
+				LoadData->load[16 * LoadOrder + 13],
+				LoadData->load[16 * LoadOrder + 14],
+				LoadData->load[16 * LoadOrder + 15],
+
+			};
+
+			CElement& Element = ElementGrp[Ele - 1];
+			CQ8* Element_ = dynamic_cast<CQ8*>(&Element);
+			CMaterial* ElementMaterial = Element.GetElementMaterial();
+			CQ8Material* material_ = dynamic_cast<CQ8Material*>(ElementMaterial);
+			double t = material_->t;
+			CNode** nodes = Element.GetNodes();
+
+			double f_Omega[16] = { 0 };
+			double GaussPoints[2] = {
+				-sqrt(3) / 3.0,
+				sqrt(3) / 3.0,
+			};
+			for (unsigned int i = 0; i < 2; i++)	//  reduced integration
+			{
+				for (unsigned int j = 0; j < 2; j++)
+				{
+					double B[3][16] = { 0 };
+					double det;
+					Element_->ElementStrainFunction(B, &det, GaussPoints[i], GaussPoints[j]);
+					double N[2][16] = { 0 };
+					Element_->ElementShapeFunction(N, GaussPoints[i], GaussPoints[j]);
+					for (int k = 0; k < 16; k++)
+						for (int l = 0; l < 2; l++)
+							for (int m = 0; m < 16; m++)
+								f_Omega[k] += t * N[l][k] * N[l][m] * b[m] * det;  // Weight is 1
+				}
+			}
+
+			unsigned int dof[16] = {
+				nodes[0]->bcode[0],
+				nodes[0]->bcode[1],
+				nodes[1]->bcode[0],
+				nodes[1]->bcode[1],
+				nodes[2]->bcode[0],
+				nodes[2]->bcode[1],
+				nodes[3]->bcode[0],
+				nodes[3]->bcode[1],
+				nodes[4]->bcode[0],
+				nodes[4]->bcode[1],
+				nodes[5]->bcode[0],
+				nodes[5]->bcode[1],
+				nodes[6]->bcode[0],
+				nodes[6]->bcode[1],
+				nodes[7]->bcode[0],
+				nodes[7]->bcode[1],
+			};
+
+			for (int i = 0; i < 16; i++)
+				if (dof[i])	// The DOF is activated
+					Force[dof[i] - 1] += f_Omega[i];
+		}
+		break;
+	}
+	case 8:	// All surface forces of Q8 element
+	{
+		unsigned int EleGrp = 0;
+		for (; EleGrp < NUMEG; EleGrp++)
+		{
+			CElementGroup& ElementGrp = EleGrpList[EleGrp];
+			unsigned int ElementType = ElementGrp.GetElementType();
+			if (ElementType == 4)
+				break;
+		}
+		CElementGroup& ElementGrp = EleGrpList[EleGrp];
+
+		for (unsigned int LoadOrder = 0; LoadOrder < LoadData->nloads; LoadOrder++)
+		{
+			unsigned int Ele = LoadData->dof[LoadOrder];
+			double f_Gamma[6] = { 0 };
+			unsigned int ElementNode[3] = {
+				LoadData->node[3 * LoadOrder],
+				LoadData->node[3 * LoadOrder + 1],
+				LoadData->node[3 * LoadOrder + 2],
+			};
+			double t_x1 = LoadData->load[6 * LoadOrder];
+			double t_y1 = LoadData->load[6 * LoadOrder + 1];
+			double t_x2 = LoadData->load[6 * LoadOrder + 2];
+			double t_y2 = LoadData->load[6 * LoadOrder + 3];
+			double t_x3 = LoadData->load[6 * LoadOrder + 4];
+			double t_y3 = LoadData->load[6 * LoadOrder + 5];
+
+			
+			CElement& Element = ElementGrp[Ele - 1];
+			CMaterial* ElementMaterial = Element.GetElementMaterial();
+			CQ8Material* material_ = dynamic_cast<CQ8Material*>(ElementMaterial);
+			double t = material_->t;
+
+			CNode** nodes = Element.GetNodes();
+
+			double X[3] = {
+				nodes[ElementNode[0] - 1]->XYZ[0],
+				nodes[ElementNode[1] - 1]->XYZ[0],
+				nodes[ElementNode[2] - 1]->XYZ[0],
+			};
+			double Y[3] = {
+				nodes[ElementNode[0] - 1]->XYZ[1],
+				nodes[ElementNode[1] - 1]->XYZ[1],
+				nodes[ElementNode[2] - 1]->XYZ[1],
+			};
+
+			double GaussPoints[2] = {
+	            -sqrt(3) / 3.0,
+	             sqrt(3) / 3.0,
+			};
+			// Scaling Factor
+			double f12 =( (X[1] + X[0]-2*X[2])*GaussPoints[0]+ 0.5* (X[1] - X[0]))* ((X[1] + X[0] - 2 * X[2]) * GaussPoints[0] + 0.5 * (X[1] - X[0])) + ((Y[1] + Y[0] - 2 * Y[2]) * GaussPoints[0] + 0.5 * (Y[1] - Y[0]))* ((Y[1] + Y[0] - 2 * Y[2]) * GaussPoints[0] + 0.5 * (Y[1] - Y[0]));
+			double f1 = sqrt(f12);
+			// Scaling Factor
+			double f22 = ((X[1] + X[0] - 2 * X[2]) * GaussPoints[1] + 0.5 * (X[1] - X[0]))* ((X[1] + X[0] - 2 * X[2]) * GaussPoints[1] + 0.5 * (X[1] - X[0])) + ((Y[1] + Y[0] - 2 * Y[2]) * GaussPoints[1] + 0.5 * (Y[1] - Y[0]))* ((Y[1] + Y[0] - 2 * Y[2]) * GaussPoints[1] + 0.5 * (Y[1] - Y[0]));
+			double f2 = sqrt(f22);
+
+			// Nitxi Nityi
+			double Nitxi1 = 0.5 * GaussPoints[0] * (GaussPoints[0] - 1) * t_x1 + (1 - GaussPoints[0] * GaussPoints[0]) * t_x3 + 0.5 * GaussPoints[0] * (GaussPoints[0] + 1) * t_x2;
+			double Nitxi2 = 0.5 * GaussPoints[1] * (GaussPoints[1] - 1) * t_x1 + (1 - GaussPoints[1] * GaussPoints[1]) * t_x3 + 0.5 * GaussPoints[1] * (GaussPoints[1] + 1) * t_x2;
+			double Nityi1 = 0.5 * GaussPoints[0] * (GaussPoints[0] - 1) * t_y1 + (1 - GaussPoints[0] * GaussPoints[0]) * t_y3 + 0.5 * GaussPoints[0] * (GaussPoints[0] + 1) * t_y2;
+			double Nityi2 = 0.5 * GaussPoints[1] * (GaussPoints[1] - 1) * t_y1 + (1 - GaussPoints[1] * GaussPoints[1]) * t_y3 + 0.5 * GaussPoints[1] * (GaussPoints[1] + 1) * t_y2;
+			f_Gamma[0] = 0.5 * GaussPoints[0] * (GaussPoints[0] - 1) * Nitxi1 * f1 + 0.5 * GaussPoints[1] * (GaussPoints[1] - 1) * Nitxi2 * f2;
+			f_Gamma[1] = 0.5 * GaussPoints[0] * (GaussPoints[0] - 1) * Nityi1 * f1 + 0.5 * GaussPoints[1] * (GaussPoints[1] - 1) * Nityi2 * f2;
+			f_Gamma[2] = 0.5 * GaussPoints[0] * (GaussPoints[0] + 1) * Nitxi1 * f1 + 0.5 * GaussPoints[1] * (GaussPoints[1] + 1) * Nitxi2 * f2;
+			f_Gamma[3] = 0.5 * GaussPoints[0] * (GaussPoints[0] + 1) * Nityi1 * f1 + 0.5 * GaussPoints[1] * (GaussPoints[1] + 1) * Nityi2 * f2;
+			f_Gamma[4] = (1 - GaussPoints[0] * GaussPoints[0]) * Nitxi1 * f1 + (1 - GaussPoints[1] * GaussPoints[1]) * Nitxi2 * f2;
+			f_Gamma[5] = (1 - GaussPoints[0] * GaussPoints[0]) * Nityi1 * f1 + (1 - GaussPoints[1] * GaussPoints[1]) * Nityi2 * f2;
+
+			unsigned int dof[6] = {
+				nodes[ElementNode[0] - 1]->bcode[0],
+				nodes[ElementNode[0] - 1]->bcode[1],
+				nodes[ElementNode[1] - 1]->bcode[0],
+				nodes[ElementNode[1] - 1]->bcode[1],
+				nodes[ElementNode[2] - 1]->bcode[0],
+				nodes[ElementNode[2] - 1]->bcode[1],
+			};
+			for (int i = 0; i < 6; i++)
+				if (dof[i])	// The DOF is activated
+					Force[dof[i] - 1] += f_Gamma[i];
+		}
+		break;
 	}
 	default:
 		std::cerr << "LodaCase " << LoadData->LoadCaseType_ << " not available. See CDomain::AssembleForce." << std::endl;
