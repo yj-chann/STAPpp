@@ -14,7 +14,7 @@
 
 using namespace std;
 
-//! Bar element class
+//! Q8 element class
 class CQ8 : public CElement
 {
 public:

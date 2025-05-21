@@ -1,5 +1,5 @@
 TITLE : An_Example_Of_Bar_Element
-        (21:51:5 on May 10, 2025, Saturday)
+        (19:23:11 on May 19, 2025, Monday)
 
 C O N T R O L   I N F O R M A T I O N
 
@@ -81,12 +81,9 @@ C O N T R O L   I N F O R M A T I O N
      MEAN HALF BANDWIDTH . . . . . . . . . . . . . .(MM ) = 1
 
 
- LOAD CASE    1
-
-
  D I S P L A C E M E N T S
 
-  NODE           X-DISPLACEMENT    Y-DISPLACEMENT    Z-DISPLACEMENT
+  NODE            X-DISPLACEMENT    Y-DISPLACEMENT    Z-DISPLACEMENT
     1               0.00000e+00       0.00000e+00       0.00000e+00
     2               1.00000e+00       0.00000e+00       0.00000e+00
     3               2.00000e+00       0.00000e+00       0.00000e+00
@@ -107,9 +104,9 @@ C O N T R O L   I N F O R M A T I O N
 
  S O L U T I O N   T I M E   L O G   I N   S E C 
 
-     TIME FOR INPUT PHASE = 7.40000e-02
-     TIME FOR CALCULATION OF STIFFNESS MATRIX = 0.00000e+00
-     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 3.10000e-02
+     TIME FOR INPUT PHASE = 4.80000e-02
+     TIME FOR CALCULATION OF STIFFNESS MATRIX = 1.00000e-03
+     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 1.20000e-02
 
-     T O T A L   S O L U T I O N   T I M E = 1.05000e-01
+     T O T A L   S O L U T I O N   T I M E = 6.10000e-02
 

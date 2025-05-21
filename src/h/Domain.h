@@ -34,7 +34,7 @@ private:
 //!	Input file stream for reading data from input data file
 	ifstream Input;
 
-//!	Heading information for use in labeling the outpu
+//!	Heading information for use in labeling the output
 	char Title[256]; 
 
 //!	Solution MODEX
@@ -59,7 +59,7 @@ private:
 	unsigned int NLCASE;
 
 //!	List of all load cases
-	CLoadCaseData* LoadCases;
+	CLoadCaseData* LoadCases; // obj of CloadCaseData
 
 //!	Number of concentrated loads applied in each load case
 	unsigned int* NLOAD;
