@@ -13,7 +13,7 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
-// #define _DEBUG_
+#define _DEBUG_
 
 using namespace std;
 
@@ -65,6 +65,9 @@ public:
 
 //!	Output Q8 element data
 	void OutputQ8Elements(unsigned int EleGrp);
+
+//!	Output B21EB element data
+	void OutputB21EBElements(unsigned int EleGrp);
 
 //!	Output load data 
 	void OutputLoadInfo(); 

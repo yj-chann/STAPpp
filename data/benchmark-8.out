@@ -1,5 +1,5 @@
 TITLE :  STAP90 input data for example 4.1 with 1 Q4 element, together with benchmark-7
-        (0:4:29 on May 12, 2025, Monday)
+        (22:15:22 on May 15, 2025, Thursday)
 
 C O N T R O L   I N F O R M A T I O N
 
@@ -23,10 +23,10 @@ C O N T R O L   I N F O R M A T I O N
 
    NODE NUMBER   DEGREES OF FREEDOM
         N           X    Y    Z
-        1           0    0
-        2           0    0
-        3           1    2
-        4           3    4
+        1           0    0    0
+        2           0    0    0
+        3           1    2    0
+        4           3    4    0
 
  L O A D   C A S E   D A T A
 
@@ -65,15 +65,6 @@ C O N T R O L   I N F O R M A T I O N
  NUMBER-N      I          J        K        L       SET NUMBER
     1          1          2          3        4           1
 
-   Ele =        Location Matrix
-        1    0    0    0    0    1    2    3    4
-
-*** _Debug_ *** Column Heights
-       0       1       2       3
-
-*** _Debug_ *** Address of Diagonal Element
-       1       2       4       7      11
-
 	TOTAL SYSTEM DATA
 
      NUMBER OF EQUATIONS . . . . . . . . . . . . . .(NEQ) = 4
@@ -82,39 +73,13 @@ C O N T R O L   I N F O R M A T I O N
      MEAN HALF BANDWIDTH . . . . . . . . . . . . . .(MM ) = 2
 
 
-*** _Debug_ *** Banded stiffness matrix
-   2.00338e+07   3.81657e+07  -8.24176e+06   1.59129e+07   3.29670e+06  -1.17921e+07
-   3.67234e+07   2.47253e+06  -3.52811e+07   2.47253e+06
-
-*** _Debug_ *** Full stiffness matrix
-   2.00338e+07  -8.24176e+06  -1.17921e+07   2.47253e+06
-  -8.24176e+06   3.81657e+07   3.29670e+06  -3.52811e+07
-  -1.17921e+07   3.29670e+06   1.59129e+07   2.47253e+06
-   2.47253e+06  -3.52811e+07   2.47253e+06   3.67234e+07
-
-*** _Debug_ *** Banded stiffness matrix
-   2.00338e+07   3.47751e+07  -4.11392e-01   8.90256e+06  -4.47003e-02  -5.88608e-01
-   2.01302e+06   2.69166e-01  -9.85300e-01   1.23418e-01
-
-*** _Debug_ *** Full stiffness matrix
-   2.00338e+07  -4.11392e-01  -5.88608e-01   1.23418e-01
-  -4.11392e-01   3.47751e+07  -4.47003e-02  -9.85300e-01
-  -5.88608e-01  -4.47003e-02   8.90256e+06   2.69166e-01
-   1.23418e-01  -9.85300e-01   2.69166e-01   2.01302e+06
-
-*** _Debug_ *** Displacement vector
-   0.00000e+00   0.00000e+00   0.00000e+00  -2.00000e+01
-
-*** _Debug_ *** Displacement vector
-  -1.17777e-06  -9.66972e-06   2.67425e-06  -9.93532e-06
-
  D I S P L A C E M E N T S
 
   NODE            X-DISPLACEMENT    Y-DISPLACEMENT    Z-DISPLACEMENT
-    1               0.00000e+00       0.00000e+00
-    2               0.00000e+00       0.00000e+00
-    3              -1.17777e-06      -9.66972e-06
-    4               2.67425e-06      -9.93532e-06
+    1               0.00000e+00       0.00000e+00       0.00000e+00
+    2               0.00000e+00       0.00000e+00       0.00000e+00
+    3              -1.17777e-06      -9.66972e-06       0.00000e+00
+    4               2.67425e-06      -9.93532e-06       0.00000e+00
 
  S T R E S S  C A L C U L A T I O N S  F O R  E L E M E N T  G R O U P    1
 
@@ -128,9 +93,9 @@ GAUSSPOINT NUMBER
 
  S O L U T I O N   T I M E   L O G   I N   S E C 
 
-     TIME FOR INPUT PHASE = 3.30000e-02
-     TIME FOR CALCULATION OF STIFFNESS MATRIX = 1.20000e-02
-     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 2.30000e-02
+     TIME FOR INPUT PHASE = 5.30000e-02
+     TIME FOR CALCULATION OF STIFFNESS MATRIX = 2.00000e-03
+     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 2.80000e-02
 
-     T O T A L   S O L U T I O N   T I M E = 6.80000e-02
+     T O T A L   S O L U T I O N   T I M E = 8.30000e-02
 

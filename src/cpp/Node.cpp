@@ -18,10 +18,18 @@ CNode::CNode(double X, double Y, double Z)
     XYZ[0] = X;		// Coordinates of the node
     XYZ[1] = Y;
     XYZ[2] = Z;
+
+	// XYZ[3] = X;		// Rotation Angles of the node
+    // XYZ[4] = Y;
+    // XYZ[5] = Z;
     
     bcode[0] = 0;	// Boundary codes
     bcode[1] = 0;
     bcode[2] = 0;
+
+	// bcode[3] = 0;	// Boundary codes
+    // bcode[4] = 0;
+    // bcode[5] = 0;
 };
 
 //	Read element data from stream Input
