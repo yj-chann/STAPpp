@@ -1,4 +1,4 @@
-﻿/*****************************************************************************/
+/*****************************************************************************/
 /*  STAP++ : A C++ FEM code sharing the same input data file with STAP90     */
 /*     Computational Dynamics Laboratory                                     */
 /*     School of Aerospace Engineering, Tsinghua University                  */
@@ -8,7 +8,7 @@
 /*     http://www.comdyn.cn/                                                 */
 /*****************************************************************************/
 
-#include "Q4.h"
+#include "B31EB.h"
 
 #include <iostream>
 #include <iomanip>
@@ -17,40 +17,38 @@
 using namespace std;
 
 //	Constructor
-CQ4::CQ4()
+CB31EB::CB31EB()
 {
-	NEN_ = 4;	// Each element has 4 nodes
+	NEN_ = 2;	// Each element has 2 nodes
 	nodes_ = new CNode*[NEN_];
     
-    ND_ = 8;
+    ND_ = 12;
     LocationMatrix_ = new unsigned int[ND_];
 
 	ElementMaterial_ = nullptr;
 }
 
 //	Desconstructor
-CQ4::~CQ4()
+CB31EB::~CB31EB()
 {
 }
 
 //	Read element data from stream Input
-bool CQ4::Read(ifstream& Input, CMaterial* MaterialSets, CNode* NodeList)
+bool CB31EB::Read(ifstream& Input, CMaterial* MaterialSets, CNode* NodeList)
 {
 	unsigned int MSet;	// Material property set number
-	unsigned int N1, N2, N3, N4;	// first node number, second node number, third node number and fourth node number, Counterclockwise
+	unsigned int N1, N2;	// first node number, second node number
 
-	Input >> N1 >> N2 >> N3 >> N4 >> MSet;
-    ElementMaterial_ = dynamic_cast<CQ4Material*>(MaterialSets) + MSet - 1;
+	Input >> N1 >> N2 >> MSet;
+    ElementMaterial_ = dynamic_cast<CB31EBMaterial*>(MaterialSets) + MSet - 1;
 	nodes_[0] = &NodeList[N1 - 1];
 	nodes_[1] = &NodeList[N2 - 1];
-    nodes_[2] = &NodeList[N3 - 1];
-    nodes_[3] = &NodeList[N4 - 1];
 
 	return true;
 }
 
 //	Write element data to stream
-void CQ4::Write(COutputter& output)
+void CB31EB::Write(COutputter& output)
 {
 	output << setw(11) << nodes_[0]->NodeNumber
            << setw(11) << nodes_[1]->NodeNumber
@@ -60,7 +58,7 @@ void CQ4::Write(COutputter& output)
 
 //	Calculate element stiffness matrix 
 //	Upper triangular matrix, stored as an array column by colum starting from the diagonal element
-void CQ4::ElementStiffness(double* Matrix)  // use full integration here, then is reduced integration with hourglass control
+void CB31EB::ElementStiffness(double* Matrix)  // use full integration here, then is reduced integration with hourglass control
 {
 	clear(Matrix, SizeOfStiffnessMatrix());
 
@@ -118,7 +116,7 @@ void CQ4::ElementStiffness(double* Matrix)  // use full integration here, then i
 }
 
 //	Calculate element stress, for CST element, the strain and stress is constant 
-void CQ4::ElementStress(double* stress, double* Displacement)
+void CB31EB::ElementStress(double* stress, double* Displacement)
 {	    
 	CQ4Material* material_ = dynamic_cast<CQ4Material*>(ElementMaterial_);	// Pointer to material of the element
 
@@ -184,7 +182,7 @@ void CQ4::ElementStress(double* stress, double* Displacement)
 }
 
 // Calculate Q4 element shape function matrix N
-void CQ4::ElementShapeFunction(double (&N)[2][8], double xi, double eta)
+void CB31EB::ElementShapeFunction(double (&N)[2][8], double xi, double eta)
 {   
     double n[4] = {
         0.25 * (1.0 - xi) * (1.0 - eta),
@@ -199,7 +197,7 @@ void CQ4::ElementShapeFunction(double (&N)[2][8], double xi, double eta)
 }
 
 //!	Calculate derivative of Q4 element shape function matrix B and Jacobian determination
-void CQ4::ElementStrainFunction(double (&B)[3][8], double* det, double xi, double eta)
+void CB31EB::ElementStrainFunction(double (&B)[3][8], double* det, double xi, double eta)
 {
     // Calculate the Grad(N) matrix, natural coordinate
     double GN[2][4] = {
@@ -258,44 +256,3 @@ void CQ4::ElementStrainFunction(double (&B)[3][8], double* det, double xi, doubl
     B[2][6] = G[1][3];    
     B[2][7] = G[0][3];
 }
-
-//! Calcualte derivative of element shape function matrix DN at coordinate xt
-void CQ4::ElementDerivativeShapeFunction(double (&DN)[2][4], double xi, double eta)
-{
-    // Calculate the Grad(N) matrix, natural coordinate
-    double GN[2][4] = {
-        {0.25 * (eta - 1.0), 0.25 * (1.0 - eta), 0.25 * (1.0 + eta), 0.25 * (- eta - 1.0)},
-        {0.25 * (xi - 1.0), 0.25 * (- xi - 1.0), 0.25 * (1.0 + xi), 0.25 * (1.0 - xi)},
-    };
-    // x and y coordinates
-    double C[4][2];
-	for (unsigned int i = 0; i < 4; i++)
-	{
-		C[i][0] = nodes_[i]->XYZ[0];
-        C[i][1] = nodes_[i]->XYZ[1];
-    };   
-
-    // Calculate Jacobian matrix
-    double J[2][2] = {0};
-    for (unsigned int i = 0; i < 2; i++) 
-        for (unsigned int j = 0; j < 2; j++) 
-            for (unsigned int k = 0; k < 4; k++) 
-                J[i][j] += GN[i][k] * C[k][j];
-	// Calculate determinant of Jacobian
-    double det = J[0][0] * J[1][1] - J[0][1] * J[1][0];
-
-    // Calculate inverse matrix of Jacobian
-    double invJ[2][2];
-    double invDet = 1.0 / det;
-    invJ[0][0] =  J[1][1] * invDet;
-    invJ[0][1] = -J[0][1] * invDet;
-    invJ[1][0] = -J[1][0] * invDet;
-    invJ[1][1] =  J[0][0] * invDet;
-
-    // Calculate the Grad matrix, physical coordinate
-    for (unsigned int i = 0; i < 2; i++)
-        for (unsigned int j = 0; j < 4; j++)
-            for (unsigned int k = 0; k < 2; k++) 
-                DN[i][j] += invJ[i][k] * GN[k][j];
-}
-

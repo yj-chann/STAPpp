@@ -315,50 +315,97 @@ void COutputter::OutputQ4Elements(unsigned int EleGrp)
 	*this << endl;
 }
 
-	//	Output Q8 element data
-	void COutputter::OutputQ8Elements(unsigned int EleGrp)
+//	Output Q8 element data
+void COutputter::OutputQ8Elements(unsigned int EleGrp)
+{
+	CDomain* FEMData = CDomain::GetInstance();
+
+	CElementGroup& ElementGroup = FEMData->GetEleGrpList()[EleGrp];
+	unsigned int NUMMAT = ElementGroup.GetNUMMAT();
+
+	*this << " M A T E R I A L   D E F I N I T I O N" << endl
+		<< endl;
+	*this << " NUMBER OF DIFFERENT SETS OF MATERIAL" << endl;
+	*this << " AND CROSS-SECTIONAL  CONSTANTS  . . . .( NPAR(3) ) . . =" << setw(5) << NUMMAT
+		<< endl
+		<< endl;
+
+	*this << "  SET       YOUNG'S        POISSON'S        THICK        PLANE-" << endl
+		<< " NUMBER     MODULUS          RATIO          -NESS        STRAIN" << endl
+		<< "               E              nu              t           FLAG" << endl;
+
+	*this << setiosflags(ios::scientific) << setprecision(5);
+
+	//	Loop over for all property sets
+	for (unsigned int mset = 0; mset < NUMMAT; mset++)
 	{
-		CDomain* FEMData = CDomain::GetInstance();
+		*this << setw(5) << mset + 1;
+		ElementGroup.GetMaterial(mset).Write(*this);
+	}
 
-		CElementGroup& ElementGroup = FEMData->GetEleGrpList()[EleGrp];
-		unsigned int NUMMAT = ElementGroup.GetNUMMAT();
+	*this << endl << endl
+		<< " E L E M E N T   I N F O R M A T I O N" << endl;
 
-		*this << " M A T E R I A L   D E F I N I T I O N" << endl
-			<< endl;
-		*this << " NUMBER OF DIFFERENT SETS OF MATERIAL" << endl;
-		*this << " AND CROSS-SECTIONAL  CONSTANTS  . . . .( NPAR(3) ) . . =" << setw(5) << NUMMAT
-			<< endl
-			<< endl;
+	*this << " ELEMENT     NODE       NODE     	NODE     NODE       MATERIAL" << endl
+		<< " NUMBER-N      I          J        K        L       SET NUMBER" << endl;
 
-		*this << "  SET       YOUNG'S        POISSON'S        THICK        PLANE-" << endl
-			<< " NUMBER     MODULUS          RATIO          -NESS        STRAIN" << endl
-			<< "               E              nu              t           FLAG" << endl;
+	unsigned int NUME = ElementGroup.GetNUME();
 
-		*this << setiosflags(ios::scientific) << setprecision(5);
+	//	Loop over for all elements in group EleGrp
+	for (unsigned int Ele = 0; Ele < NUME; Ele++)
+	{
+		*this << setw(5) << Ele + 1;
+		ElementGroup[Ele].Write(*this);
+	}
 
-		//	Loop over for all property sets
-		for (unsigned int mset = 0; mset < NUMMAT; mset++)
-		{
-			*this << setw(5) << mset + 1;
-			ElementGroup.GetMaterial(mset).Write(*this);
-		}
+	*this << endl;
+	
+}
 
-		*this << endl << endl
-			<< " E L E M E N T   I N F O R M A T I O N" << endl;
+//	Output B21EB element data
+void COutputter::OutputB21EBElements(unsigned int EleGrp)
+{
+	CDomain* FEMData = CDomain::GetInstance();
 
-		*this << " ELEMENT     NODE       NODE     	NODE     NODE       MATERIAL" << endl
-			<< " NUMBER-N      I          J        K        L       SET NUMBER" << endl;
+	CElementGroup& ElementGroup = FEMData->GetEleGrpList()[EleGrp];
+	unsigned int NUMMAT = ElementGroup.GetNUMMAT();
 
-		unsigned int NUME = ElementGroup.GetNUME();
+	*this << " M A T E R I A L   D E F I N I T I O N" << endl
+		<< endl;
+	*this << " NUMBER OF DIFFERENT SETS OF MATERIAL" << endl;
+	*this << " AND CROSS-SECTIONAL  CONSTANTS  . . . .( NPAR(3) ) . . =" << setw(5) << NUMMAT
+		<< endl
+		<< endl;
 
-		//	Loop over for all elements in group EleGrp
-		for (unsigned int Ele = 0; Ele < NUME; Ele++)
-		{
-			*this << setw(5) << Ele + 1;
-			ElementGroup[Ele].Write(*this);
-		}
+	*this << "  SET       YOUNG'S        CROSS-SECTION      MOMENT OF " << endl
+		<< " NUMBER     MODULUS          	AREA          	INERTIA  " << endl
+		<< "               E              	  A              I      " << endl;
 
-		*this << endl;
+	*this << setiosflags(ios::scientific) << setprecision(5);
+
+	//	Loop over for all property sets
+	for (unsigned int mset = 0; mset < NUMMAT; mset++)
+	{
+		*this << setw(5) << mset + 1;
+		ElementGroup.GetMaterial(mset).Write(*this);
+	}
+
+	*this << endl << endl
+		<< " E L E M E N T   I N F O R M A T I O N" << endl;
+
+	*this << " ELEMENT     NODE       NODE        MATERIAL" << endl
+		<< " NUMBER-N      I          J      SET NUMBER" << endl;
+
+	unsigned int NUME = ElementGroup.GetNUME();
+
+	//	Loop over for all elements in group EleGrp
+	for (unsigned int Ele = 0; Ele < NUME; Ele++)
+	{
+		*this << setw(5) << Ele + 1;
+		ElementGroup[Ele].Write(*this);
+	}
+
+	*this << endl;
 	
 }
 
