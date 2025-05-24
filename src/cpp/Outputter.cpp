@@ -150,6 +150,8 @@ void COutputter::OutputElementInfo()
 		*this << "     EQ.1, TRUSS ELEMENTS" << endl
 			  << "     EQ.2, ELEMENTS CURRENTLY" << endl
 			  << "     EQ.3, NOT AVAILABLE" << endl
+			  << "     EQ.4, Q8" << endl
+		      << "     EQ.7, H8" << endl
 			  << endl;
 
 		*this << " NUMBER OF ELEMENTS. . . . . . . . . . .( NPAR(2) ) . . =" << setw(5) << NUME
@@ -168,6 +170,9 @@ void COutputter::OutputElementInfo()
 				OutputQ4Elements(EleGrp);
 				break;
 			case ElementTypes::Q8: // Q8 element
+				OutputQ8Elements(EleGrp);
+				break;
+			case ElementTypes::H8: // H8 element
 				OutputQ8Elements(EleGrp);
 				break;
 		    default:
@@ -325,9 +330,7 @@ void COutputter::OutputQ8Elements(unsigned int EleGrp)
 
 	*this << " M A T E R I A L   D E F I N I T I O N" << endl
 		<< endl;
-	*this << " NUMBER OF DIFFERENT SETS OF MATERIAL" << endl;
-	*this << " AND CROSS-SECTIONAL  CONSTANTS  . . . .( NPAR(3) ) . . =" << setw(5) << NUMMAT
-		<< endl
+	*this << " NUMBER OF DIFFERENT SETS OF MATERIAL" << setw(5) << NUMMAT<< endl
 		<< endl;
 
 	*this << "  SET       YOUNG'S        POISSON'S        THICK        PLANE-" << endl
@@ -346,8 +349,8 @@ void COutputter::OutputQ8Elements(unsigned int EleGrp)
 	*this << endl << endl
 		<< " E L E M E N T   I N F O R M A T I O N" << endl;
 
-	*this << " ELEMENT     NODE       NODE     	NODE     NODE       MATERIAL" << endl
-		<< " NUMBER-N      I          J        K        L       SET NUMBER" << endl;
+	*this << " ELEMENT     NODE       NODE     	NODE      NODE      NODE       NODE        NODE        NODE        MATERIAL" << endl
+		<< " NUMBER-N      I          J         K         L         M          N           O           P          SET NUMBER" << endl;
 
 	unsigned int NUME = ElementGroup.GetNUME();
 
@@ -360,6 +363,51 @@ void COutputter::OutputQ8Elements(unsigned int EleGrp)
 
 	*this << endl;
 	
+}
+
+//	Output H8 element data
+void COutputter::OutputH8Elements(unsigned int EleGrp)
+{
+	CDomain* FEMData = CDomain::GetInstance();
+
+	CElementGroup& ElementGroup = FEMData->GetEleGrpList()[EleGrp];
+	unsigned int NUMMAT = ElementGroup.GetNUMMAT();
+
+	*this << " M A T E R I A L   D E F I N I T I O N" << endl
+		<< endl;
+	*this << " NUMBER OF DIFFERENT SETS OF MATERIAL" << setw(5) << NUMMAT << endl
+		<< endl;
+
+	*this << "  SET       YOUNG'S        POISSON'S       " << endl
+		<< " NUMBER     MODULUS          RATIO          " << endl
+		<< "               E              nu            " << endl;
+
+	*this << setiosflags(ios::scientific) << setprecision(5);
+
+	//	Loop over for all property sets
+	for (unsigned int mset = 0; mset < NUMMAT; mset++)
+	{
+		*this << setw(5) << mset + 1;
+		ElementGroup.GetMaterial(mset).Write(*this);
+	}
+
+	*this << endl << endl
+		<< " E L E M E N T   I N F O R M A T I O N" << endl;
+
+	*this << " ELEMENT     NODE       NODE     	NODE      NODE      NODE       NODE        NODE        NODE        MATERIAL" << endl
+		  << " NUMBER-N      I          J         K         L         M          N           O           P          SET NUMBER" << endl;
+
+	unsigned int NUME = ElementGroup.GetNUME();
+
+	//	Loop over for all elements in group EleGrp
+	for (unsigned int Ele = 0; Ele < NUME; Ele++)
+	{
+		*this << setw(5) << Ele + 1;
+		ElementGroup[Ele].Write(*this);
+	}
+
+	*this << endl;
+
 }
 
 //	Output B21EB element data
@@ -408,6 +456,8 @@ void COutputter::OutputB21EBElements(unsigned int EleGrp)
 	*this << endl;
 	
 }
+
+
 
 //	Print load data
 void COutputter::OutputLoadInfo()
@@ -492,10 +542,10 @@ void COutputter::OutputLoadInfo()
 				<< endl;
 
 			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
-			*this << "     NUMBER OF BODY FORCES OF Q8 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
+			*this << "     BODY FORCES OF Q8 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
 				<< endl;
-			*this << " ELEMENT      BX1-LOAD      	BY1-LOAD      	BX2-LOAD      	BY2-LOAD      	BX3-LOAD      	BY3-LOAD      	BX4-LOAD      	BY4-LOAD      	BX5-LOAD      	BY5-LOAD      	BX6-LOAD      	BY6-LOAD      	BX7-LOAD      	BY7-LOAD      	BX8-LOAD      	BY8-LOAD" << endl
-				<< " NUMBER	MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE	  MAGNITUDE" << endl;
+			*this << " ELEMENT      BX1-LOAD      BY1-LOAD      BX2-LOAD      BY2-LOAD      BX3-LOAD      BY3-LOAD      BX4-LOAD      BY4-LOAD      BX5-LOAD      BY5-LOAD      BX6-LOAD      BY6-LOAD      BX7-LOAD      BY7-LOAD      BX8-LOAD      BY8-LOAD" << endl
+				<< " NUMBER       MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE" << endl;
 			break;
 		case 8:	// All surface forces of Q8 element
 			*this << setiosflags(ios::scientific);
@@ -503,12 +553,34 @@ void COutputter::OutputLoadInfo()
 				<< endl;
 
 			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
-			*this << "     NUMBER OF SURFACE  FORCES OF Q8 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
+			*this << "     SURFACE  FORCES OF Q8 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
 				<< endl;
-			*this << " ELEMENT       1-NODE       2-NODE       3-NODE     	TX1-LOAD      	TY1-LOAD      	TX2-LOAD      	TY2-LOAD      	TX3-LOAD      	TY3-LOAD" << endl
-				<< " NUMBER	       NUMBER       NUMBER       NUMBER         MAGNITUDE	  MAGNITUDE     MAGNITUDE     MAGNITUDE	    MAGNITUDE	   MAGNITUDE" << endl;
+			*this << " ELEMENT       1-NODE        2-NODE        3-NODE        TX1-LOAD       TY1-LOAD       TX2-LOAD       TY2-LOAD       TX3-LOAD       TY3-LOAD" << endl
+				<< " NUMBER        NUMBER        NUMBER        NUMBER        MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE" << endl;
 			break;
 
+		case 11:	// All body forces of H8 element
+			*this << setiosflags(ios::scientific);
+			*this << " L O A D   C A S E   D A T A" << endl
+				<< endl;
+
+			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
+			*this << "     BODY FORCES OF H8 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
+				<< endl;
+			*this << " ELEMENT      BX1-LOAD      BY1-LOAD      BZ1-LOAD      BX2-LOAD      BY2-LOAD      BZ2-LOAD      BX3-LOAD      BY3-LOAD      BZ3-LOAD      BX4-LOAD      BY4-LOAD      BZ4-LOAD      BX5-LOAD      BY5-LOAD      BZ5-LOAD      BX6-LOAD      BY6-LOAD      BZ6-LOAD      BX7-LOAD      BY7-LOAD      BZ7-LOAD      BX8-LOAD      BY8-LOAD      BZ8-LOAD " << endl
+				<< " NUMBER       MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE" << endl;
+			break;
+		case 12:	// All surface forces of H8 element
+			*this << setiosflags(ios::scientific);
+			*this << " L O A D   C A S E   D A T A" << endl
+				<< endl;
+
+			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
+			*this << "     SURFACE  FORCES OF H8 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
+				<< endl;
+			*this << " ELEMENT       1-NODE        2-NODE        3-NODE        4-NODE        TX1-LOAD       TY1-LOAD       TZ1-LOAD       TX2-LOAD       TY2-LOAD       TZ2-LOAD       TX3-LOAD       TY3-LOAD       TZ3-LOAD       TX4-LOAD       TY4-LOAD       TZ4-LOAD" << endl
+				<< " NUMBER        NUMBER        NUMBER        NUMBER        NUMBER        MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE" << endl;
+			break;
 		default:
 			std::cerr << "LodaCase " << LoadData->LoadCaseType_ << " not available. See COutputter::OutputLoadInfo." << std::endl;
 			exit(5);
@@ -640,7 +712,29 @@ void COutputter::OutputElementStress()
 					for (unsigned int i = 0; i < 4; i++)
 					{
 						*this << setw(8) << Ele + 1 << "-" << setw(1) << i + 1 << setw(22) << coord_stress_Q4[5 * i] << setw(22) << coord_stress_Q4[5 * i + 1]
-							<< setw(18) << coord_stress_Q4[5 * i + 2] << setw(22) << coord_stress_Q4[5 * i + 3] << setw(22) << coord_stress_Q4[5 * i + 4] << endl;
+							<< setw(18) << coord_stress_Q4[5 * i + 2] << setw(22) << coord_stress_Q4[5 * i + 3] << setw(22) << coord_stress_Q4[5 * i + 4] <<setw(8)<< 2<<endl;
+					}
+				}
+
+				*this << endl;
+
+				break;
+			}
+			case ElementTypes::H8: // H8 element
+			{
+				*this << "ELEMENT NUMBER   x-coord      y-coord      z-coord     Sigma_xx     Sigma_yy     Sigma_zz     Sigma_xy     Sigma_xz     Sigma_yz" << endl
+					<< "GAUSSPOINT NUMBER" << endl;
+
+				double coord_stress_H8[72] = { 0 };// 2x2x2 Gauss Points
+
+				for (unsigned int Ele = 0; Ele < NUME; Ele++)
+				{
+					CElement& Element = EleGrp[Ele];
+					Element.ElementStress(coord_stress_H8, Displacement);
+					for (unsigned int i = 0; i < 8; i++)
+					{
+						*this << setw(8) << Ele + 1 << "-" << setw(1) << i + 1 << setw(22) << coord_stress_H8[9 * i] << setw(22) << coord_stress_H8[9 * i + 1]
+							<< setw(18) << coord_stress_H8[9 * i + 2] << setw(22) << coord_stress_H8[9 * i + 3] << setw(22) << coord_stress_H8[9 * i + 4] << setw(22) << coord_stress_H8[9 * i + 5] << setw(22) << coord_stress_H8[9 * i + 6] << setw(22) << coord_stress_H8[9 * i + 7] << setw(22) << coord_stress_H8[9 * i + 8]<<setw(8)<<2 << endl;
 					}
 				}
 
