@@ -124,16 +124,18 @@ public:
 	virtual void Write(COutputter& output);
 };
 
-//!	Material class for B31EB element
-class CB31EBMaterial : public CMaterial
+//!	Material class for B31 element
+class CB31Material : public CMaterial
 {
 public:
 
+	double nu;        //!< Poisson's ratio
 	double G;  		  //!< Shear modulus
 	double Area;	  //!< Sectional area of a bar element
 	double Iy;	  	  //!< Moment of inertia of the x'z' cross-section
 	double Iz;	  	  //!< Moment of inertia of the x'y' cross-section
 	double J;	  	  //!< Torsional Moment of Inertia
+	double k;		  //!< Correction factor (shear area ratio)
 
 public:
 

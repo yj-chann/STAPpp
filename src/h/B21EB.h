@@ -34,7 +34,7 @@ public:
 //!	Calculate element stiffness matrix
 	virtual void ElementStiffness(double* Matrix);
 
-//!	Calculate element stress
+//!	Calculate element stress, for Beam element, they are moment and shear force in Gausspoints
 	virtual void ElementStress(double* stress, double* Displacement);
 
 //!	Calculate element shape function matrix N at parent coordinate xi
