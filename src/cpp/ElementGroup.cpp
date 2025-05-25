@@ -78,6 +78,10 @@ void CElementGroup::CalculateMemberSize()
             ElementSize_ = sizeof(CQ8);
             MaterialSize_ = sizeof(CQ8Material);
             break;
+        case ElementTypes::H8:
+            ElementSize_ = sizeof(CH8);
+            MaterialSize_ = sizeof(CH8Material);
+            break;
         case ElementTypes::B21EB:
             ElementSize_ = sizeof(CB31EB);
             MaterialSize_ = sizeof(CB31EB);
@@ -110,6 +114,9 @@ void CElementGroup::AllocateElements(std::size_t size)
         case ElementTypes::Q8:
             ElementList_ = new CQ8[size];
             break;
+        case ElementTypes::H8:
+            ElementList_ = new CH8[size];
+            break;
         case ElementTypes::B21EB:
             ElementList_ = new CB21EB[size];
             break;
@@ -138,6 +145,9 @@ void CElementGroup::AllocateMaterials(std::size_t size)
             break;
         case ElementTypes::Q8:
             MaterialList_ = new CQ8Material[size];
+            break;
+        case ElementTypes::H8:
+            MaterialList_ = new CH8Material[size];
             break;
         case ElementTypes::B21EB:
             MaterialList_ = new CB21EBMaterial[size];

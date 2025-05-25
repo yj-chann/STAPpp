@@ -81,6 +81,22 @@ void CQ8Material::Write(COutputter& output)
 }
 
 //	Read material data from stream Input
+bool CH8Material::Read(ifstream& Input)
+{
+	Input >> nset;	// Number of property set
+
+	Input >> E >> nu ;	// Young's modulus, Poisson's ratio, element thickness and Plane Strain or not
+
+	return true;
+}
+
+//	Write material data to Stream
+void CH8Material::Write(COutputter& output)
+{
+	output << setw(16) << E << setw(16) << nu << endl;
+}
+
+//	Read material data from stream Input
 bool CB21EBMaterial::Read(ifstream& Input)
 {
 	Input >> nset;	// Number of property set

@@ -17,6 +17,7 @@
 #include "CST.h"
 #include "Q4.h"
 #include "Q8.h"
+#include "H8.h"
 #include "B21EB.h"
 #include "B31EB.h"
 #include "Material.h"
@@ -31,10 +32,10 @@ enum ElementTypes
     Bar,    // Bar element
     CST,    // T3 element, constant-strain triangle
     Q4,     // Q4 element
-    Q8,     // Q8 element    
+    Q8,     // Q8 element  #4  
     B21EB,  // Beam21(Euler-Bernoulli) element
     B31EB,  // Beam31(Euler-Bernoulli) element
-    H8,     // 8H element
+    H8,     // H8 element #7
     Beam,   // Beam element
     Plate,  // Plate element
     Shell   // Shell elment
