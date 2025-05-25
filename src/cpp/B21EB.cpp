@@ -142,7 +142,7 @@ void CB21EB::ElementStiffness(double* Matrix)  // Local stiffness matrix can be 
     }
 }
 
-//	Calculate element stress, for CST element, the strain and stress is constant 
+//	Calculate element stress, for Beam element, they are moment and shear force in Gausspoints
 void CB21EB::ElementStress(double* stress, double* Displacement)
 {	    
 	CB21EBMaterial* material_ = dynamic_cast<CB21EBMaterial*>(ElementMaterial_);	// Pointer to material of the element
@@ -150,6 +150,36 @@ void CB21EB::ElementStress(double* stress, double* Displacement)
 	double E = material_->E;
     double Area = material_->Area;
 	double I = material_->I;
+
+//	Calculate beam length
+	double DX[2];		//	dx = x2-x1, dy = y2-y1
+	for (unsigned int i = 0; i < 2; i++)
+		DX[i] = nodes_[1]->XYZ[i] - nodes_[0]->XYZ[i];
+
+	double DX2[3];	//  Quadratic polynomial (dx^2, dy^2, dx*dy)
+	DX2[0] = DX[0] * DX[0];
+	DX2[1] = DX[1] * DX[1];
+	DX2[2] = DX[0] * DX[1];
+
+	double L2 = DX2[0] + DX2[1];
+	double L = sqrt(L2);
+
+// Calculate direction cosine matrix
+    double cos = DX[0] / L; // Cosine of angle between beam and x-axis
+    double sin = DX[1] / L;
+
+// Calculate transformation Matrix
+    double Te[6][6] = {0};
+    Te[0][0] = cos;
+    Te[0][1] = sin;
+    Te[1][0] = -sin;
+    Te[1][1] = cos;
+    Te[2][2] = 1.0;
+    Te[3][3] = cos;
+    Te[3][1] = sin;
+    Te[4][3] = -sin;
+    Te[4][4] = cos;
+    Te[5][5] = 1.0;
 
 // x and y coordinates, and rotation angle
     double C[6];
@@ -161,10 +191,21 @@ void CB21EB::ElementStress(double* stress, double* Displacement)
     };   
 
 //  Get element displacement vector
-	double d[6] = {0};
+	double d_global[6] = {0};
 	for (unsigned int i = 0; i < 6; i++)
 		if (LocationMatrix_[i])
-			d[i] = Displacement[LocationMatrix_[i]-1];
+			d_global[i] = Displacement[LocationMatrix_[i]-1];
+
+    double d[6] = {0};
+    for (int i = 0; i < 6; i++)
+        for (int j = 0; j < 6; j++)
+            d[i] += Te[i][j] * d_global[j];
+
+    double d_beam[4] = {0};
+    d_beam[0] = d[1];
+    d_beam[1] = d[2];
+    d_beam[2] = d[4];
+    d_beam[3] = d[5];
 
 // Calculate element stress , sigma = D * B * d
     double GaussPoints[2] = {
@@ -181,9 +222,10 @@ void CB21EB::ElementStress(double* stress, double* Displacement)
         stress[4*index] += (C[0] + C[3]) / 2.0 + (C[3] - C[0]) / 2.0 * GaussPoints[gp];
         stress[4*index+1] += (C[1] + C[4]) / 2.0 + (C[4] - C[1]) / 2.0 * GaussPoints[gp];
         for (int i = 0; i < 4; i++)
-            stress[4*index+2] += E * I * B[i] * d[i];
+            stress[4*index+2] += E * I * B[i] * d_beam[i];
         for (int i = 0; i < 4; i++)
-            stress[4*index+3] += -E * I * S[i] * d[i];
+            stress[4*index+3] += -E * I * S[i] * d_beam[i];
+        index++;
     }
 }
 

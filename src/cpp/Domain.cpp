@@ -580,7 +580,6 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 		}	
 		break;		
 	}
-	
 	case 7:	// All body forces of Q8 element
 	{
 		unsigned int EleGrp = 0;
