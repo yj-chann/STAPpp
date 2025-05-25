@@ -113,17 +113,19 @@ void CB21EBMaterial::Write(COutputter& output)
 }
 
 //	Read material data from stream Input
-bool CB31EBMaterial::Read(ifstream& Input)
+bool CB31Material::Read(ifstream& Input)
 {
 	Input >> nset;	// Number of property set
 
-	Input >> E >> G >> Area >> Iy >> Iz >> J;	// Young's modulus, Shear modulus, Cross-section area, Moment of inertia, Torsional Moment
+	Input >> E >> nu >> Area >> Iy >> Iz >> J >> k;	// Young's modulus, Shear modulus, Cross-section area, Moment of inertia, Torsional Moment, Correction factor
+
+	G = E / 2.0 / (1 + nu);
 
 	return true;
 }
 
 //	Write material data to Stream
-void CB31EBMaterial::Write(COutputter& output)
+void CB31Material::Write(COutputter& output)
 {
-	output << setw(16) << E << setw(16) << G << setw(16) << Area << setw(16) << Iy << setw(16) << Iz << setw(16) << J << endl;
+	output << setw(16) << E << setw(16) << G << setw(16) << Area << setw(16) << Iy << setw(16) << Iz << setw(16) << J << setw(16) << k << endl;
 }

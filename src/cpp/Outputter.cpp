@@ -115,8 +115,8 @@ void COutputter::OutputEquationNumber()
 
 	*this << " EQUATION NUMBERS" << endl
 		  << endl;
-	*this << "   NODE NUMBER   DEGREES OF FREEDOM" << endl;
-	*this << "        N           X    Y    Z" << endl;
+	*this << "   NODE NUMBER   DEGREES 	OF 	FREEDOM" << endl;
+	*this << "        N           X    Y    Z    x    y    z" << endl;
 
 	for (unsigned int np = 0; np < NUMNP; np++) // Loop over for all node
 		NodeList[np].WriteEquationNo(*this);
@@ -171,6 +171,12 @@ void COutputter::OutputElementInfo()
 				break;
 			case ElementTypes::Q8: // Q8 element
 				OutputQ8Elements(EleGrp);
+				break;
+			case ElementTypes::B21EB: // B21EB element, Euler-Bernoulli
+				OutputB21EBElements(EleGrp);
+				break;
+			case ElementTypes::B31: // B31 element
+				OutputB31Elements(EleGrp);
 				break;
 			case ElementTypes::H8: // H8 element
 				OutputQ8Elements(EleGrp);
@@ -457,6 +463,52 @@ void COutputter::OutputB21EBElements(unsigned int EleGrp)
 	
 }
 
+//	Output B31 element data
+void COutputter::OutputB31Elements(unsigned int EleGrp)
+{
+	CDomain* FEMData = CDomain::GetInstance();
+
+	CElementGroup& ElementGroup = FEMData->GetEleGrpList()[EleGrp];
+	unsigned int NUMMAT = ElementGroup.GetNUMMAT();
+
+	*this << " M A T E R I A L   D E F I N I T I O N" << endl
+		<< endl;
+	*this << " NUMBER OF DIFFERENT SETS OF MATERIAL" << endl;
+	*this << " AND CROSS-SECTIONAL  CONSTANTS  . . . .( NPAR(3) ) . . =" << setw(5) << NUMMAT
+		<< endl
+		<< endl;
+
+	*this << "  SET       YOUNG'S       SHEAR       CROSS-SECTION      MOMENT OF      MOMENT OF      MOMENT OF      CORRECTION" << endl
+		<< " NUMBER     MODULUS     MODULUS          AREA          	INERTIA-y      INERTIA-z      TORSION      	FACTOR  " << endl
+		<< "               E            G             A              Iy		Iz		J		k      " << endl;
+
+	*this << setiosflags(ios::scientific) << setprecision(5);
+
+	//	Loop over for all property sets
+	for (unsigned int mset = 0; mset < NUMMAT; mset++)
+	{
+		*this << setw(5) << mset + 1;
+		ElementGroup.GetMaterial(mset).Write(*this);
+	}
+
+	*this << endl << endl
+		<< " E L E M E N T   I N F O R M A T I O N" << endl;
+
+	*this << " ELEMENT     NODE       NODE        MATERIAL" << endl
+		<< " NUMBER-N      I          J      SET NUMBER" << endl;
+
+	unsigned int NUME = ElementGroup.GetNUME();
+
+	//	Loop over for all elements in group EleGrp
+	for (unsigned int Ele = 0; Ele < NUME; Ele++)
+	{
+		*this << setw(5) << Ele + 1;
+		ElementGroup[Ele].Write(*this);
+	}
+
+	*this << endl;
+	
+}
 
 
 //	Print load data
@@ -604,7 +656,7 @@ void COutputter::OutputNodalDisplacement()
 
 	*this << " D I S P L A C E M E N T S" << endl
 		  << endl;
-	*this << "  NODE            X-DISPLACEMENT    Y-DISPLACEMENT    Z-DISPLACEMENT" << endl;
+	*this << "  NODE            X-DISPLACEMENT    Y-DISPLACEMENT    Z-DISPLACEMENT    X-ROTATION    Y-ROTATION    Z-ROTATION" << endl;
 
 	for (unsigned int np = 0; np < FEMData->GetNUMNP(); np++)
 		NodeList[np].WriteNodalDisplacement(*this, Displacement);
@@ -679,13 +731,12 @@ void COutputter::OutputElementStress()
 			case ElementTypes::Q4: // Q4 element
 			{
 			    *this << "ELEMENT NUMBER	  	x-coord	    	    y-coord           Sigma_xx             sigma_yy               Sigma_xy" << endl
-					<< "GAUSSPOINT NUMBER" << endl;
-
-				double coord_stress_Q4[20] = {0};
+					<< "GAUSSPOINT NUMBER" << endl;				
 
 				for (unsigned int Ele = 0; Ele < NUME; Ele++)
-				{
+				{	
 					CElement& Element = EleGrp[Ele];
+					double coord_stress_Q4[20] = {0};  // 2x2 Gauss Points
 					Element.ElementStress(coord_stress_Q4, Displacement);
 					for (unsigned int i = 0; i < 4; i++)
 					{
@@ -698,21 +749,21 @@ void COutputter::OutputElementStress()
 
 				break;
 			}	
+
 			case ElementTypes::Q8: // Q8 element
 			{
 				*this << "ELEMENT NUMBER	  	x-coord	    	    y-coord           Sigma_xx             sigma_yy               Sigma_xy" << endl
 					<< "GAUSSPOINT NUMBER" << endl;
 
-				double coord_stress_Q4[20] = { 0 };// 2x2 Gauss Points
-
 				for (unsigned int Ele = 0; Ele < NUME; Ele++)
 				{
 					CElement& Element = EleGrp[Ele];
-					Element.ElementStress(coord_stress_Q4, Displacement);
+					double coord_stress_Q8[20] = {0}; // 2x2 Gauss Points
+					Element.ElementStress(coord_stress_Q8, Displacement);
 					for (unsigned int i = 0; i < 4; i++)
 					{
-						*this << setw(8) << Ele + 1 << "-" << setw(1) << i + 1 << setw(22) << coord_stress_Q4[5 * i] << setw(22) << coord_stress_Q4[5 * i + 1]
-							<< setw(18) << coord_stress_Q4[5 * i + 2] << setw(22) << coord_stress_Q4[5 * i + 3] << setw(22) << coord_stress_Q4[5 * i + 4] <<setw(8)<< 2<<endl;
+						*this << setw(8) << Ele + 1 << "-" << setw(1) << i + 1 << setw(22) << coord_stress_Q8[5*i] << setw(22) << coord_stress_Q8[5*i+1]
+							<< setw(18) << coord_stress_Q8[5*i+2] << setw(22) << coord_stress_Q8[5*i+3] << setw(22) << coord_stress_Q8[5*i+4] << endl;
 					}
 				}
 
@@ -720,21 +771,46 @@ void COutputter::OutputElementStress()
 
 				break;
 			}
-			case ElementTypes::H8: // H8 element
-			{
-				*this << "ELEMENT NUMBER   x-coord      y-coord      z-coord     Sigma_xx     Sigma_yy     Sigma_zz     Sigma_xy     Sigma_xz     Sigma_yz" << endl
-					<< "GAUSSPOINT NUMBER" << endl;
 
-				double coord_stress_H8[72] = { 0 };// 2x2x2 Gauss Points
+			case ElementTypes::B21EB: // B21EB element, Euler-Bernoulli
+			{
+				*this << "ELEMENT NUMBER	  	x-coord	    	    y-coord           Moment             Shear Force" << endl
+					<< "GAUSSPOINT NUMBER" << endl;
 
 				for (unsigned int Ele = 0; Ele < NUME; Ele++)
 				{
 					CElement& Element = EleGrp[Ele];
+					double coord_stress_B21EB[8] = {0};// 2 Gauss Points
+					Element.ElementStress(coord_stress_B21EB, Displacement);
+					for (unsigned int i = 0; i < 2; i++)
+					{
+						*this << setw(8) << Ele + 1 << "-" << setw(1) << i + 1 << setw(22) << coord_stress_B21EB[4*i] << setw(22) << coord_stress_B21EB[4*i+1]
+							<< setw(18) << coord_stress_B21EB[4*i+2] << setw(22) << coord_stress_B21EB[4*i+3]  << endl;
+					}
+				}
+
+				*this << endl;
+
+				break;
+			}
+			
+			case ElementTypes::H8: // H8 element
+			{
+				*this << "ELEMENT NUMBER   x-coord      y-coord      z-coord           Sigma_xx           Sigma_yy           Sigma_zz           Sigma_xy           Sigma_xz           Sigma_yz" << endl
+					<< "GAUSSPOINT NUMBER" << endl;
+			
+				for (unsigned int Ele = 0; Ele < NUME; Ele++)
+				{
+					CElement& Element = EleGrp[Ele];
+					double coord_stress_H8[72] = {0};// 2x2x2 Gauss Points
 					Element.ElementStress(coord_stress_H8, Displacement);
 					for (unsigned int i = 0; i < 8; i++)
 					{
-						*this << setw(8) << Ele + 1 << "-" << setw(1) << i + 1 << setw(22) << coord_stress_H8[9 * i] << setw(22) << coord_stress_H8[9 * i + 1]
-							<< setw(18) << coord_stress_H8[9 * i + 2] << setw(22) << coord_stress_H8[9 * i + 3] << setw(22) << coord_stress_H8[9 * i + 4] << setw(22) << coord_stress_H8[9 * i + 5] << setw(22) << coord_stress_H8[9 * i + 6] << setw(22) << coord_stress_H8[9 * i + 7] << setw(22) << coord_stress_H8[9 * i + 8]<<setw(8)<<2 << endl;
+						*this << setw(3) << Ele + 1 << "-" << setw(1) << i + 1 << setw(18) << coord_stress_H8[9*i] 
+							<< setw(15) << coord_stress_H8[9*i+1] << setw(15) << coord_stress_H8[9*i+2] 
+							<< setw(18) << coord_stress_H8[9*i+3] << setw(18) << coord_stress_H8[9*i+4] 
+							<< setw(18) << coord_stress_H8[9*i+5] << setw(22) << coord_stress_H8[9*i+6] 
+							<< setw(18) << coord_stress_H8[9*i+7] << setw(18) << coord_stress_H8[9*i+8] << endl; //<< setw(8)<< 2 << endl;
 					}
 				}
 
