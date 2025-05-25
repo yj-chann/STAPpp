@@ -1,5 +1,5 @@
 TITLE :  STAP90 input data for example with 10 B31 element, Timoshenko Beam theory, slope
-        (20:13:23 on May 24, 2025, Saturday)
+        (11:3:8 on May 25, 2025, Sunday)
 
 C O N T R O L   I N F O R M A T I O N
 
@@ -29,7 +29,7 @@ C O N T R O L   I N F O R M A T I O N
  EQUATION NUMBERS
 
    NODE NUMBER   DEGREES 	OF 	FREEDOM
-        N           X    Y    Z	Angle:X  Y  Z
+        N           X    Y    Z    x    y    z
         1           0    0    0    0    0    0
         2           1    2    3    4    5    6
         3           7    8    9   10   11   12
@@ -65,6 +65,8 @@ C O N T R O L   I N F O R M A T I O N
      EQ.1, TRUSS ELEMENTS
      EQ.2, ELEMENTS CURRENTLY
      EQ.3, NOT AVAILABLE
+     EQ.4, Q8
+     EQ.7, H8
 
  NUMBER OF ELEMENTS. . . . . . . . . . .( NPAR(2) ) . . =   10
 
@@ -121,9 +123,9 @@ C O N T R O L   I N F O R M A T I O N
 
  S O L U T I O N   T I M E   L O G   I N   S E C 
 
-     TIME FOR INPUT PHASE = 8.80000e-02
+     TIME FOR INPUT PHASE = 5.90000e-02
      TIME FOR CALCULATION OF STIFFNESS MATRIX = 1.00000e-03
      TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 2.80000e-02
 
-     T O T A L   S O L U T I O N   T I M E = 1.17000e-01
+     T O T A L   S O L U T I O N   T I M E = 8.80000e-02
 

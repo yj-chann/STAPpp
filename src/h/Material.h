@@ -107,6 +107,24 @@ public:
 	virtual void Write(COutputter& output);
 };
 
+//!	Material class for H8 element
+class CH8Material : public CMaterial
+{
+public:
+
+	double nu;        //!< Poisson's ratio of a H8 element
+
+
+public:
+
+	//!	Read material data from stream Input
+	virtual bool Read(ifstream& Input);
+
+	//!	Write material data to Stream
+	virtual void Write(COutputter& output);
+};
+
+
 //!	Material class for B21EB element
 class CB21EBMaterial : public CMaterial
 {

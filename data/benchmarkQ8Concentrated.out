@@ -1,5 +1,5 @@
 TITLE :  STAP90 input data for example 4.1 with 1 Q4 element, together with benchmark-8
-        (10:33:13 on May 21, 2025, Wednesday)
+        (10:44:47 on May 25, 2025, Sunday)
 
 C O N T R O L   I N F O R M A T I O N
 
@@ -25,16 +25,16 @@ C O N T R O L   I N F O R M A T I O N
 
  EQUATION NUMBERS
 
-   NODE NUMBER   DEGREES OF FREEDOM
-        N           X    Y    Z
-        1           0    0    0
-        2           0    0    0
-        3           1    2    0
-        4           3    4    0
-        5           0    0    0
-        6           5    6    0
-        7           7    8    0
-        8           9   10    0
+   NODE NUMBER   DEGREES 	OF 	FREEDOM
+        N           X    Y    Z    x    y    z
+        1           0    0    0  N/A  N/A  N/A
+        2           0    0    0  N/A  N/A  N/A
+        3           1    2    0  N/A  N/A  N/A
+        4           3    4    0  N/A  N/A  N/A
+        5           0    0    0  N/A  N/A  N/A
+        6           5    6    0  N/A  N/A  N/A
+        7           7    8    0  N/A  N/A  N/A
+        8           9   10    0  N/A  N/A  N/A
 
  L O A D   C A S E   D A T A
 
@@ -54,13 +54,14 @@ C O N T R O L   I N F O R M A T I O N
      EQ.1, TRUSS ELEMENTS
      EQ.2, ELEMENTS CURRENTLY
      EQ.3, NOT AVAILABLE
+     EQ.4, Q8
+     EQ.7, H8
 
  NUMBER OF ELEMENTS. . . . . . . . . . .( NPAR(2) ) . . =    1
 
  M A T E R I A L   D E F I N I T I O N
 
- NUMBER OF DIFFERENT SETS OF MATERIAL
- AND CROSS-SECTIONAL  CONSTANTS  . . . .( NPAR(3) ) . . =    1
+ NUMBER OF DIFFERENT SETS OF MATERIAL    1
 
   SET       YOUNG'S        POISSON'S        THICK        PLANE-
  NUMBER     MODULUS          RATIO          -NESS        STRAIN
@@ -69,8 +70,8 @@ C O N T R O L   I N F O R M A T I O N
 
 
  E L E M E N T   I N F O R M A T I O N
- ELEMENT     NODE       NODE     	NODE     NODE       MATERIAL
- NUMBER-N      I          J        K        L       SET NUMBER
+ ELEMENT     NODE       NODE     	NODE      NODE      NODE       NODE        NODE        NODE        MATERIAL
+ NUMBER-N      I          J         K         L         M          N           O           P          SET NUMBER
     1          1          2          3          4          5          6          7          8           1
 
 	TOTAL SYSTEM DATA
@@ -83,15 +84,15 @@ C O N T R O L   I N F O R M A T I O N
 
  D I S P L A C E M E N T S
 
-  NODE            X-DISPLACEMENT    Y-DISPLACEMENT    Z-DISPLACEMENT
-    1               0.00000e+00       0.00000e+00       0.00000e+00
-    2               0.00000e+00       0.00000e+00       0.00000e+00
-    3              -3.72303e-06      -3.72981e-05       0.00000e+00
-    4               1.26483e-05      -3.91478e-05       0.00000e+00
-    5               0.00000e+00       0.00000e+00       0.00000e+00
-    6              -5.21728e-06      -1.06741e-05       0.00000e+00
-    7               3.89659e-06      -3.78413e-05       0.00000e+00
-    8               7.32772e-06      -1.01948e-05       0.00000e+00
+  NODE            X-DISPLACEMENT    Y-DISPLACEMENT    Z-DISPLACEMENT    X-ROTATION    Y-ROTATION    Z-ROTATION
+    1               0.00000e+00       0.00000e+00       0.00000e+00         N/A         N/A            N/A
+    2               0.00000e+00       0.00000e+00       0.00000e+00         N/A         N/A            N/A
+    3              -3.72303e-06      -3.72981e-05       0.00000e+00         N/A         N/A            N/A
+    4               1.26483e-05      -3.91478e-05       0.00000e+00         N/A         N/A            N/A
+    5               0.00000e+00       0.00000e+00       0.00000e+00         N/A         N/A            N/A
+    6              -5.21728e-06      -1.06741e-05       0.00000e+00         N/A         N/A            N/A
+    7               3.89659e-06      -3.78413e-05       0.00000e+00         N/A         N/A            N/A
+    8               7.32772e-06      -1.01948e-05       0.00000e+00         N/A         N/A            N/A
 
  S T R E S S  C A L C U L A T I O N S  F O R  E L E M E N T  G R O U P    1
 
@@ -105,9 +106,9 @@ GAUSSPOINT NUMBER
 
  S O L U T I O N   T I M E   L O G   I N   S E C 
 
-     TIME FOR INPUT PHASE = 3.00000e-02
-     TIME FOR CALCULATION OF STIFFNESS MATRIX = 1.00000e-03
-     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 1.70000e-02
+     TIME FOR INPUT PHASE = 6.30000e-02
+     TIME FOR CALCULATION OF STIFFNESS MATRIX = 2.00000e-03
+     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 4.50000e-02
 
-     T O T A L   S O L U T I O N   T I M E = 4.80000e-02
+     T O T A L   S O L U T I O N   T I M E = 1.10000e-01
 

@@ -1,3 +1,0 @@
-C:/git_STAPpp/STAPpp/src/build/CMakeFiles/stap++.dir
-C:/git_STAPpp/STAPpp/src/build/CMakeFiles/ALL_BUILD.dir
-C:/git_STAPpp/STAPpp/src/build/CMakeFiles/ZERO_CHECK.dir
