@@ -286,10 +286,10 @@ void CDomain::AssembleStiffnessMatrix()
 		Matrix = nullptr;
 	}
 
-#ifdef _DEBUG_
-	COutputter* Output = COutputter::GetInstance();
-	Output->PrintStiffnessMatrix();
-#endif
+//#ifdef _DEBUG_
+//	COutputter* Output = COutputter::GetInstance();
+//	Output->PrintStiffnessMatrix();
+//#endif
 
 }
 

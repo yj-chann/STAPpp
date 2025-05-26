@@ -181,7 +181,7 @@ void CQ8::ElementStress(double* stress, double* Displacement)
             for (unsigned int k = 0; k < 3; k++)
                 for (unsigned int l = 0; l < 3; l++)
                     for (unsigned int m = 0; m < 16; m++)
-                        stress[5 * index + 2 + k] += D[k][l] * B[l][m] * d[m];
+                        stress[5 * (index) + 2 + k] += D[k][l] * B[l][m] * d[m];
             double N[2][16] = { 0 };
             ElementShapeFunction(N, GaussPoints[i], GaussPoints[j]);
             for (unsigned int k = 0; k < 2; k++)
