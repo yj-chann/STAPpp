@@ -15,15 +15,15 @@
 using namespace std;
 
 //! Beam31(Euler-Bernoulli) element class
-class CB31EB : public CElement
+class CB31 : public CElement
 {
 public:
 
 //!	Constructor
-	CB31EB();
+	CB31();
 
 //!	Desconstructor
-	~CB31EB();
+	~CB31();
 
 //!	Read element data from stream Input
 	virtual bool Read(ifstream& Input, CMaterial* MaterialSets, CNode* NodeList);
@@ -34,15 +34,15 @@ public:
 //!	Calculate element stiffness matrix
 	virtual void ElementStiffness(double* Matrix);
 
-//!	Calculate element stress
+//!	Calculate element stress, for Beam element, they are moment and shear force in Gausspoints
 	virtual void ElementStress(double* stress, double* Displacement);
 
-//!	Calculate Q4 element shape function matrix N
-	void ElementShapeFunction(double (&N)[2][8], double xi, double eta);
+//!	Calculate element shape function matrix N at parent coordinate xi
+	void ElementShapeFunction(double* N, double xi);
 
-//!	Calculate derivative of Q4 element shape function matrix B and Jacobian determination
-	void ElementStrainFunction(double (&B)[3][8], double* det, double xi, double eta);
+//!	Calculate derivative of element shape function matrix B at parent coordinate xi(m = 2, actually second derivative)
+	void ElementStrainFunction(double* B, double xi);
 
-//! Calcualte derivative of element shape function matrix DN at coordinate xt
-	void ElementDerivativeShapeFunction(double (&DN)[2][4], double xi, double eta);
+//!	Calculate second derivative of element shape function matrix S at parent coordinate xi
+	void ElementDerivativeStrainFunction(double *S, double xi);
 };

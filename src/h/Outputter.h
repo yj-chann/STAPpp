@@ -13,7 +13,7 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
-#define _DEBUG_
+//#define _DEBUG_
 
 using namespace std;
 
@@ -73,7 +73,7 @@ public:
 	void OutputB21EBElements(unsigned int EleGrp);
 
 //!	Output B31EB element data
-	void OutputB31EBElements(unsigned int EleGrp);
+	void OutputB31Elements(unsigned int EleGrp);
 
 //!	Output load data 
 	void OutputLoadInfo(); 
