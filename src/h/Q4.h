@@ -37,6 +37,9 @@ public:
 //!	Calculate element stress
 	virtual void ElementStress(double* stress, double* Displacement);
 
+//!	Calculate element non-homogeneous essential boundary conditions
+	virtual void ElementNonHomo(double* Matrix, double* NonForce) override;
+
 //!	Calculate Q4 element shape function matrix N
 	void ElementShapeFunction(double (&N)[2][8], double xi, double eta);
 

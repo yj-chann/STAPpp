@@ -133,3 +133,37 @@ void CBar::ElementStress(double* stress, double* Displacement)
 			*stress += S[i] * Displacement[LocationMatrix_[i]-1];
 	}
 }
+
+//	Calculate element non-homogeneous essential boundary conditions
+void CBar::ElementNonHomo(double* Matrix, double* NonForce)
+{   
+    double Ke[6][6] = {0};
+    unsigned int index = 0;
+    for (int j = 0; j < 6; j++) 
+        for (int i = j; i >= 0; i--) 
+            Ke[i][j] = Matrix[index++];
+
+    for (unsigned int i = 0; i < 6; i++) 
+        for (unsigned int j = 0; j < i; j++) 
+            Ke[i][j] = Ke[j][i];        
+
+    double d[6] = {0};
+    for (unsigned int i = 0; i < 2; i++)
+    {
+        d[3*i] = nodes_[i]->BC[0];
+        d[3*i+1] = nodes_[i]->BC[1];
+		d[3*i+2] = nodes_[i]->BC[2];
+    }
+
+    for (unsigned int i = 0; i < 6; i++)
+    {   
+        if (LocationMatrix_[i] == 0)
+            continue;
+        for (unsigned int j = 0; j < 6; j++)
+        {
+            if (LocationMatrix_[j] != 0)
+                continue;
+            NonForce[i] += Ke[i][j] * d[j];
+        }
+    }
+}

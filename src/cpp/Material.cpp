@@ -117,7 +117,7 @@ bool CB31Material::Read(ifstream& Input)
 {
 	Input >> nset;	// Number of property set
 
-	Input >> E >> nu >> Area >> Iy >> Iz >> J >> k;	// Young's modulus, Shear modulus, Cross-section area, Moment of inertia, Torsional Moment, Correction factor
+	Input >> E >> nu >> Area >> Iy >> Iz >> J >> k;	// Young's modulus, Poisson's ratio, Cross-section area, Moment of inertia, Torsional Moment, Correction factor
 
 	G = E / 2.0 / (1 + nu);
 
@@ -128,4 +128,22 @@ bool CB31Material::Read(ifstream& Input)
 void CB31Material::Write(COutputter& output)
 {
 	output << setw(16) << E << setw(16) << G << setw(16) << Area << setw(16) << Iy << setw(16) << Iz << setw(16) << J << setw(16) << k << endl;
+}
+
+//	Read material data from stream Input
+bool CS8R5Material::Read(ifstream& Input)
+{
+	Input >> nset;	// Number of property set
+
+	Input >> E >> nu >> t >> k >> v3[0] >> v3[1] >> v3[2];	// Young's modulus, Poisson's ratio, element thickness, Correction factor, unit vector normal to the midsurface
+
+	G = E / 2.0 / (1 + nu);
+
+	return true;
+}
+
+//	Write material data to Stream
+void CS8R5Material::Write(COutputter& output)
+{
+	output << setw(16) << E << setw(16) << G << setw(16) << t << setw(16) << k << setw(16) << v3[0] << setw(16) << v3[1] << setw(16) << v3[2] << endl;
 }

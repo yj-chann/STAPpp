@@ -122,7 +122,7 @@ void CH8::ElementStiffness(double* Matrix)  // use full integration (2x2x2)
     int index = 0;
     for (int j = 0; j < 24; j++)	// Column-major order
     {
-        for (int i = j; i >= 0; i--) {    // Upper triangle (i ¡Ü j)
+        for (int i = j; i >= 0; i--) {    // Upper triangle (i ï¿½ï¿½ j)
             Matrix[index++] = Ke[i][j];   // Pack into one dimensional element stiffness matrix
         }
     }
@@ -194,6 +194,40 @@ void CH8::ElementStress(double* stress, double* Displacement)
                         stress[9 * index + k] += N[k][l] * C[l];
                 index++;
             }
+        }
+    }
+}
+
+//	Calculate element non-homogeneous essential boundary conditions
+void CH8::ElementNonHomo(double* Matrix, double* NonForce)
+{   
+    double Ke[24][24] = {0};
+    unsigned int index = 0;
+    for (int j = 0; j < 24; j++) 
+        for (int i = j; i >= 0; i--) 
+            Ke[i][j] = Matrix[index++];
+
+    for (unsigned int i = 0; i < 24; i++) 
+        for (unsigned int j = 0; j < i; j++) 
+            Ke[i][j] = Ke[j][i];        
+
+    double d[24] = {0};
+    for (unsigned int i = 0; i < 8; i++)
+    {
+        d[3*i] = nodes_[i]->BC[0];
+        d[3*i+1] = nodes_[i]->BC[1];
+		d[3*i+2] = nodes_[i]->BC[2];
+    }
+
+    for (unsigned int i = 0; i < 24; i++)
+    {   
+        if (LocationMatrix_[i] == 0)
+            continue;
+        for (unsigned int j = 0; j < 24; j++)
+        {
+            if (LocationMatrix_[j] != 0)
+                continue;
+            NonForce[i] += Ke[i][j] * d[j];
         }
     }
 }
@@ -342,32 +376,32 @@ void CH8::ElementStrainFunction(double(&B)[6][24], double* det, double xi, doubl
 
     // Derivative of H8 element shape function matrix B
     for (int i = 0; i < 8; i++) {
-        // 1st row£ºN_{i,x} 0  0...
+        // 1st rowï¿½ï¿½N_{i,x} 0  0...
         B[0][3 * i] = G[0][i];
         B[0][3 * i + 1] = 0.0;
         B[0][3 * i + 2] = 0.0;
 
-        // 2nd row£º0 N_{i,y} 0...
+        // 2nd rowï¿½ï¿½0 N_{i,y} 0...
         B[1][3 * i] = 0.0;
         B[1][3 * i + 1] = G[1][i];
 		B[1][3 * i + 2] = 0.0;
 
-        // 3rd row£º0 0 N_{i,y} ...
+        // 3rd rowï¿½ï¿½0 0 N_{i,y} ...
         B[2][3 * i] = 0.0;
 		B[2][3 * i + 1] = 0.0;
         B[2][3 * i + 2] = G[2][i];
 
-        // 4th row£ºN_{i,y} N_{i,x},0 ...
+        // 4th rowï¿½ï¿½N_{i,y} N_{i,x},0 ...
         B[3][3 * i] = G[1][i];
         B[3][3 * i + 1] = G[0][i];
         B[3][3 * i + 2] = 0.0;
 
-        // 5th row£ºN_{i,z} 0 N_{i,x} ...
+        // 5th rowï¿½ï¿½N_{i,z} 0 N_{i,x} ...
         B[3][3 * i] = G[2][i];
         B[3][3 * i + 1] = 0.0;
         B[3][3 * i + 2] = G[0][i];
 
-        // 6th row£º0 N_{i,z} N_{i,y} ...
+        // 6th rowï¿½ï¿½0 N_{i,z} N_{i,y} ...
         B[3][3 * i] = 0.0;
         B[3][3 * i + 1] = G[2][i];
         B[3][3 * i + 2] = G[1][i];

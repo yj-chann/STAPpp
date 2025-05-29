@@ -27,9 +27,9 @@ CNode::CNode(double X, double Y, double Z)
     bcode[1] = 0;
     bcode[2] = 0;
 
-	bcode[3] = -1;	// Boundary codes
-    bcode[4] = -1;
-    bcode[5] = -1;
+	bcode[3] = 3;	// Boundary codes of rotation
+    bcode[4] = 3;
+    bcode[5] = 3;
 };
 
 //	Read element data from stream Input
@@ -39,12 +39,36 @@ bool CNode::Read(ifstream& Input)
 	Input >> bcode[0] >> bcode[1] >> bcode[2]
 		  >> XYZ[0] >> XYZ[1] >> XYZ[2];
 
-	if (Input.peek() == '\n') {
-	} 
-	else {
-    Input >> bcode[3] >> bcode[4] >> bcode[5];
-	NodeType = 1;
+	if (bcode[0] == 2 || bcode[1] == 2 || bcode[2] == 2) {
+		for (unsigned int i = 0; i < 3; i++)
+			if (bcode[i] == 2)
+				Input >> BC[i];
+
+		if (Input.peek() == '\n') {
+		} 
+		else {
+			Input >> bcode[3] >> bcode[4] >> bcode[5];
+			NodeType = 1;
+			if (bcode[3] == 2 || bcode[4] == 2 || bcode[5] == 2)
+				for (unsigned int i = 3; i < 6; i++)
+					if (bcode[i] == 2)
+						Input >> BC[i];
+		}
 	}
+	else {
+		if (Input.peek() == '\n') {
+		} 
+		else {
+			Input >> bcode[3] >> bcode[4] >> bcode[5];
+			NodeType = 1;
+			if (bcode[3] == 2 || bcode[4] == 2 || bcode[5] == 2)
+				for (unsigned int i = 3; i < 6; i++)
+					if (bcode[i] == 2)
+						Input >> BC[i];
+		}
+	}
+	if (bcode[0] == 2 || bcode[1] == 2 || bcode[2] == 2 || bcode[3] == 2 || bcode[4] == 2 || bcode[5] == 2)
+		NonHomo = 1;	
 
 	return true;
 }
@@ -97,7 +121,7 @@ void CNode::WriteNodalDisplacement(COutputter& output, double* Displacement)
 	{
 		if (bcode[j] == 0)
 		{
-			output << setw(18) << 0.0;
+			output << setw(18) << BC[j];
 		}
 		else
 		{
@@ -110,7 +134,7 @@ void CNode::WriteNodalDisplacement(COutputter& output, double* Displacement)
 		{
 			if (bcode[j] == 0)
 			{
-				output << setw(15) << 0.0;
+				output << setw(15) << BC[j];
 			}
 			else
 			{
@@ -120,7 +144,7 @@ void CNode::WriteNodalDisplacement(COutputter& output, double* Displacement)
 
 	}
 	else {
-		output << setw(12) << "N/A"<< setw(12) << "N/A"<< setw(15) << "N/A";
+		output << setw(12) << "N/A" << setw(13) << "N/A" << setw(15) << "N/A";
 	}
 
 	output << endl;
