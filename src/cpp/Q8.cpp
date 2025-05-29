@@ -37,7 +37,7 @@ CQ8::~CQ8()
 bool CQ8::Read(ifstream& Input, CMaterial* MaterialSets, CNode* NodeList)
 {
     unsigned int MSet;	// Material property set number
-    unsigned int N1, N2, N3, N4, N5, N6, N7, N8;;	// 1~8 node number, Counterclockwise
+    unsigned int N1, N2, N3, N4, N5, N6, N7, N8;	// 1~8 node number, Counterclockwise
 
     Input >> N1 >> N2 >> N3 >> N4 >> N5 >> N6 >> N7 >> N8 >> MSet;
     ElementMaterial_ = dynamic_cast<CQ8Material*>(MaterialSets) + MSet - 1;
@@ -120,7 +120,7 @@ void CQ8::ElementStiffness(double* Matrix)  // use reduced integration (2*2)
     int index = 0;
     for (int j = 0; j < 16; j++)	// Column-major order
     {
-        for (int i = j; i >= 0; i--) {    // Upper triangle (i ¡Ü j)
+        for (int i = j; i >= 0; i--) {    // Upper triangle (i ï¿½ï¿½ j)
             Matrix[index++] = Ke[i][j];   // Pack into one dimensional element stiffness matrix
         }
     }
@@ -192,18 +192,51 @@ void CQ8::ElementStress(double* stress, double* Displacement)
     }
 }
 
+//	Calculate element non-homogeneous essential boundary conditions
+void CQ8::ElementNonHomo(double* Matrix, double* NonForce)
+{   
+    double Ke[16][16] = {0};
+    unsigned int index = 0;
+    for (int j = 0; j < 16; j++) 
+        for (int i = j; i >= 0; i--) 
+            Ke[i][j] = Matrix[index++];
+
+    for (unsigned int i = 0; i < 16; i++) 
+        for (unsigned int j = 0; j < i; j++) 
+            Ke[i][j] = Ke[j][i];        
+
+    double d[16] = {0};
+    for (unsigned int i = 0; i < 8; i++)
+    {
+        d[2*i] = nodes_[i]->BC[0];
+        d[2*i+1] = nodes_[i]->BC[1];
+    }
+
+    for (unsigned int i = 0; i < 16; i++)
+    {   
+        if (LocationMatrix_[i] == 0)
+            continue;
+        for (unsigned int j = 0; j < 16; j++)
+        {
+            if (LocationMatrix_[j] != 0)
+                continue;
+            NonForce[i] += Ke[i][j] * d[j];
+        }
+    }
+}
+
 // Calculate Q8 element shape function matrix N
 void CQ8::ElementShapeFunction(double(&N)[2][16], double xi, double eta)
 {
     double n[8] = {
-        -0.25 * (1 - xi) * (1 - eta) * (xi+eta+1),
-        0.25 * (1 + xi) * (1 - eta) * (xi-eta-1),
-        0.25 * (1 + xi) * (1 + eta) * (xi+eta-1),
-        -0.25 * (1 - xi) * (1 + eta) * (xi-eta+1),
-        0.5 * (1 - xi * xi) * (1-eta),
-		0.5 * (1 + xi) * (1 - eta * eta),
-		0.5 * (1 - xi * xi) * (1 + eta),
-		0.5 * (1 - xi) * (1 - eta * eta),
+        -0.25 * (1.0 - xi) * (1.0 - eta) * (xi + eta + 1.0),
+        0.25 * (1.0 + xi) * (1.0 - eta) * (xi - eta - 1.0),
+        0.25 * (1.0 + xi) * (1.0 + eta) * (xi + eta - 1.0),
+        -0.25 * (1.0 - xi) * (1.0 + eta) * (xi - eta + 1.0),
+        0.5 * (1.0 - xi * xi) * (1.0 - eta),
+		0.5 * (1.0 + xi) * (1.0 - eta * eta),
+		0.5 * (1.0 - xi * xi) * (1.0 + eta),
+		0.5 * (1.0 - xi) * (1.0 - eta * eta),
     };
 
     for (unsigned i = 0; i < 2; i++)
@@ -299,15 +332,15 @@ void CQ8::ElementStrainFunction(double(&B)[3][16], double* det, double xi, doubl
 
     // Derivative of Q8 element shape function matrix B
     for (int i = 0; i < 8; i++) {
-        // 1st row£ºN_{i,x} 0 ...
+        // 1st rowï¿½ï¿½N_{i,x} 0 ...
         B[0][2 * i] = G[0][i];
         B[0][2 * i + 1] = 0.0;
 
-        // 2nd row£º0 N_{i,y} ...
+        // 2nd rowï¿½ï¿½0 N_{i,y} ...
         B[1][2 * i] = 0.0;
         B[1][2 * i + 1] = G[1][i];
 
-        // 3rd row£ºN_{i,y} N_{i,x} ...
+        // 3rd rowï¿½ï¿½N_{i,y} N_{i,x} ...
         B[2][2 * i] = G[1][i];
         B[2][2 * i + 1] = G[0][i];
     }

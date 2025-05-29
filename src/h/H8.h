@@ -19,28 +19,31 @@ class CH8 : public CElement
 {
 public:
 
-	//!	Constructor
+//!	Constructor
 	CH8();
 
-	//!	Desconstructor
+//!	Desconstructor
 	~CH8();
 
-	//!	Read element data from stream Input
+//!	Read element data from stream Input
 	virtual bool Read(ifstream& Input, CMaterial* MaterialSets, CNode* NodeList);
 
-	//!	Write element data to stream
+//!	Write element data to stream
 	virtual void Write(COutputter& output);
 
-	//!	Calculate element stiffness matrix
+//!	Calculate element stiffness matrix
 	virtual void ElementStiffness(double* Matrix);
 
-	//!	Calculate element stress
+//!	Calculate element stress
 	virtual void ElementStress(double* stress, double* Displacement);
 
-	//!	Calculate H8 element shape function matrix N
+//!	Calculate element non-homogeneous essential boundary conditions
+	virtual void ElementNonHomo(double* Matrix, double* NonForce) override;
+
+//!	Calculate H8 element shape function matrix N
 	void ElementShapeFunction(double(&N)[3][24], double xi, double eta ,double zeta);
 
-	//!	Calculate derivative of H8 element shape function matrix B and Jacobian determination
+//!	Calculate derivative of H8 element shape function matrix B and Jacobian determination
 	void ElementStrainFunction(double(&B)[6][24], double* det, double xi, double eta , double zeta);
 };
 

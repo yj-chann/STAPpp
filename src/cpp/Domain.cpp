@@ -264,26 +264,59 @@ void CDomain::AllocateMatrices()
 
 //	Assemble the banded gloabl stiffness matrix
 void CDomain::AssembleStiffnessMatrix()
-{
+{	
+	
+	clear(Force, NEQ);	// For resolving the non-homogeneous essential boundary conditions
+
 //	Loop over for all element groups
 	for (unsigned int EleGrp = 0; EleGrp < NUMEG; EleGrp++)
 	{
         CElementGroup& ElementGrp = EleGrpList[EleGrp];
         unsigned int NUME = ElementGrp.GetNUME();
 
-		unsigned int size = ElementGrp[0].SizeOfStiffnessMatrix();
+		unsigned int size = ElementGrp[0].SizeOfStiffnessMatrix();		
 		double* Matrix = new double[size];
+
+		unsigned int ND = ElementGrp[0].GetND();
+		double* NonForce = new double[ND];	// Force caused by the non-homogeneous essential boundary conditions
+		// double* dE = new double[ND];	// d including non-homogeneous essential boundary conditions
+		// unsigned int NEN = ElementGrp[0].GetNEN();
+		// unsigned int DOF = ND / NEN;
 
 //		Loop over for all elements in group EleGrp
 		for (unsigned int Ele = 0; Ele < NUME; Ele++)
         {
             CElement& Element = ElementGrp[Ele];
             Element.ElementStiffness(Matrix);
-            StiffnessMatrix->Assembly(Matrix, Element.GetLocationMatrix(), Element.GetND());
+            StiffnessMatrix->Assembly(Matrix, Element.GetLocationMatrix(), Element.GetND());		
+			
+			if (Element.GetNonHomo()) {
+				clear(NonForce, Element.GetND());
+				unsigned int* LocationMatrix = Element.GetLocationMatrix();
+				Element.ElementNonHomo(Matrix, NonForce);
+				for (unsigned int i = 0; i < ND; i++)
+				{
+					if (LocationMatrix[i] == 0)
+						continue;
+					Force[LocationMatrix[i] - 1] -= NonForce[i];
+				}
+			}			
+						
+			// CNode** nodes = Element.GetNodes();
+			// for (unsigned int i = 0; i < NEN; i++) {
+			// 	if (nodes[i]->NonHomo) {
+			// 		for (unsigned j = 0; j < DOF; j++) {
+			// 		}
+			// 	}					
+			// }
         }
 
 		delete[] Matrix;
 		Matrix = nullptr;
+		delete[] NonForce;
+		NonForce = nullptr;
+		// delete[] dE;
+		// dE = nullptr;
 	}
 
 #ifdef _DEBUG_
@@ -301,8 +334,8 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 
 	CLoadCaseData* LoadData = &LoadCases[LoadCase - 1];
 
-	if (LoadCase == 1)
-    	clear(Force, NEQ);
+	// if (LoadCase == 1)	// Clear the Force vector in CDomain::AssembleStiffnessMatrix
+    // 	clear(Force, NEQ);
 
 	switch (LoadData->LoadCaseType_)
 	{
@@ -752,8 +785,10 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 		}
 		break;
 	}
-
-
+	case 9:
+		break;
+	case 10:
+		break;
 	case 11:	// All body forces of H8 element
 	{
 		unsigned int EleGrp = 0;
@@ -794,8 +829,6 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 				LoadData->load[24 * LoadOrder + 21],
 				LoadData->load[24 * LoadOrder + 22],
 				LoadData->load[24 * LoadOrder + 23],
-			
-
 			};
 
 			CElement& Element = ElementGrp[Ele - 1];
@@ -817,7 +850,7 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 					{
 						double B[6][24] = { 0 };
 						double det;
-						Element_->ElementStrainFunction(B, &det, GaussPoints[i], GaussPoints[j],GaussPoints[g]);
+						Element_->ElementStrainFunction(B, &det, GaussPoints[i], GaussPoints[j], GaussPoints[g]);
 						double N[3][24] = { 0 };
 						Element_->ElementShapeFunction(N, GaussPoints[i], GaussPoints[j], GaussPoints[g]);
 						for (int k = 0; k < 24; k++)
@@ -1061,6 +1094,282 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 			for (int i = 0; i < 12; i++)
 				if (dof[i])	// The DOF is activated
 					Force[dof[i] - 1] += f_Gamma[i];
+		}
+		break;
+	}
+	// case 13:
+	// 	break;
+	// case 14:
+	// 	break;
+	case 15:	// All surface forces of S8R5 element
+	{
+		unsigned int EleGrp = 0;
+		for (; EleGrp < NUMEG; EleGrp++)
+		{
+			CElementGroup& ElementGrp = EleGrpList[EleGrp];
+			unsigned int ElementType = ElementGrp.GetElementType();
+			if (ElementType == 8)
+				break;
+		}
+		CElementGroup& ElementGrp = EleGrpList[EleGrp];
+
+		for (unsigned int LoadOrder = 0; LoadOrder < LoadData->nloads; LoadOrder++)
+		{
+			unsigned int Ele = LoadData->node[LoadOrder];
+			double t[40] = {
+				LoadData->load[24*LoadOrder],
+				LoadData->load[24*LoadOrder+1],
+				LoadData->load[24*LoadOrder+2],
+				0,
+				0,
+				LoadData->load[24*LoadOrder+3],
+				LoadData->load[24*LoadOrder+4],
+				LoadData->load[24*LoadOrder+5],
+				0,
+				0,
+				LoadData->load[24*LoadOrder+6],
+				LoadData->load[24*LoadOrder+7],
+				LoadData->load[24*LoadOrder+8],
+				0,
+				0,
+				LoadData->load[24*LoadOrder+9],
+				LoadData->load[24*LoadOrder+10],
+				LoadData->load[24*LoadOrder+11],
+				0,
+				0,
+				LoadData->load[24*LoadOrder+12],
+				LoadData->load[24*LoadOrder+13],
+				LoadData->load[24*LoadOrder+14],
+				0,
+				0,
+				LoadData->load[24*LoadOrder+15],
+				LoadData->load[24*LoadOrder+16],
+				LoadData->load[24*LoadOrder+17],
+				0,
+				0,
+				LoadData->load[24*LoadOrder+18],
+				LoadData->load[24*LoadOrder+19],
+				LoadData->load[24*LoadOrder+20],
+				0,
+				0,
+				LoadData->load[24*LoadOrder+21],
+				LoadData->load[24*LoadOrder+22],
+				LoadData->load[24*LoadOrder+23],
+				0,
+				0,
+			};
+
+			CElement& Element = ElementGrp[Ele - 1];
+			CS8R5* Element_ = dynamic_cast<CS8R5*>(&Element);
+			CMaterial* ElementMaterial = Element.GetElementMaterial();
+			CS8R5Material* material_ = dynamic_cast<CS8R5Material*>(ElementMaterial);
+			CNode** nodes = Element.GetNodes();
+
+			double f_Omega[40] = {0};
+			double GaussPoints[2] = {
+				-sqrt(3) / 3.0,
+				sqrt(3) / 3.0,
+			};
+
+			for (unsigned int gp1 = 0; gp1 < 2; gp1++)	//  reduced integration
+			{
+				for (unsigned int gp2 = 0; gp2 < 2; gp2++)
+				{
+					double det = 0;
+					Element_->ElementDetTop(&det, GaussPoints[gp1], GaussPoints[gp2]);	// Top Area
+					double N[3][40] = {0};
+					Element_->ElementShapeFunction(N, GaussPoints[gp1], GaussPoints[gp2], 1.0);
+					for (int i = 0; i < 40; i++)
+						for (int j = 0; j < 3; j++)
+							for (int k = 0; k < 40; k++)
+								f_Omega[i] += N[j][i] * N[j][k] * t[k] * det;  // Weight is 1			
+				}
+			}
+
+			unsigned int dof[40] = {
+				nodes[0]->bcode[0],
+				nodes[0]->bcode[1],
+				nodes[0]->bcode[2],
+				nodes[0]->bcode[3],
+				nodes[0]->bcode[4],
+				nodes[1]->bcode[0],
+				nodes[1]->bcode[1],
+				nodes[1]->bcode[2],
+				nodes[1]->bcode[3],
+				nodes[1]->bcode[4],
+				nodes[2]->bcode[0],
+				nodes[2]->bcode[1],
+				nodes[2]->bcode[2],
+				nodes[2]->bcode[3],
+				nodes[2]->bcode[4],
+				nodes[3]->bcode[0],
+				nodes[3]->bcode[1],
+				nodes[3]->bcode[2],
+				nodes[3]->bcode[3],
+				nodes[3]->bcode[4],
+				nodes[4]->bcode[0],
+				nodes[4]->bcode[1],
+				nodes[4]->bcode[2],
+				nodes[4]->bcode[3],
+				nodes[4]->bcode[4],
+				nodes[5]->bcode[0],
+				nodes[5]->bcode[1],
+				nodes[5]->bcode[2],
+				nodes[5]->bcode[3],
+				nodes[5]->bcode[4],
+				nodes[6]->bcode[0],
+				nodes[6]->bcode[1],
+				nodes[6]->bcode[2],
+				nodes[6]->bcode[3],
+				nodes[6]->bcode[4],
+				nodes[7]->bcode[0],
+				nodes[7]->bcode[1],
+				nodes[7]->bcode[2],
+				nodes[7]->bcode[3],
+				nodes[7]->bcode[4]
+			};
+
+			for (int i = 0; i < 40; i++)
+				if (dof[i])	// The DOF is activated
+					Force[dof[i] - 1] += f_Omega[i];
+		}
+		break;
+	}
+	case 16:	// All body forces of S8R5 element
+	{
+		unsigned int EleGrp = 0;
+		for (; EleGrp < NUMEG; EleGrp++)
+		{
+			CElementGroup& ElementGrp = EleGrpList[EleGrp];
+			unsigned int ElementType = ElementGrp.GetElementType();
+			if (ElementType == 8)
+				break;
+		}
+		CElementGroup& ElementGrp = EleGrpList[EleGrp];
+
+		for (unsigned int LoadOrder = 0; LoadOrder < LoadData->nloads; LoadOrder++)
+		{
+			unsigned int Ele = LoadData->node[LoadOrder];
+			double b[40] = {
+				LoadData->load[24*LoadOrder],
+				LoadData->load[24*LoadOrder+1],
+				LoadData->load[24*LoadOrder+2],
+				0,
+				0,
+				LoadData->load[24*LoadOrder+3],
+				LoadData->load[24*LoadOrder+4],
+				LoadData->load[24*LoadOrder+5],
+				0,
+				0,
+				LoadData->load[24*LoadOrder+6],
+				LoadData->load[24*LoadOrder+7],
+				LoadData->load[24*LoadOrder+8],
+				0,
+				0,
+				LoadData->load[24*LoadOrder+9],
+				LoadData->load[24*LoadOrder+10],
+				LoadData->load[24*LoadOrder+11],
+				0,
+				0,
+				LoadData->load[24*LoadOrder+12],
+				LoadData->load[24*LoadOrder+13],
+				LoadData->load[24*LoadOrder+14],
+				0,
+				0,
+				LoadData->load[24*LoadOrder+15],
+				LoadData->load[24*LoadOrder+16],
+				LoadData->load[24*LoadOrder+17],
+				0,
+				0,
+				LoadData->load[24*LoadOrder+18],
+				LoadData->load[24*LoadOrder+19],
+				LoadData->load[24*LoadOrder+20],
+				0,
+				0,
+				LoadData->load[24*LoadOrder+21],
+				LoadData->load[24*LoadOrder+22],
+				LoadData->load[24*LoadOrder+23],
+				0,
+				0,
+			};
+
+			CElement& Element = ElementGrp[Ele - 1];
+			CS8R5* Element_ = dynamic_cast<CS8R5*>(&Element);
+			CMaterial* ElementMaterial = Element.GetElementMaterial();
+			CS8R5Material* material_ = dynamic_cast<CS8R5Material*>(ElementMaterial);
+			CNode** nodes = Element.GetNodes();
+
+			double f_Omega[40] = {0};
+			double GaussPoints[2] = {
+				-sqrt(3) / 3.0,
+				sqrt(3) / 3.0,
+			};
+
+			for (unsigned int gp1 = 0; gp1 < 2; gp1++)	//  reduced integration
+			{
+				for (unsigned int gp2 = 0; gp2 < 2; gp2++)
+				{
+					for (unsigned int gp3 = 0; gp3 < 2; gp3++)
+					{
+						double B[5][40] = {0};
+						double det = 0;
+						Element_->ElementStrainFunction(B, &det, GaussPoints[gp1], GaussPoints[gp2], GaussPoints[gp3]);
+						double N[3][40] = {0};
+						Element_->ElementShapeFunction(N, GaussPoints[gp1], GaussPoints[gp2], GaussPoints[gp3]);
+						for (int i = 0; i < 40; i++)
+							for (int j = 0; j < 3; j++)
+								for (int k = 0; k < 40; k++)
+									f_Omega[i] += N[j][i] * N[j][k] * b[k] * det;  // Weight is 1
+					}
+				}
+			}
+
+			unsigned int dof[40] = {
+				nodes[0]->bcode[0],
+				nodes[0]->bcode[1],
+				nodes[0]->bcode[2],
+				nodes[0]->bcode[3],
+				nodes[0]->bcode[4],
+				nodes[1]->bcode[0],
+				nodes[1]->bcode[1],
+				nodes[1]->bcode[2],
+				nodes[1]->bcode[3],
+				nodes[1]->bcode[4],
+				nodes[2]->bcode[0],
+				nodes[2]->bcode[1],
+				nodes[2]->bcode[2],
+				nodes[2]->bcode[3],
+				nodes[2]->bcode[4],
+				nodes[3]->bcode[0],
+				nodes[3]->bcode[1],
+				nodes[3]->bcode[2],
+				nodes[3]->bcode[3],
+				nodes[3]->bcode[4],
+				nodes[4]->bcode[0],
+				nodes[4]->bcode[1],
+				nodes[4]->bcode[2],
+				nodes[4]->bcode[3],
+				nodes[4]->bcode[4],
+				nodes[5]->bcode[0],
+				nodes[5]->bcode[1],
+				nodes[5]->bcode[2],
+				nodes[5]->bcode[3],
+				nodes[5]->bcode[4],
+				nodes[6]->bcode[0],
+				nodes[6]->bcode[1],
+				nodes[6]->bcode[2],
+				nodes[6]->bcode[3],
+				nodes[6]->bcode[4],
+				nodes[7]->bcode[0],
+				nodes[7]->bcode[1],
+				nodes[7]->bcode[2],
+				nodes[7]->bcode[3],
+				nodes[7]->bcode[4]
+			};
+
+			for (int i = 0; i < 40; i++)
+				if (dof[i])	// The DOF is activated
+					Force[dof[i] - 1] += f_Omega[i];
 		}
 		break;
 	}
