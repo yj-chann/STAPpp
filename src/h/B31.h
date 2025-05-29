@@ -37,6 +37,9 @@ public:
 //!	Calculate element stress, for Beam element, they are moment and shear force in Gausspoints
 	virtual void ElementStress(double* stress, double* Displacement);
 
+//!	Calculate element non-homogeneous essential boundary conditions
+	virtual void ElementNonHomo(double* Matrix, double* NonForce) override;
+
 //!	Calculate element shape function matrix N at parent coordinate xi
 	void ElementShapeFunction(double* N, double xi);
 

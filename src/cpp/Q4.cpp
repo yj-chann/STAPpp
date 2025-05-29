@@ -183,6 +183,39 @@ void CQ4::ElementStress(double* stress, double* Displacement)
     }
 }
 
+//	Calculate element non-homogeneous essential boundary conditions
+void CQ4::ElementNonHomo(double* Matrix, double* NonForce)
+{   
+    double Ke[8][8] = {0};
+    unsigned int index = 0;
+    for (int j = 0; j < 8; j++) 
+        for (int i = j; i >= 0; i--) 
+            Ke[i][j] = Matrix[index++];
+
+    for (unsigned int i = 0; i < 8; i++) 
+        for (unsigned int j = 0; j < i; j++) 
+            Ke[i][j] = Ke[j][i];        
+
+    double d[8] = {0};
+    for (unsigned int i = 0; i < 4; i++)
+    {
+        d[2*i] = nodes_[i]->BC[0];
+        d[2*i+1] = nodes_[i]->BC[1];
+    }
+
+    for (unsigned int i = 0; i < 8; i++)
+    {   
+        if (LocationMatrix_[i] == 0)
+            continue;
+        for (unsigned int j = 0; j < 8; j++)
+        {
+            if (LocationMatrix_[j] != 0)
+                continue;
+            NonForce[i] += Ke[i][j] * d[j];
+        }
+    }
+}
+
 // Calculate Q4 element shape function matrix N
 void CQ4::ElementShapeFunction(double (&N)[2][8], double xi, double eta)
 {   

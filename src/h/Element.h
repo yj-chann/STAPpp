@@ -40,6 +40,11 @@ protected:
 //! Dimension of the location matrix
     unsigned int ND_;
 
+//! Calculate non-homogeneous essential boundary conditions flag
+/*!		0: Closed */
+/*!		1: Open */
+    unsigned int NonHomo_ = 0;
+
 public:
 
 //!	Constructor
@@ -77,6 +82,17 @@ public:
         for (unsigned int N = 0; N < NEN_; N++)
             for (unsigned int D = 0; D < Node_NDF; D++)
                 LocationMatrix_[i++] = nodes_[N]->bcode[D];
+        
+        int break_all = 0;
+        for (unsigned int N = 0; N < NEN_ && !break_all; N++) {
+            for (unsigned int D = 0; D < Node_NDF && !break_all; D++) {
+                if (nodes_[N]->bcode[D] == 0 && nodes_[N]->BC[D] != 0) {
+                    NonHomo_ = 1;
+                    break_all = 1;
+                    break;
+                }
+            }                
+        }      
     }
 
 //! Return the size of the element stiffness matrix (stored as an array column by column)
@@ -95,6 +111,9 @@ public:
 //!	Calculate element stress 
 	virtual void ElementStress(double* stress, double* Displacement) = 0;
 
+//!	Calculate element non-homogeneous essential boundary conditions
+	virtual void ElementNonHomo(double* stiffness, double* NonForce) { }
+
 //! Return number of nodes per element
     inline unsigned int GetNEN() { return NEN_; }
     
@@ -109,4 +128,7 @@ public:
     
     //! Return the dimension of the location matrix
     inline unsigned int GetND() { return ND_; }
+
+    //! Return the dimension of the location matrix
+    inline unsigned int GetNonHomo() { return NonHomo_; }
 };

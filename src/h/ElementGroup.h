@@ -20,6 +20,7 @@
 #include "B21EB.h"
 #include "B31.h"
 #include "H8.h"
+#include "S8R5.h"
 #include "Material.h"
 #include "Node.h"
 
@@ -36,6 +37,7 @@ enum ElementTypes
     B21EB,  // Beam21(Euler-Bernoulli) element
     B31,    // Beam31(Timoshenko) element
     H8,     // 8H element
+    S8R5,   // 8-node quadratic degenerated shell, reduced integration, using five degrees of freedom per node
     Beam,   // Beam element
     Plate,  // Plate element
     Shell   // Shell elment

@@ -164,5 +164,25 @@ public:
 	virtual void Write(COutputter& output);
 };
 
+//!	Material class for S8R5 element
+class CS8R5Material : public CMaterial
+{
+public:
+
+	double nu;        //!< Poisson's ratio
+	double G;  		  //!< Shear modulus
+	double t;	      //!< Element thickness of a Q8 element
+	double k;		  //!< Correction factor (shear area ratio)
+	double v3[3];	  //!< Torsional Moment of Inertia
+
+public:
+
+	//!	Read material data from stream Input
+	virtual bool Read(ifstream& Input);
+
+	//!	Write material data to Stream
+	virtual void Write(COutputter& output);
+};
+
 
 

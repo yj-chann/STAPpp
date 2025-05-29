@@ -84,7 +84,10 @@ void CLoadCaseData :: Allocate(unsigned int LL, unsigned int num)
 		coordinate = nullptr;	// In case 8, coordinate is useless
 		load = new double[6 * nloads];	// In case 8, every element surface force must be input in order of element node number, t_x1 t_y1 ...
 		break;
-
+	case 9:
+		break;
+	case 10:
+		break;
 	case 11:	// All body forces of H8 element
 		nloads = num;
 		node = new unsigned int[nloads];	// In case 11, node is element number
@@ -98,6 +101,24 @@ void CLoadCaseData :: Allocate(unsigned int LL, unsigned int num)
 		dof = new unsigned int[nloads];  // In case 12, dof is element number
 		coordinate = nullptr;	// In case 12, coordinate is useless
 		load = new double[12 * nloads];	// In case 12, every element surface force must be input in order of element node number, t_x1 t_y1 t_z1 ...
+		break;
+	case 13:
+		break;
+	case 14:
+		break;
+	case 15:	// All surface forces of S8R5 element
+		nloads = num;
+		node = new unsigned int[nloads];	// In case 15, node is element number
+		dof = nullptr;  // In case 15, dof is useless
+		coordinate = nullptr;	// In case 15, coordinate is useless
+		load = new double[24*nloads];	// In case 15, every element body force must be input in order of element node number, t_x1 t_y1 t_z1 ...
+		break;
+	case 16:	// All body forces of S8R5 element
+		nloads = num;
+		node = new unsigned int[nloads];	// In case 16, node is element number
+		dof = nullptr;  // In case 16, dof is useless
+		coordinate = nullptr;	// In case 16, coordinate is useless
+		load = new double[24*nloads];	// In case 16, every element body force must be input in order of element node number, b_x1 b_y1 b_z1 ...
 		break;
 	default:
 		std::cerr << "LodaCase " << LL << " not available. See CLoadCaseData::Allocate." << std::endl;
@@ -152,14 +173,29 @@ bool CLoadCaseData :: Read(unsigned int LL, ifstream& Input)
 		for (unsigned int i = 0; i < NL; i++)
 			Input >> dof[i] >> node[3 * i] >> node[3 * i + 1] >> node[3 * i + 2] >> load[6 * i] >> load[6 * i + 1] >> load[6 * i + 2] >> load[6 * i + 3] >> load[6 * i + 4] >> load[6 * i + 5];
 		break;
-
+	case 9:
+		break;
+	case 10:
+		break;
 	case 11:	// All body forces of H8 element
 		for (unsigned int i = 0; i < NL; i++)
-			Input >> node[i] >> load[24 * i] >> load[24 * i + 1] >> load[24 * i + 2] >> load[24 * i + 3] >> load[24 * i + 4] >> load[24 * i + 5] >> load[24 * i + 6] >> load[24 * i + 7] >> load[24 * i + 8] >> load[24 * i + 9] >> load[24 * i + 10] >> load[24 * i + 11] >> load[24 * i + 12] >> load[24 * i + 13] >> load[24 * i + 14] >> load[24 * i + 15] >> load[24 * i + 16] >> load[24 * i + 17] >> load[24 * i + 18] >> load[24 * i + 19] >> load[24 * i + 20] >> load[24 * i + 21] >> load[24 * i +22] >> load[24 * i + 23] ;
+			Input >> node[i] >> load[24 * i] >> load[24 * i + 1] >> load[24 * i + 2] >> load[24 * i + 3] >> load[24 * i + 4] >> load[24 * i + 5] >> load[24 * i + 6] >> load[24 * i + 7] >> load[24 * i + 8] >> load[24 * i + 9] >> load[24 * i + 10] >> load[24 * i + 11] >> load[24 * i + 12] >> load[24 * i + 13] >> load[24 * i + 14] >> load[24 * i + 15] >> load[24 * i + 16] >> load[24 * i + 17] >> load[24 * i + 18] >> load[24 * i + 19] >> load[24 * i + 20] >> load[24 * i + 21] >> load[24 * i +22] >> load[24 * i + 23];
 		break;
 	case 12:	// All surface forces of H8 element
 		for (unsigned int i = 0; i < NL; i++)
 			Input >> dof[i] >> node[4 * i] >> node[4 * i + 1] >> node[4 * i + 2] >> node[4 * i + 3] >> load[12 * i] >> load[12 * i + 1] >> load[12 * i + 2] >> load[12 * i + 3] >> load[12 * i + 4] >> load[12 * i + 5] >> load[12 * i + 6] >> load[12 * i + 7] >> load[12 * i + 8] >> load[12 * i + 9] >> load[12 * i + 10] >> load[12 * i + 11];
+		break;
+	case 13:
+		break;
+	case 14:
+		break;
+	case 15:	// All surface forces of S8R5 element
+		for (unsigned int i = 0; i < NL; i++)
+			Input >> node[i] >> load[24*i] >> load[24*i+1] >> load[24*i+2] >> load[24*i+3] >> load[24*i+4] >> load[24*i+5] >> load[24*i+6] >> load[24*i+7] >> load[24*i+8] >> load[24*i+9] >> load[24*i+10] >> load[24*i+11] >> load[24*i+12] >> load[24*i+13] >> load[24*i+14] >> load[24*i+15] >> load[24*i+16] >> load[24*i+17] >> load[24*i+18] >> load[24*i+19] >> load[24*i+20] >> load[24*i+21] >> load[24*i+22] >> load[24*i+23];
+		break;
+	case 16:	// All body forces of S8R5 element
+		for (unsigned int i = 0; i < NL; i++)
+			Input >> node[i] >> load[24*i] >> load[24*i+1] >> load[24*i+2] >> load[24*i+3] >> load[24*i+4] >> load[24*i+5] >> load[24*i+6] >> load[24*i+7] >> load[24*i+8] >> load[24*i+9] >> load[24*i+10] >> load[24*i+11] >> load[24*i+12] >> load[24*i+13] >> load[24*i+14] >> load[24*i+15] >> load[24*i+16] >> load[24*i+17] >> load[24*i+18] >> load[24*i+19] >> load[24*i+20] >> load[24*i+21] >> load[24*i+22] >> load[24*i+23];
 		break;
 	default:
 		std::cerr << "LodaCase " << LL << " not available. See CLoadCaseData::Read." << std::endl;
@@ -207,15 +243,29 @@ void CLoadCaseData::Write(unsigned int lcase, COutputter& output)
 		for (unsigned int i = 0; i < nloads; i++)
 			output << setw(4) << dof[i] << setw(13) << node[3 * i] << setw(13) << node[3 * i + 1] << setw(13) << node[3 * i + 2] << setw(18) << load[6 * i] << setw(18) << load[6 * i + 1] << setw(18) << load[6 * i + 2] << setw(18) << load[6 * i + 3] << setw(18) << load[6 * i + 4] << setw(18) << load[6 * i + 5] << endl;
 		break;
-
+	case 9:
+		break;
+	case 10:
+		break;
 	case 11:	// All body forces of H8 element
 		for (unsigned int i = 0; i < nloads; i++)
 			output << setw(4) << node[i] << setw(18) << load[24 * i] << setw(18) << load[24 * i + 1] << setw(18) << load[24 * i + 2] << setw(18) << load[24 * i + 3] << setw(18) << load[24 * i + 4] << setw(18) << load[24 * i + 5] << setw(18) << load[24 * i + 6] << setw(18) << load[24 * i + 7] << setw(18) << load[24 * i + 8] << setw(18) << load[24 * i + 9] << setw(18) << load[24 * i + 10] << setw(18) << load[24 * i + 11] << setw(18) << load[24 * i + 12] << setw(18) << load[24 * i + 13] << setw(18) << load[24 * i + 14] << setw(18) << load[24 * i + 15] << setw(18) << load[24 * i + 16] << setw(18) << load[24 * i + 17] << setw(18) << load[24 * i + 18] << setw(18) << load[24 * i + 19] << setw(18) << load[24 * i + 20] << setw(18) << load[24 * i + 21] << setw(18) << load[24 * i + 22] << setw(18) << load[24 * i + 23] << endl;
 		break;
-
 	case 12:	// All surface forces of H8 element
 		for (unsigned int i = 0; i < nloads; i++)
 			output << setw(4) << dof[i] << setw(13) << node[4 * i] << setw(13) << node[4 * i + 1] << setw(13) << node[4 * i + 2] << setw(13) << node[4 * i + 3] << setw(18) << load[12 * i] << setw(18) << load[12 * i + 1] << setw(18) << load[12 * i + 2] << setw(18) << load[12 * i + 3] << setw(18) << load[12 * i + 4] << setw(18) << load[12 * i + 5] << setw(18) << load[12 * i + 6] << setw(18) << load[12 * i + 7] << setw(18) << load[12 * i + 8] << setw(18) << load[12 * i + 9] << setw(18) << load[12 * i + 10] << setw(18) << load[12 * i + 11]  << endl;
+		break;
+	case 13:
+		break;
+	case 14:
+		break;
+	case 15:	// All surface forces of S8R5 element
+		for (unsigned int i = 0; i < nloads; i++)
+			output << setw(4) << node[i] << setw(18) << load[24*i] << setw(18) << load[24*i+1] << setw(18) << load[24*i+2] << setw(18) << load[24*i+3] << setw(18) << load[24*i+4] << setw(18) << load[24*i+5] << setw(18) << load[24*i+6] << setw(18) << load[24*i+7] << setw(18) << load[24*i+8] << setw(18) << load[24*i+9] << setw(18) << load[24*i+10] << setw(18) << load[24*i+11] << setw(18) << load[24*i+12] << setw(18) << load[24*i+13] << setw(18) << load[24*i+14] << setw(18) << load[24*i+15] << setw(18) << load[24*i+16] << setw(18) << load[24*i+17] << setw(18) << load[24*i+18] << setw(18) << load[24*i+19] << setw(18) << load[24*i+20] << setw(18) << load[24*i+21] << setw(18) << load[24*i+22] << setw(18) << load[24*i+23] << endl;
+		break;
+	case 16:	// All body forces of S8R5 element
+		for (unsigned int i = 0; i < nloads; i++)
+			output << setw(4) << node[i] << setw(18) << load[24*i] << setw(18) << load[24*i+1] << setw(18) << load[24*i+2] << setw(18) << load[24*i+3] << setw(18) << load[24*i+4] << setw(18) << load[24*i+5] << setw(18) << load[24*i+6] << setw(18) << load[24*i+7] << setw(18) << load[24*i+8] << setw(18) << load[24*i+9] << setw(18) << load[24*i+10] << setw(18) << load[24*i+11] << setw(18) << load[24*i+12] << setw(18) << load[24*i+13] << setw(18) << load[24*i+14] << setw(18) << load[24*i+15] << setw(18) << load[24*i+16] << setw(18) << load[24*i+17] << setw(18) << load[24*i+18] << setw(18) << load[24*i+19] << setw(18) << load[24*i+20] << setw(18) << load[24*i+21] << setw(18) << load[24*i+22] << setw(18) << load[24*i+23] << endl;
 		break;
 	default:
 		std::cerr << "LodaCase " << lcase << " not available. See CLoadCaseData::Write." << std::endl;
