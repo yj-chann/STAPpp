@@ -289,7 +289,7 @@ void CDomain::AssembleStiffnessMatrix()
             CElement& Element = ElementGrp[Ele];
             Element.ElementStiffness(Matrix);
             StiffnessMatrix->Assembly(Matrix, Element.GetLocationMatrix(), Element.GetND());		
-			
+
 			if (Element.GetNonHomo()) {
 				clear(NonForce, Element.GetND());
 				unsigned int* LocationMatrix = Element.GetLocationMatrix();

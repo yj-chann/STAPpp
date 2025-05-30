@@ -72,6 +72,7 @@ void CB31::ElementStiffness(double* Matrix)  // Local stiffness matrix can be de
     double Iz = material_->Iz;
     double J = material_->J;
     double k = material_->k;
+    unsigned int direction = material_->direction;
 
 //	Calculate beam length
 	double DX[3];		//	dx = x2-x1, dy = y2-y1, dz = z2-z1
@@ -143,38 +144,116 @@ void CB31::ElementStiffness(double* Matrix)  // Local stiffness matrix can be de
     Ke[11][7] = -k * G * Area / 2.0;
     Ke[11][11] = k * G * Area * L / 4.0 + E * Iz / L;
 
-// Calculate direction cosine matrix
-//! In this problem, since the z-axis of the local coordinate system of the B31 element coincides with the z-axis of the global coordinate system,
-//! the analysis is simplified. Otherwise, we would need to determine the local x-axis and y-axis based on the cross-section shape, 
-//! which is a time-consuming task. It should be noted that, according to the inp file, the cross-section in this problem is of a box-type (rectangular hollow) shape.
-    double lxpx = DX[0] / L;    // Cosine of angle between beam and x-axis
-    double lxpy = DX[1] / L;    // Cosine of angle between beam and y-axis
-
 // Calculate transformation Matrix
     double Te[12][12] = {0};
-    Te[0][0] = lxpx;
-    Te[0][1] = lxpy;
-    Te[1][0] = -lxpy;
-    Te[1][1] = lxpx;
-    Te[2][2] = 1.0;
 
-    Te[3][3] = lxpx;
-    Te[3][4] = lxpy;
-    Te[4][3] = -lxpy;
-    Te[4][4] = lxpx;
-    Te[5][5] = 1.0;
+    switch (direction)
+    {
+        case 1: // Beam in the YOZ plane
+        {
+            // Calculate direction cosine matrix
+            //! In this case, since the x-axis of the local coordinate system of the B31 element coincides with the x-axis of the global coordinate system,
+            //! the analysis is simplified. Otherwise, we would need to determine the local y-axis and z-axis based on the cross-section shape, 
+            //! which is a time-consuming task. It should be noted that, according to the inp file, the cross-section in this problem is of a box-type (rectangular hollow) shape.
+                double lypy = DX[1] / L;    // Cosine of angle between beam and y-axis
+                double lypz = DX[2] / L;    // Cosine of angle between beam and z-axis
+            
+            Te[0][0] = 1.0;
+            Te[1][1] = lypy;
+            Te[1][2] = lypz;
+            Te[2][1] = -lypz;
+            Te[2][2] = lypy;
 
-    Te[6][6] = lxpx;
-    Te[6][7] = lxpy;
-    Te[7][6] = -lxpy;
-    Te[7][7] = lxpx;
-    Te[8][8] = 1.0;
+            Te[3][3] = 1.0;
+            Te[4][4] = lypy;
+            Te[4][5] = lypz;
+            Te[5][4] = -lypz;
+            Te[5][5] = lypy;
 
-    Te[9][9] = lxpx;
-    Te[9][10] = lxpy;
-    Te[10][9] = -lxpy;
-    Te[10][10] = lxpx;
-    Te[11][11] = 1.0;
+            Te[6][6] = 1.0;
+            Te[7][7] = lypy;
+            Te[7][8] = lypz;
+            Te[8][7] = -lypz;
+            Te[8][8] = lypy;
+
+            Te[9][9] = 1.0;
+            Te[10][10] = lypy;
+            Te[10][11] = lypz;
+            Te[11][10] = -lypz;
+            Te[11][11] = lypy;
+            break;
+        }
+
+        case 2: // Beam in the ZOX plane
+        {
+            // Calculate direction cosine matrix
+            //! In this case, since the y-axis of the local coordinate system of the B31 element coincides with the y-axis of the global coordinate system,
+            //! the analysis is simplified. Otherwise, we would need to determine the local z-axis and x-axis based on the cross-section shape, 
+            //! which is a time-consuming task. It should be noted that, according to the inp file, the cross-section in this problem is of a box-type (rectangular hollow) shape.
+                double lzpz = DX[2] / L;    // Cosine of angle between beam and z-axis
+                double lzpx = DX[0] / L;    // Cosine of angle between beam and x-axis
+            
+            Te[0][0] = lzpz;
+            Te[0][2] = -lzpx;
+            Te[1][1] = 1.0;
+            Te[2][0] = lzpx;
+            Te[2][2] = lzpz;
+
+            Te[3][3] = lzpz;
+            Te[3][5] = -lzpx;
+            Te[4][4] = 1.0;
+            Te[5][3] = lzpx;
+            Te[5][5] = lzpz;
+
+            Te[6][6] = lzpz;
+            Te[6][8] = -lzpx;
+            Te[7][7] = 1.0;
+            Te[8][6] = lzpx;
+            Te[8][8] = lzpz;
+
+            Te[9][9] = lzpz;
+            Te[9][11] = -lzpx;
+            Te[10][10] = 1.0;
+            Te[11][9] = lzpx;
+            Te[11][11] = lzpz;
+            break;
+        }
+
+        case 3: // Beam in the XOY plane
+        {
+            // Calculate direction cosine matrix
+            //! In this case, since the z-axis of the local coordinate system of the B31 element coincides with the z-axis of the global coordinate system,
+            //! the analysis is simplified. Otherwise, we would need to determine the local x-axis and y-axis based on the cross-section shape, 
+            //! which is a time-consuming task. It should be noted that, according to the inp file, the cross-section in this problem is of a box-type (rectangular hollow) shape.
+                double lxpx = DX[0] / L;    // Cosine of angle between beam and x-axis
+                double lxpy = DX[1] / L;    // Cosine of angle between beam and y-axis
+
+            Te[0][0] = lxpx;
+            Te[0][1] = lxpy;
+            Te[1][0] = -lxpy;
+            Te[1][1] = lxpx;
+            Te[2][2] = 1.0;
+
+            Te[3][3] = lxpx;
+            Te[3][4] = lxpy;
+            Te[4][3] = -lxpy;
+            Te[4][4] = lxpx;
+            Te[5][5] = 1.0;
+
+            Te[6][6] = lxpx;
+            Te[6][7] = lxpy;
+            Te[7][6] = -lxpy;
+            Te[7][7] = lxpx;
+            Te[8][8] = 1.0;
+
+            Te[9][9] = lxpx;
+            Te[9][10] = lxpy;
+            Te[10][9] = -lxpy;
+            Te[10][10] = lxpx;
+            Te[11][11] = 1.0;
+            break;
+        }
+    }
 
     double K[12][12] = {0};
     for (int i = 0; i < 12; i++)

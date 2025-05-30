@@ -168,6 +168,7 @@ void CQ4::ElementStress(double* stress, double* Displacement)
             -sqrt(3) / 3.0,
             sqrt(3) / 3.0,
     };
+    
     int index = 0;
     for (unsigned int gp1 = 0; gp1 < 2; gp1++)
     {

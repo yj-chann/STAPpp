@@ -21,6 +21,7 @@
 #include "B31.h"
 #include "H8.h"
 #include "S8R5.h"
+#include "MP.h"
 #include "Material.h"
 #include "Node.h"
 
@@ -38,6 +39,7 @@ enum ElementTypes
     B31,    // Beam31(Timoshenko) element
     H8,     // 8H element
     S8R5,   // 8-node quadratic degenerated shell, reduced integration, using five degrees of freedom per node
+    MP,     // 4-node Mindlin Reissner Plate, selective reduced integration
     Beam,   // Beam element
     Plate,  // Plate element
     Shell   // Shell elment

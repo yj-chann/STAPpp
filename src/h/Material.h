@@ -154,6 +154,7 @@ public:
 	double Iz;	  	  //!< Moment of inertia of the x'y' cross-section
 	double J;	  	  //!< Torsional Moment of Inertia
 	double k;		  //!< Correction factor (shear area ratio)
+	unsigned int direction; //!< 1: YOZ plane; 2: ZOX plane; 3: XOY plane
 
 public:
 
@@ -173,7 +174,7 @@ public:
 	double G;  		  //!< Shear modulus
 	double t;	      //!< Element thickness of a Q8 element
 	double k;		  //!< Correction factor (shear area ratio)
-	double v3[3];	  //!< Torsional Moment of Inertia
+	double v3[3];	  //!< Unit vector normal to the midsurface
 
 public:
 
@@ -183,6 +184,27 @@ public:
 	//!	Write material data to Stream
 	virtual void Write(COutputter& output);
 };
+
+//!	Material class for Mindlin-Reissner Plate element
+class CMPMaterial : public CMaterial
+{
+public:
+
+	double nu;        //!< Poisson's ratio
+	double G;  		  //!< Shear modulus
+	double D_0;	      //!< Bending stiffness
+	double t;	      //!< Element thickness of a Q8 element
+	double k;		  //!< Correction factor (shear area ratio)
+
+public:
+
+	//!	Read material data from stream Input
+	virtual bool Read(ifstream& Input);
+
+	//!	Write material data to Stream
+	virtual void Write(COutputter& output);
+};
+
 
 
 

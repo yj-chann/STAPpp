@@ -94,6 +94,10 @@ void CElementGroup::CalculateMemberSize()
             ElementSize_ = sizeof(CS8R5);
             MaterialSize_ = sizeof(CS8R5Material);
             break;
+        case ElementTypes::MP:
+            ElementSize_ = sizeof(CMP);
+            MaterialSize_ = sizeof(CMPMaterial);
+            break;
         default:
             std::cerr << "Type " << ElementType_ << " not available. See CElementGroup::CalculateMemberSize." << std::endl;
             exit(5);
@@ -130,6 +134,9 @@ void CElementGroup::AllocateElements(std::size_t size)
         case ElementTypes::S8R5:
             ElementList_ = new CS8R5[size];
             break;
+        case ElementTypes::MP:
+            ElementList_ = new CMP[size];
+            break;
         default:
             std::cerr << "Type " << ElementType_ << " not available. See CElementGroup::AllocateElement." << std::endl;
             exit(5);
@@ -165,6 +172,9 @@ void CElementGroup::AllocateMaterials(std::size_t size)
         case ElementTypes::S8R5:
             MaterialList_ = new CS8R5Material[size];
             break;
+        case ElementTypes::MP:
+            MaterialList_ = new CMPMaterial[size];
+            break;
         default:
             std::cerr << "Type " << ElementType_ << " not available. See CElementGroup::AllocateMaterial." << std::endl;
             exit(5);
@@ -180,12 +190,12 @@ bool CElementGroup::Read(ifstream& Input)
 
 //  Read material/section property lines
     AllocateMaterials(NUMMAT_);
-    
+
 //  Loop over for all material property sets in this element group
     for (unsigned int mset = 0; mset < NUMMAT_; mset++)
-    {
+    {    
         GetMaterial(mset).Read(Input);
-  
+   
         if (GetMaterial(mset).nset != mset + 1)
         {
             cerr << "*** Error *** Material sets must be inputted in order !" << endl
