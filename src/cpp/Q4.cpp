@@ -147,6 +147,13 @@ void CQ4::ElementStress(double* stress, double* Displacement)
 	for (unsigned int i = 0; i < 8; i++)
 		if (LocationMatrix_[i])
 			d[i] = Displacement[LocationMatrix_[i]-1];
+    
+    unsigned int Node_NDF = ND_ / NEN_;
+// Resolving non-homogeneous essential boundary conditions
+    if (NonHomo_)
+        for (unsigned int i = 0; i < ND_; i++)
+            if (!LocationMatrix_[i] && nodes_[i/Node_NDF]->BC[i%Node_NDF] != 0)
+                d[i] = nodes_[i/Node_NDF]->BC[i%Node_NDF];
 
 // x and y coordinates
     double C[8];
