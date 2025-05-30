@@ -1,5 +1,5 @@
 TITLE : STAP90 input data for exercise 2.5
-        (17:37:21 on May 4, 2025, Sunday)
+        (15:30:24 on May 30, 2025, Friday)
 
 C O N T R O L   I N F O R M A T I O N
 
@@ -21,12 +21,12 @@ C O N T R O L   I N F O R M A T I O N
 
  EQUATION NUMBERS
 
-   NODE NUMBER   DEGREES OF FREEDOM
-        N           X    Y    Z
-        1           0    0    0
-        2           0    0    0
-        3           1    0    0
-        4           2    3    0
+   NODE NUMBER   DEGREES 	OF 	FREEDOM
+        N           X    Y    Z    x    y    z
+        1           0    0    0  N/A  N/A  N/A
+        2           0    0    0  N/A  N/A  N/A
+        3           1    0    0  N/A  N/A  N/A
+        4           2    3    0  N/A  N/A  N/A
 
  L O A D   C A S E   D A T A
 
@@ -46,6 +46,8 @@ C O N T R O L   I N F O R M A T I O N
      EQ.1, TRUSS ELEMENTS
      EQ.2, ELEMENTS CURRENTLY
      EQ.3, NOT AVAILABLE
+     EQ.4, Q8
+     EQ.7, H8
 
  NUMBER OF ELEMENTS. . . . . . . . . . .( NPAR(2) ) . . =    3
 
@@ -76,16 +78,13 @@ C O N T R O L   I N F O R M A T I O N
      MEAN HALF BANDWIDTH . . . . . . . . . . . . . .(MM ) = 2
 
 
- LOAD CASE    1
-
-
  D I S P L A C E M E N T S
 
-  NODE           X-DISPLACEMENT    Y-DISPLACEMENT    Z-DISPLACEMENT
-    1               0.00000e+00       0.00000e+00       0.00000e+00
-    2               0.00000e+00       0.00000e+00       0.00000e+00
-    3               3.82843e-06       0.00000e+00       0.00000e+00
-    4               3.32843e-06       5.00000e-07       0.00000e+00
+  NODE            X-DISPLACEMENT    Y-DISPLACEMENT    Z-DISPLACEMENT    X-ROTATION    Y-ROTATION    Z-ROTATION
+    1               0.00000e+00       0.00000e+00       0.00000e+00         N/A          N/A            N/A
+    2               0.00000e+00       0.00000e+00       0.00000e+00         N/A          N/A            N/A
+    3               3.82843e-06       0.00000e+00       0.00000e+00         N/A          N/A            N/A
+    4               3.32843e-06       5.00000e-07       0.00000e+00         N/A          N/A            N/A
 
  S T R E S S  C A L C U L A T I O N S  F O R  E L E M E N T  G R O U P    1
 
@@ -98,9 +97,9 @@ C O N T R O L   I N F O R M A T I O N
 
  S O L U T I O N   T I M E   L O G   I N   S E C 
 
-     TIME FOR INPUT PHASE = 2.50000e-02
-     TIME FOR CALCULATION OF STIFFNESS MATRIX = 2.00000e-03
-     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 1.10000e-02
+     TIME FOR INPUT PHASE = 5.20000e-02
+     TIME FOR CALCULATION OF STIFFNESS MATRIX = 1.00000e-03
+     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 2.20000e-02
 
-     T O T A L   S O L U T I O N   T I M E = 3.80000e-02
+     T O T A L   S O L U T I O N   T I M E = 7.50000e-02
 
