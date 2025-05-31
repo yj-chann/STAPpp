@@ -1097,11 +1097,7 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 		}
 		break;
 	}
-	// case 13:
-	// 	break;
-	// case 14:
-	// 	break;
-	case 15:	// All surface forces of S8R5 element
+	case 13:	// All surface forces of S8R5 element
 	{
 		unsigned int EleGrp = 0;
 		for (; EleGrp < NUMEG; EleGrp++)
@@ -1235,7 +1231,7 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 		}
 		break;
 	}
-	case 16:	// All body forces of S8R5 element
+	case 14:	// All body forces of S8R5 element
 	{
 		unsigned int EleGrp = 0;
 		for (; EleGrp < NUMEG; EleGrp++)
@@ -1368,6 +1364,171 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 			};
 
 			for (int i = 0; i < 40; i++)
+				if (dof[i])	// The DOF is activated
+					Force[dof[i] - 1] += f_Omega[i];
+		}
+		break;
+	}
+	case 15:	// All body forces Mindlin-Reissner Plate element, except body moment
+	{	
+		unsigned int EleGrp = 0;
+		for (; EleGrp < NUMEG; EleGrp++)
+		{
+			CElementGroup& ElementGrp = EleGrpList[EleGrp];
+			unsigned int ElementType = ElementGrp.GetElementType();
+			if (ElementType == 9)
+				break;
+		}
+		CElementGroup& ElementGrp = EleGrpList[EleGrp];
+
+		for (unsigned int LoadOrder = 0; LoadOrder < LoadData->nloads; LoadOrder++)
+		{
+			unsigned int Ele = LoadData->node[LoadOrder];
+			double b[12] = {
+				0,
+				0,
+				LoadData->load[4*LoadOrder],
+				0,
+				0,
+				LoadData->load[4*LoadOrder+1],
+				0,
+				0,
+				LoadData->load[4*LoadOrder+2],
+				0,
+				0,
+				LoadData->load[4*LoadOrder+3],
+			};
+
+			CElement& Element = ElementGrp[Ele - 1];
+			CMP* Element_ = dynamic_cast<CMP*>(&Element);
+			CMaterial* ElementMaterial = Element.GetElementMaterial();
+			CMPMaterial* material_ = dynamic_cast<CMPMaterial*>(ElementMaterial);
+			CNode** nodes = Element.GetNodes();
+
+			double f_Omega[12] = {0};
+			double GaussPoints[2] = {
+				-sqrt(3) / 3.0,
+				sqrt(3) / 3.0,
+			};
+
+			for (unsigned int gp1 = 0; gp1 < 2; gp1++)	//  reduced integration
+			{
+				for (unsigned int gp2 = 0; gp2 < 2; gp2++)
+				{					
+					double Bb[3][12] = {0};
+					double Bs[2][12] = {0};
+					double det = 0;
+					Element_->ElementStrainFunction(Bb, Bs, &det, GaussPoints[gp1], GaussPoints[gp2]);
+					double N[3][12] = {0};
+					Element_->ElementShapeFunction(N, GaussPoints[gp1], GaussPoints[gp2]);
+					for (int i = 0; i < 12; i++)
+						for (int j = 0; j < 3; j++)
+							for (int k = 0; k < 12; k++)
+								f_Omega[i] += N[j][i] * N[j][k] * b[k] * det;  // Weight is 1					
+				}
+			}
+
+			unsigned int dof[12] = {
+				nodes[0]->bcode[3],
+				nodes[0]->bcode[4],
+				nodes[0]->bcode[2],
+				nodes[1]->bcode[3],
+				nodes[1]->bcode[4],
+				nodes[1]->bcode[2],
+				nodes[2]->bcode[3],
+				nodes[2]->bcode[4],
+				nodes[2]->bcode[2],
+				nodes[3]->bcode[3],
+				nodes[3]->bcode[4],
+				nodes[3]->bcode[2],
+			};
+
+			for (int i = 0; i < 12; i++)
+				if (dof[i])	// The DOF is activated
+					Force[dof[i] - 1] += f_Omega[i];
+		}
+		break;
+	}
+	case 16:	// All body forces of basic Plate element
+	{
+		unsigned int EleGrp = 0;
+		for (; EleGrp < NUMEG; EleGrp++)
+		{
+			CElementGroup& ElementGrp = EleGrpList[EleGrp];
+			unsigned int ElementType = ElementGrp.GetElementType();
+			if (ElementType == 10)
+				break;
+		}
+		CElementGroup& ElementGrp = EleGrpList[EleGrp];
+
+		for (unsigned int LoadOrder = 0; LoadOrder < LoadData->nloads; LoadOrder++)
+		{
+			unsigned int Ele = LoadData->node[LoadOrder];
+			double b[12] = {
+				LoadData->load[4*LoadOrder],
+				0,
+				0,
+				LoadData->load[4*LoadOrder+1],
+				0,
+				0,
+				LoadData->load[4*LoadOrder+2],
+				0,
+				0,
+				LoadData->load[4*LoadOrder+3],
+				0,
+				0,
+			};
+
+			CElement& Element = ElementGrp[Ele - 1];
+			CPlate* Element_ = dynamic_cast<CPlate*>(&Element);
+			CMaterial* ElementMaterial = Element.GetElementMaterial();
+			CPlateMaterial* material_ = dynamic_cast<CPlateMaterial*>(ElementMaterial);
+			CNode** nodes = Element.GetNodes();
+
+			double f_Omega[12] = {0};
+			double GaussPoints[3] = {
+				-sqrt(15) / 5.0,
+				0.0,
+				sqrt(15) / 5.0,
+			};
+
+			double Weight[3] = {
+				5.0 / 9.0,
+				8.0 / 9.0,
+				5.0 / 9.0,
+			};
+
+			for (unsigned int gp1 = 0; gp1 < 3; gp1++)	//  full integration
+			{
+				for (unsigned int gp2 = 0; gp2 < 3; gp2++)
+				{					
+					double B[3][12] = {0};
+					double det = 0;
+					Element_->ElementStrainFunction(B, &det, GaussPoints[gp1], GaussPoints[gp2]);
+					double N[1][12] = {0};
+					Element_->ElementShapeFunction(N, GaussPoints[gp1], GaussPoints[gp2]);
+					for (int i = 0; i < 12; i++)		
+						for (int j = 0; j < 12; j++)
+							f_Omega[i] += Weight[gp1] * Weight[gp2] * N[0][i] * N[0][j] * b[j] * det;  // Weight is 1					
+				}
+			}
+
+			unsigned int dof[12] = {
+				nodes[0]->bcode[2],
+				nodes[0]->bcode[3],
+				nodes[0]->bcode[4],
+				nodes[1]->bcode[2],
+				nodes[1]->bcode[3],
+				nodes[1]->bcode[4],
+				nodes[2]->bcode[2],
+				nodes[2]->bcode[3],
+				nodes[2]->bcode[4],
+				nodes[3]->bcode[2],
+				nodes[3]->bcode[3],
+				nodes[3]->bcode[4],
+			};
+
+			for (int i = 0; i < 12; i++)
 				if (dof[i])	// The DOF is activated
 					Force[dof[i] - 1] += f_Omega[i];
 		}

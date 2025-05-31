@@ -193,8 +193,27 @@ public:
 	double nu;        //!< Poisson's ratio
 	double G;  		  //!< Shear modulus
 	double D_0;	      //!< Bending stiffness
-	double t;	      //!< Element thickness of a Q8 element
+	double t;	      //!< Element thickness of a Plate element
 	double k;		  //!< Correction factor (shear area ratio)
+
+public:
+
+	//!	Read material data from stream Input
+	virtual bool Read(ifstream& Input);
+
+	//!	Write material data to Stream
+	virtual void Write(COutputter& output);
+};
+
+//!	Material class for Rectangle Plate element
+class CPlateMaterial : public CMaterial
+{
+public:
+
+	double nu;        //!< Poisson's ratio
+	double G;  		  //!< Shear modulus
+	double D_0;	      //!< Bending stiffness
+	double t;	      //!< Element thickness of a Plate element
 
 public:
 
