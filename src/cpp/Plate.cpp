@@ -246,9 +246,9 @@ void CPlate::ElementStrainFunction(double (&B)[3][12], double* det, double xi, d
     double a = fabs(C[1][0] - C[0][0]) / 2.0;   // Half of the length of element in the x-direction
     double b = fabs(C[2][1] - C[0][1]) / 2.0;   // Half of the length of element in the y-direction
     
-    if (!a) {
-        double a = fabs(C[2][0] - C[1][0]) / 2.0;
-        double b = fabs(C[1][1] - C[0][1]) / 2.0;
+    if (fabs(a) < 1e-10) {
+        a = fabs(C[2][0] - C[1][0]) / 2.0;
+        b = fabs(C[1][1] - C[0][1]) / 2.0;
     }
 
     double xi_I[4] = {
