@@ -22,6 +22,7 @@
 #include "H8.h"
 #include "S8R5.h"
 #include "MP.h"
+#include "Plate.h"
 #include "Material.h"
 #include "Node.h"
 
@@ -40,8 +41,7 @@ enum ElementTypes
     H8,     // 8H element
     S8R5,   // 8-node quadratic degenerated shell, reduced integration, using five degrees of freedom per node
     MP,     // 4-node Mindlin Reissner Plate, selective reduced integration
-    Beam,   // Beam element
-    Plate,  // Plate element
+    Plate,  // 4-node Rectangle Plate element
     Shell   // Shell elment
 };
 

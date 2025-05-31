@@ -636,31 +636,49 @@ void COutputter::OutputLoadInfo()
 			*this << " ELEMENT       1-NODE        2-NODE        3-NODE        4-NODE        TX1-LOAD       TY1-LOAD       TZ1-LOAD       TX2-LOAD       TY2-LOAD       TZ2-LOAD       TX3-LOAD       TY3-LOAD       TZ3-LOAD       TX4-LOAD       TY4-LOAD       TZ4-LOAD" << endl
 				<< " NUMBER        NUMBER        NUMBER        NUMBER        NUMBER        MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE" << endl;
 			break;
-		case 13:
-			break;
-		case 14:
-			break;
-		case 15:	// All surface forces of S8R5 element
+		case 13:	// All surface forces of S8R5 element
 			*this << setiosflags(ios::scientific);
 			*this << " L O A D   C A S E   D A T A" << endl
 				<< endl;
 
 			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
-			*this << "     BODY FORCES OF H8 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
+			*this << "     BODY FORCES OF S8R5 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
 				<< endl;
 			*this << " ELEMENT      BX1-LOAD      BY1-LOAD      BZ1-LOAD      BX2-LOAD      BY2-LOAD      BZ2-LOAD      BX3-LOAD      BY3-LOAD      BZ3-LOAD      BX4-LOAD      BY4-LOAD      BZ4-LOAD      BX5-LOAD      BY5-LOAD      BZ5-LOAD      BX6-LOAD      BY6-LOAD      BZ6-LOAD      BX7-LOAD      BY7-LOAD      BZ7-LOAD      BX8-LOAD      BY8-LOAD      BZ8-LOAD " << endl
 				<< " NUMBER       MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE" << endl;
 			break;
-		case 16:	// All body forces of S8R5 element
+		case 14:	// All body forces of S8R5 element
 			*this << setiosflags(ios::scientific);
 			*this << " L O A D   C A S E   D A T A" << endl
 				<< endl;
 
 			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
-			*this << "     BODY FORCES OF H8 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
+			*this << "     BODY FORCES OF S8R5 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
 				<< endl;
 			*this << " ELEMENT      BX1-LOAD      BY1-LOAD      BZ1-LOAD      BX2-LOAD      BY2-LOAD      BZ2-LOAD      BX3-LOAD      BY3-LOAD      BZ3-LOAD      BX4-LOAD      BY4-LOAD      BZ4-LOAD      BX5-LOAD      BY5-LOAD      BZ5-LOAD      BX6-LOAD      BY6-LOAD      BZ6-LOAD      BX7-LOAD      BY7-LOAD      BZ7-LOAD      BX8-LOAD      BY8-LOAD      BZ8-LOAD " << endl
 				<< " NUMBER       MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE" << endl;
+			break;
+		case 15:	// All surface forces of Mindlin-Reissner Plate element
+			*this << setiosflags(ios::scientific);
+			*this << " L O A D   C A S E   D A T A" << endl
+				<< endl;
+
+			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
+			*this << "     BODY FORCES OF Mindlin-Reissner Plate ELEMENTS . =" << setw(6) << LoadData->nloads << endl
+				<< endl;
+			*this << " ELEMENT      BZ1-LOAD      BZ2-LOAD      BZ3-LOAD      BZ4-LOAD " << endl
+				<< " NUMBER       MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE" << endl;
+			break;
+		case 16:	// All surface forces of Plate element
+			*this << setiosflags(ios::scientific);
+			*this << " L O A D   C A S E   D A T A" << endl
+				<< endl;
+
+			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
+			*this << "     BODY FORCES OF Plate ELEMENTS . =" << setw(6) << LoadData->nloads << endl
+				<< endl;
+			*this << " ELEMENT      BZ1-LOAD      BZ2-LOAD      BZ3-LOAD      BZ4-LOAD " << endl
+				<< " NUMBER       MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE" << endl;
 			break;
 		default:
 			std::cerr << "LodaCase " << LoadData->LoadCaseType_ << " not available. See COutputter::OutputLoadInfo." << std::endl;

@@ -98,6 +98,10 @@ void CElementGroup::CalculateMemberSize()
             ElementSize_ = sizeof(CMP);
             MaterialSize_ = sizeof(CMPMaterial);
             break;
+        case ElementTypes::Plate:
+            ElementSize_ = sizeof(CPlate);
+            MaterialSize_ = sizeof(CPlateMaterial);
+            break;
         default:
             std::cerr << "Type " << ElementType_ << " not available. See CElementGroup::CalculateMemberSize." << std::endl;
             exit(5);
@@ -137,6 +141,9 @@ void CElementGroup::AllocateElements(std::size_t size)
         case ElementTypes::MP:
             ElementList_ = new CMP[size];
             break;
+        case ElementTypes::Plate:
+            ElementList_ = new CPlate[size];
+            break;
         default:
             std::cerr << "Type " << ElementType_ << " not available. See CElementGroup::AllocateElement." << std::endl;
             exit(5);
@@ -175,6 +182,9 @@ void CElementGroup::AllocateMaterials(std::size_t size)
         case ElementTypes::MP:
             MaterialList_ = new CMPMaterial[size];
             break;
+        case ElementTypes::Plate:
+            MaterialList_ = new CPlateMaterial[size];
+            break;
         default:
             std::cerr << "Type " << ElementType_ << " not available. See CElementGroup::AllocateMaterial." << std::endl;
             exit(5);
@@ -185,7 +195,7 @@ void CElementGroup::AllocateMaterials(std::size_t size)
 bool CElementGroup::Read(ifstream& Input)
 {
     Input >> (int&)ElementType_ >> NUME_ >> NUMMAT_;
-    
+
     CalculateMemberSize();
 
 //  Read material/section property lines

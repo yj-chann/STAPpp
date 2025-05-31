@@ -153,7 +153,7 @@ bool CMPMaterial::Read(ifstream& Input)
 {
 	Input >> nset;	// Number of property set
 
-	Input >> E >> nu >> t >> k ;	// Young's modulus, Poisson's ratio, element thickness, Correction factor, unit vector normal to the midsurface
+	Input >> E >> nu >> t >> k;	// Young's modulus, Poisson's ratio, element thickness, Correction factor
 
 	G = E / 2.0 / (1 + nu);
 	D_0 = E * t * t * t / (12 * (1 - nu * nu));
@@ -165,4 +165,23 @@ bool CMPMaterial::Read(ifstream& Input)
 void CMPMaterial::Write(COutputter& output)
 {
 	output << setw(16) << E << setw(16) << G << setw(16) << t << setw(16) << k << endl;
+}
+
+//	Read material data from stream Input
+bool CPlateMaterial::Read(ifstream& Input)
+{
+	Input >> nset;	// Number of property set
+
+	Input >> E >> nu >> t;	// Young's modulus, Poisson's ratio, element thickness
+
+	G = E / 2.0 / (1 + nu);
+	D_0 = E * t * t * t / (12 * (1 - nu * nu));
+
+	return true;
+}
+
+//	Write material data to Stream
+void CPlateMaterial::Write(COutputter& output)
+{
+	output << setw(16) << E << setw(16) << G << setw(16) << t << endl;
 }
