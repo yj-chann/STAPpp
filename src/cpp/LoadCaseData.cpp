@@ -130,6 +130,20 @@ void CLoadCaseData :: Allocate(unsigned int LL, unsigned int num)
 		coordinate = nullptr;	// In case 16, coordinate is useless
 		load = new double[4*nloads];	// In case 16, every element body force must be input in order of element node number, b_z1 b_z2 b_z3 ...
 		break;
+	case 17:	// All body forces of Tet4 element
+		nloads = num;
+		node = new unsigned int[nloads];	// In case 17, node is element number
+		dof = nullptr;  // In case 17, dof is useless
+		coordinate = nullptr;	// In case 17, coordinate is useless
+		load = new double[12*nloads];	// In case 17, every element body force must be input in order of element node number, b_x1 b_y1 b_z1 ...
+		break;
+	case 18:	// All surface forces of Tet4 element
+		nloads = num;
+		node = new unsigned int[3*nloads];
+		dof = new unsigned int[nloads];  // In case 18, dof is element number
+		coordinate = nullptr;	// In case 18, coordinate is useless
+		load = new double[9*nloads];	// In case 18, every element surface force must be input in order of element node number, t_x1 t_y1 t_z1 ...
+		break;
 	default:
 		std::cerr << "LodaCase " << LL << " not available. See CLoadCaseData::Allocate." << std::endl;
 		exit(5);
@@ -211,6 +225,14 @@ bool CLoadCaseData :: Read(unsigned int LL, ifstream& Input)
 		for (unsigned int i = 0; i < NL; i++)
 			Input >> node[i] >> load[4*i] >> load[4*i+1] >> load[4*i+2] >> load[4*i+3];
 		break;
+	case 17:	// All body forces of Tet4 element
+		for (unsigned int i = 0; i < NL; i++)
+			Input >> node[i] >> load[12*i] >> load[12*i+1] >> load[12*i+2] >> load[12*i+3] >> load[12*i+4] >> load[12*i+5] >> load[12*i+6] >> load[12*i+7] >> load[12*i+8] >> load[12*i+9] >> load[12*i+10] >> load[12*i+11];
+		break;
+	case 18:	// All surface forces of Tet4 element
+		for (unsigned int i = 0; i < NL; i++)
+			Input >> dof[i] >> node[3*i] >> node[3*i+1] >> node[3*i+2]>> load[9*i] >> load[9*i+1] >> load[9*i+2] >> load[9*i+3] >> load[9*i+4] >> load[9*i+5] >> load[9*i+6] >> load[9*i+7] >> load[9*i+8];
+		break;
 	default:
 		std::cerr << "LodaCase " << LL << " not available. See CLoadCaseData::Read." << std::endl;
 		exit(5);
@@ -284,6 +306,14 @@ void CLoadCaseData::Write(unsigned int lcase, COutputter& output)
 	case 16:	// All body forces of basic Plate element
 		for (unsigned int i = 0; i < nloads; i++)
 			output << setw(4) << node[i] << setw(18) << load[4*i] << setw(18) << load[4*i+1] << setw(18) << load[4*i+2] << setw(18) << load[4*i+3] << endl;	
+		break;
+	case 17:	// All body forces of Tet4 element
+		for (unsigned int i = 0; i < nloads; i++)
+			output << setw(4) << node[i] << setw(18) << load[12*i] << setw(18) << load[12*i+1] << setw(18) << load[12*i+2] << setw(18) << load[12*i+3] << setw(18) << load[12*i+4] << setw(18) << load[12*i+5] << setw(18) << load[12*i+6] << setw(18) << load[12*i+7] << setw(18) << load[12*i+8] << setw(18) << load[12*i+9] << setw(18) << load[12*i+10] << setw(18) << load[12*i+11] << endl;
+		break;
+	case 18:	// All surface forces of Tet4 element
+		for (unsigned int i = 0; i < nloads; i++)
+			output << setw(4) << dof[i] << setw(13) << node[3*i] << setw(13) << node[3*i+1] << setw(13) << node[3*i+2] << setw(18) << load[9*i] << setw(18) << load[9*i+1] << setw(18) << load[9*i+2] << setw(18) << load[9*i+3] << setw(18) << load[9*i+4] << setw(18) << load[9*i+5] << setw(18) << load[9*i+6] << setw(18) << load[9*i+7] << setw(18) << load[9*i+8] << endl;
 		break;
 	default:
 		std::cerr << "LodaCase " << lcase << " not available. See CLoadCaseData::Write." << std::endl;

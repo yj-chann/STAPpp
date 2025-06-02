@@ -152,6 +152,7 @@ void COutputter::OutputElementInfo()
 			  << "     EQ.3, NOT AVAILABLE" << endl
 			  << "     EQ.4, Q8" << endl
 		      << "     EQ.7, H8" << endl
+			  << "     EQ.11, Tet4" << endl
 			  << endl;
 
 		*this << " NUMBER OF ELEMENTS. . . . . . . . . . .( NPAR(2) ) . . =" << setw(5) << NUME
@@ -178,8 +179,11 @@ void COutputter::OutputElementInfo()
 			case ElementTypes::B31: // B31 element
 				OutputB31Elements(EleGrp);
 				break;
+			case ElementTypes::Tet4: // Tet4 element
+				OutputTet4Elements(EleGrp);
+				break;
 			case ElementTypes::H8: // H8 element
-				OutputQ8Elements(EleGrp);
+				OutputH8Elements(EleGrp);
 				break;
 		    default:
 		        *this << ElementType << " has not been implemented yet." << endl;
@@ -369,6 +373,51 @@ void COutputter::OutputQ8Elements(unsigned int EleGrp)
 
 	*this << endl;
 	
+}
+
+//	Output Tet4 element data
+void COutputter::OutputTet4Elements(unsigned int EleGrp)
+{
+	CDomain* FEMData = CDomain::GetInstance();
+
+	CElementGroup& ElementGroup = FEMData->GetEleGrpList()[EleGrp];
+	unsigned int NUMMAT = ElementGroup.GetNUMMAT();
+
+	*this << " M A T E R I A L   D E F I N I T I O N" << endl
+		<< endl;
+	*this << " NUMBER OF DIFFERENT SETS OF MATERIAL" << setw(5) << NUMMAT << endl
+		<< endl;
+
+	*this << "  SET       YOUNG'S        POISSON'S       " << endl
+		<< " NUMBER     MODULUS          RATIO          " << endl
+		<< "               E              nu            " << endl;
+
+	*this << setiosflags(ios::scientific) << setprecision(5);
+
+	//	Loop over for all property sets
+	for (unsigned int mset = 0; mset < NUMMAT; mset++)
+	{
+		*this << setw(5) << mset + 1;
+		ElementGroup.GetMaterial(mset).Write(*this);
+	}
+
+	*this << endl << endl
+		<< " E L E M E N T   I N F O R M A T I O N" << endl;
+
+	*this << " ELEMENT     NODE       NODE     	NODE      NODE        MATERIAL" << endl
+		  << " NUMBER-N      I          J         K         L          SET NUMBER" << endl;
+
+	unsigned int NUME = ElementGroup.GetNUME();
+
+	//	Loop over for all elements in group EleGrp
+	for (unsigned int Ele = 0; Ele < NUME; Ele++)
+	{
+		*this << setw(5) << Ele + 1;
+		ElementGroup[Ele].Write(*this);
+	}
+
+	*this << endl;
+
 }
 
 //	Output H8 element data
@@ -680,6 +729,28 @@ void COutputter::OutputLoadInfo()
 			*this << " ELEMENT      BZ1-LOAD      BZ2-LOAD      BZ3-LOAD      BZ4-LOAD " << endl
 				<< " NUMBER       MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE" << endl;
 			break;
+		case 17:	// All body forces of Tet4 element
+			*this << setiosflags(ios::scientific);
+			*this << " L O A D   C A S E   D A T A" << endl
+				<< endl;
+
+			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
+			*this << "     BODY FORCES OF H8 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
+				<< endl;
+			*this << " ELEMENT      BX1-LOAD      BY1-LOAD      BZ1-LOAD      BX2-LOAD      BY2-LOAD      BZ2-LOAD      BX3-LOAD      BY3-LOAD      BZ3-LOAD      BX4-LOAD      BY4-LOAD      BZ4-LOAD " << endl
+				<< " NUMBER       MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE" << endl;
+			break;
+		case 18:	// All surface forces of Tet4 element
+			*this << setiosflags(ios::scientific);
+			*this << " L O A D   C A S E   D A T A" << endl
+				<< endl;
+
+			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
+			*this << "     SURFACE  FORCES OF H8 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
+				<< endl;
+			*this << " ELEMENT       1-NODE        2-NODE        3-NODE        TX1-LOAD       TY1-LOAD       TZ1-LOAD       TX2-LOAD       TY2-LOAD       TZ2-LOAD       TX3-LOAD       TY3-LOAD       TZ3-LOAD" << endl
+				<< " NUMBER        NUMBER        NUMBER        NUMBER        NUMBER        MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE" << endl;
+			break;
 		default:
 			std::cerr << "LodaCase " << LoadData->LoadCaseType_ << " not available. See COutputter::OutputLoadInfo." << std::endl;
 			exit(5);
@@ -841,6 +912,27 @@ void COutputter::OutputElementStress()
 				break;
 			}
 			
+			case ElementTypes::Tet4: // Tet4 element
+			{
+				*this << "ELEMENT NUMBER   x-coord      y-coord      z-coord           Sigma_xx           Sigma_yy           Sigma_zz           Sigma_xy           Sigma_xz           Sigma_yz" << endl
+					<< "  NUMBER" << endl;
+
+				double stress_Tet4[6];
+
+				for (unsigned int Ele = 0; Ele < NUME; Ele++)
+				{
+					CElement& Element = EleGrp[Ele];
+					Element.ElementStress(stress_Tet4, Displacement);
+
+					*this << setw(5) << Ele + 1 << setw(22) << stress_Tet4[0] << setw(18)
+						<< stress_Tet4[1] << setw(22) << stress_Tet4[2] << setw(22) << stress_Tet4[3] << setw(22) << stress_Tet4[4] << setw(22) << stress_Tet4[5] << endl;
+				}
+
+				*this << endl;
+
+				break;
+			}
+
 			case ElementTypes::H8: // H8 element
 			{
 				*this << "ELEMENT NUMBER   x-coord      y-coord      z-coord           Sigma_xx           Sigma_yy           Sigma_zz           Sigma_xy           Sigma_xz           Sigma_yz" << endl
