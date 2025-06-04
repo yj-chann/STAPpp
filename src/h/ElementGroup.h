@@ -43,7 +43,6 @@ enum ElementTypes
     S8R5,   // 8-node quadratic degenerated shell, reduced integration, using five degrees of freedom per node
     MP,     // 4-node Mindlin Reissner Plate, selective reduced integration
     Plate,  // 4-node Rectangle Plate element
-    Shell,   // Shell elment
     Tet4   // Tet4 element
 };
 

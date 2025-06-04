@@ -66,9 +66,9 @@ void CTet4::ElementStiffness(double* Matrix)
     clear(Matrix, SizeOfStiffnessMatrix());
 
     //	Calculate Tet4 element volume
-	double X[3];
-    double Y[3];
-    double Z[3];		//	x, y and z coordinates
+	double X[4];
+    double Y[4];
+    double Z[4];		//	x, y and z coordinates
 	for (unsigned int i = 0; i < 4; i++)
 	{
 		X[i] = nodes_[i]->XYZ[0];
@@ -180,9 +180,9 @@ void CTet4::ElementStiffness(double* Matrix)
 void CTet4::ElementStress(double* stress, double* Displacement)
 {
     //	Calculate Tet4 element volume
-	double X[3];
-    double Y[3];
-    double Z[3];		//	x, y and z coordinates
+	double X[4];
+    double Y[4];
+    double Z[4];		//	x, y and z coordinates
 	for (unsigned int i = 0; i < 4; i++)
 	{
 		X[i] = nodes_[i]->XYZ[0];
