@@ -240,7 +240,7 @@ void CH8::ElementNonHomo(double* Matrix, double* NonForce)
 }
 
 // Calculate H8 element shape function matrix N
-void CH8::ElementShapeFunction(double(&N)[3][24], double xi, double eta,double zeta)
+void CH8::ElementShapeFunction(double(&N)[3][24], double xi, double eta, double zeta)
 {
 	double n[8] = {
 	   (1 - xi) * (1 - eta) * (1 - zeta) / 8.0,
@@ -259,7 +259,7 @@ void CH8::ElementShapeFunction(double(&N)[3][24], double xi, double eta,double z
 }
 
 //!	Calculate derivative of H8 element shape function matrix B and Jacobian determination
-void CH8::ElementStrainFunction(double(&B)[6][24], double* det, double xi, double eta,double zeta)
+void CH8::ElementStrainFunction(double(&B)[6][24], double* det, double xi, double eta, double zeta)
 {
     // Calculate the Grad(N) matrix, natural coordinate (scalar=8)
     double GN[3][8] = {
@@ -278,7 +278,7 @@ void CH8::ElementStrainFunction(double(&B)[6][24], double* det, double xi, doubl
     };
 
     // Calculate Jacobian matrix element (scalar=8) 
-    double J[3][3] = { 0 };
+    double J[3][3] = {0};
 
     // calculate dx & dy & dz
     double x21 = C[1][0] - C[0][0];
@@ -383,35 +383,35 @@ void CH8::ElementStrainFunction(double(&B)[6][24], double* det, double xi, doubl
 
     // Derivative of H8 element shape function matrix B
     for (int i = 0; i < 8; i++) {
-        // 1st row��N_{i,x} 0  0...
+        // 1st row N_{i,x} 0  0...
         B[0][3 * i] = G[0][i];
         B[0][3 * i + 1] = 0.0;
         B[0][3 * i + 2] = 0.0;
 
-        // 2nd row��0 N_{i,y} 0...
+        // 2nd row 0 N_{i,y} 0...
         B[1][3 * i] = 0.0;
         B[1][3 * i + 1] = G[1][i];
 		B[1][3 * i + 2] = 0.0;
 
-        // 3rd row��0 0 N_{i,y} ...
+        // 3rd row 0 0 N_{i,z} ...
         B[2][3 * i] = 0.0;
 		B[2][3 * i + 1] = 0.0;
         B[2][3 * i + 2] = G[2][i];
 
-        // 4th row��N_{i,y} N_{i,x},0 ...
+        // 4th row N_{i,y} N_{i,x},0 ...
         B[3][3 * i] = G[1][i];
         B[3][3 * i + 1] = G[0][i];
         B[3][3 * i + 2] = 0.0;
 
-        // 5th row��N_{i,z} 0 N_{i,x} ...
-        B[3][3 * i] = G[2][i];
-        B[3][3 * i + 1] = 0.0;
-        B[3][3 * i + 2] = G[0][i];
+        // 5th row N_{i,z} 0 N_{i,x} ...
+        B[4][3 * i] = G[2][i];
+        B[4][3 * i + 1] = 0.0;
+        B[4][3 * i + 2] = G[0][i];
 
-        // 6th row��0 N_{i,z} N_{i,y} ...
-        B[3][3 * i] = 0.0;
-        B[3][3 * i + 1] = G[2][i];
-        B[3][3 * i + 2] = G[1][i];
+        // 6th row 0 N_{i,z} N_{i,y} ...
+        B[5][3 * i] = 0.0;
+        B[5][3 * i + 1] = G[2][i];
+        B[5][3 * i + 2] = G[1][i];
 
     }
 }
