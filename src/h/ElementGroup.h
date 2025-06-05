@@ -36,7 +36,7 @@ enum ElementTypes
     Q8,     // Q8 element  #4  
     B21EB,  // Beam21(Euler-Bernoulli) element
     B31,    // Beam31(Timoshenko) element
-    H8,     // 8H element
+    H8,     // 8H element #7
     S8R5,   // 8-node quadratic degenerated shell, reduced integration, using five degrees of freedom per node
     Beam,   // Beam element
     Plate,  // Plate element

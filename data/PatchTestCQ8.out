@@ -1,5 +1,5 @@
 TITLE :  STAP90 input data for Patch Test C of Q8
-        (13:3:58 on May 30, 2025, Friday)
+        (20:17:58 on May 30, 2025, Friday)
 
 C O N T R O L   I N F O R M A T I O N
 
@@ -62,7 +62,7 @@ C O N T R O L   I N F O R M A T I O N
 
  L O A D   C A S E   D A T A
 
-     LOAD CASE NUMBER . . . . . . . =     1
+     LOAD CASE NUMBER . . . . . . . =     8
      SURFACE  FORCES OF Q8 ELEMENTS . =     3
 
  ELEMENT       1-NODE        2-NODE        3-NODE        TX1-LOAD       TY1-LOAD       TX2-LOAD       TY2-LOAD       TX3-LOAD       TY3-LOAD
@@ -78,8 +78,8 @@ C O N T R O L   I N F O R M A T I O N
 
  ELEMENT TYPE  . . . . . . . . . . . . .( NPAR(1) ) . . =    4
      EQ.1, TRUSS ELEMENTS
-     EQ.2, ELEMENTS CURRENTLY
-     EQ.3, NOT AVAILABLE
+     EQ.2, CST
+     EQ.3, Q4
      EQ.4, Q8
      EQ.7, H8
 
@@ -164,9 +164,9 @@ GAUSSPOINT NUMBER
 
  S O L U T I O N   T I M E   L O G   I N   S E C 
 
-     TIME FOR INPUT PHASE = 5.60000e-02
+     TIME FOR INPUT PHASE = 6.00000e-02
      TIME FOR CALCULATION OF STIFFNESS MATRIX = 1.00000e-03
-     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 6.70000e-02
+     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 7.20000e-02
 
-     T O T A L   S O L U T I O N   T I M E = 1.24000e-01
+     T O T A L   S O L U T I O N   T I M E = 1.33000e-01
 
