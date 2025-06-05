@@ -14,16 +14,16 @@
 
 using namespace std;
 
-//! CST element class
-class CCST : public CElement
+//! Tet4 element class
+class CTet4 : public CElement
 {
 public:
 
 //!	Constructor
-	CCST();
+	CTet4();
 
 //!	Desconstructor
-	~CCST();
+	~CTet4();
 
 //!	Read element data from stream Input
 	virtual bool Read(ifstream& Input, CMaterial* MaterialSets, CNode* NodeList);
