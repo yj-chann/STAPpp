@@ -914,18 +914,17 @@ void COutputter::OutputElementStress()
 			
 			case ElementTypes::Tet4: // Tet4 element
 			{
-				*this << "ELEMENT NUMBER   x-coord      y-coord      z-coord           Sigma_xx           Sigma_yy           Sigma_zz           Sigma_xy           Sigma_xz           Sigma_yz" << endl
+				*this << "ELEMENT NUMBER   Sigma_xx           Sigma_yy           Sigma_zz           Sigma_xy           Sigma_xz           Sigma_yz" << endl
 					<< "  NUMBER" << endl;
-
-				double stress_Tet4[6];
-
+				
 				for (unsigned int Ele = 0; Ele < NUME; Ele++)
 				{
 					CElement& Element = EleGrp[Ele];
+					double stress_Tet4[6] = {0};
 					Element.ElementStress(stress_Tet4, Displacement);
 
 					*this << setw(5) << Ele + 1 << setw(22) << stress_Tet4[0] << setw(18)
-						<< stress_Tet4[1] << setw(22) << stress_Tet4[2] << setw(22) << stress_Tet4[3] << setw(22) << stress_Tet4[4] << setw(22) << stress_Tet4[5] << endl;
+						<< stress_Tet4[1] << setw(20) << stress_Tet4[2] << setw(18) << stress_Tet4[3] << setw(18) << stress_Tet4[4] << setw(18) << stress_Tet4[5] << endl;
 				}
 
 				*this << endl;

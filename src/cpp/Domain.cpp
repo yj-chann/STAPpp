@@ -909,26 +909,26 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 		for (unsigned int LoadOrder = 0; LoadOrder < LoadData->nloads; LoadOrder++)
 		{
 			unsigned int Ele = LoadData->dof[LoadOrder];
-			double f_Gamma[12] = { 0 };
+			double f_Gamma[12] = {0};
 			unsigned int ElementNode[4] = {
-				LoadData->node[4 * LoadOrder],
-				LoadData->node[4 * LoadOrder + 1],
-				LoadData->node[4 * LoadOrder + 2],
-				LoadData->node[4 * LoadOrder + 3],
+				LoadData->node[4*LoadOrder],
+				LoadData->node[4*LoadOrder+1],
+				LoadData->node[4*LoadOrder+2],
+				LoadData->node[4*LoadOrder+3],
 			};
-			double t_x1 = LoadData->load[12 * LoadOrder];
-			double t_y1 = LoadData->load[12 * LoadOrder + 1];
-			double t_z1 = LoadData->load[12 * LoadOrder + 2];
-			double t_x2 = LoadData->load[12 * LoadOrder + 3];
-			double t_y2 = LoadData->load[12 * LoadOrder + 4];
-			double t_z2 = LoadData->load[12 * LoadOrder + 5];
-			double t_x3 = LoadData->load[12 * LoadOrder + 6];
-			double t_y3 = LoadData->load[12 * LoadOrder + 7];
-			double t_z3 = LoadData->load[12 * LoadOrder + 8];
-			double t_x4 = LoadData->load[12 * LoadOrder + 9];
-			double t_y4 = LoadData->load[12 * LoadOrder + 10];
-			double t_z4 = LoadData->load[12 * LoadOrder + 11];
 
+			double t_x1 = LoadData->load[12*LoadOrder];
+			double t_y1 = LoadData->load[12*LoadOrder+1];
+			double t_z1 = LoadData->load[12*LoadOrder+2];
+			double t_x2 = LoadData->load[12*LoadOrder+3];
+			double t_y2 = LoadData->load[12*LoadOrder+4];
+			double t_z2 = LoadData->load[12*LoadOrder+5];
+			double t_x3 = LoadData->load[12*LoadOrder+6];
+			double t_y3 = LoadData->load[12*LoadOrder+7];
+			double t_z3 = LoadData->load[12*LoadOrder+8];
+			double t_x4 = LoadData->load[12*LoadOrder+9];
+			double t_y4 = LoadData->load[12*LoadOrder+10];
+			double t_z4 = LoadData->load[12*LoadOrder+11];
 
 			CElement& Element = ElementGrp[Ele - 1];
 			CMaterial* ElementMaterial = Element.GetElementMaterial();
@@ -964,35 +964,36 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 			double x_43 = X[3] - X[2], y_43 = Y[3] - Y[2], z_43 = Z[3] - Z[2];
 			double x_41 = X[3] - X[0], y_41 = Y[3] - Y[0], z_41 = Z[3] - Z[0];
 			double x_32 = X[2] - X[1], y_32 = Y[2] - Y[1], z_32 = Z[2] - Z[1];
-
+			
 			// Jij_kl
-			double J11_11=  2 * x_21 * (1 - GaussPoints[0]) - 2 * x_43 * (1 + GaussPoints[0]);
-			double J12_11 = 2 * y_21 * (1 - GaussPoints[0]) - 2 * y_43 * (1 + GaussPoints[0]);
-			double J13_11 = 2 * z_21 * (1 - GaussPoints[0]) - 2 * z_43 * (1 + GaussPoints[0]);
-			double J21_11 = 2 * x_41 * (1 - GaussPoints[0]) + 2 * x_32 * (1 + GaussPoints[0]);
-			double J22_11 = 2 * y_41 * (1 - GaussPoints[0]) + 2 * y_32 * (1 + GaussPoints[0]);
-			double J23_11 = 2 * z_41 * (1 - GaussPoints[0]) + 2 * z_32 * (1 + GaussPoints[0]);
+			double J11_11 = 0.25 * x_21 * (1 - GaussPoints[0]) - 0.25 * x_43 * (1 + GaussPoints[0]);
+			double J12_11 = 0.25 * y_21 * (1 - GaussPoints[0]) - 0.25 * y_43 * (1 + GaussPoints[0]);
+			double J13_11 = 0.25 * z_21 * (1 - GaussPoints[0]) - 0.25 * z_43 * (1 + GaussPoints[0]);
+			double J21_11 = 0.25 * x_41 * (1 - GaussPoints[0]) + 0.25 * x_32 * (1 + GaussPoints[0]);
+			double J22_11 = 0.25 * y_41 * (1 - GaussPoints[0]) + 0.25 * y_32 * (1 + GaussPoints[0]);
+			double J23_11 = 0.25 * z_41 * (1 - GaussPoints[0]) + 0.25 * z_32 * (1 + GaussPoints[0]);
 
-			double J11_12 = 2 * x_21 * (1 - GaussPoints[1]) - 2 * x_43 * (1 + GaussPoints[1]);
-			double J12_12 = 2 * y_21 * (1 - GaussPoints[1]) - 2 * y_43 * (1 + GaussPoints[1]);
-			double J13_12 = 2 * z_21 * (1 - GaussPoints[1]) - 2 * z_43 * (1 + GaussPoints[1]);
-			double J21_12 = 2 * x_41 * (1 - GaussPoints[0]) + 2 * x_32 * (1 + GaussPoints[0]);
-			double J22_12 = 2 * y_41 * (1 - GaussPoints[0]) + 2 * y_32 * (1 + GaussPoints[0]);
-			double J23_12 = 2 * z_41 * (1 - GaussPoints[0]) + 2 * z_32 * (1 + GaussPoints[0]);
+			double J11_12 = 0.25 * x_21 * (1 - GaussPoints[1]) - 0.25 * x_43 * (1 + GaussPoints[1]);
+			double J12_12 = 0.25 * y_21 * (1 - GaussPoints[1]) - 0.25 * y_43 * (1 + GaussPoints[1]);
+			double J13_12 = 0.25 * z_21 * (1 - GaussPoints[1]) - 0.25 * z_43 * (1 + GaussPoints[1]);
+			double J21_12 = 0.25 * x_41 * (1 - GaussPoints[0]) + 0.25 * x_32 * (1 + GaussPoints[0]);
+			double J22_12 = 0.25 * y_41 * (1 - GaussPoints[0]) + 0.25 * y_32 * (1 + GaussPoints[0]);
+			double J23_12 = 0.25 * z_41 * (1 - GaussPoints[0]) + 0.25 * z_32 * (1 + GaussPoints[0]);
 
-			double J11_21 = 2 * x_21 * (1 - GaussPoints[0]) - 2 * x_43 * (1 + GaussPoints[0]);
-			double J12_21 = 2 * y_21 * (1 - GaussPoints[0]) - 2 * y_43 * (1 + GaussPoints[0]);
-			double J13_21 = 2 * z_21 * (1 - GaussPoints[0]) - 2 * z_43 * (1 + GaussPoints[0]);
-			double J21_21 = 2 * x_41 * (1 - GaussPoints[1]) + 2 * x_32 * (1 + GaussPoints[1]);
-			double J22_21 = 2 * y_41 * (1 - GaussPoints[1]) + 2 * y_32 * (1 + GaussPoints[1]);
-			double J23_21 = 2 * z_41 * (1 - GaussPoints[1]) + 2 * z_32 * (1 + GaussPoints[1]);
+			double J11_21 = 0.25 * x_21 * (1 - GaussPoints[0]) - 0.25 * x_43 * (1 + GaussPoints[0]);
+			double J12_21 = 0.25 * y_21 * (1 - GaussPoints[0]) - 0.25 * y_43 * (1 + GaussPoints[0]);
+			double J13_21 = 0.25 * z_21 * (1 - GaussPoints[0]) - 0.25 * z_43 * (1 + GaussPoints[0]);
+			double J21_21 = 0.25 * x_41 * (1 - GaussPoints[1]) + 0.25 * x_32 * (1 + GaussPoints[1]);
+			double J22_21 = 0.25 * y_41 * (1 - GaussPoints[1]) + 0.25 * y_32 * (1 + GaussPoints[1]);
+			double J23_21 = 0.25 * z_41 * (1 - GaussPoints[1]) + 0.25 * z_32 * (1 + GaussPoints[1]);
 
-			double J11_22 = 2 * x_21 * (1 - GaussPoints[1]) - 2 * x_43 * (1 + GaussPoints[1]);
-			double J12_22 = 2 * y_21 * (1 - GaussPoints[1]) - 2 * y_43 * (1 + GaussPoints[1]);
-			double J13_22 = 2 * z_21 * (1 - GaussPoints[1]) - 2 * z_43 * (1 + GaussPoints[1]);
-			double J21_22 = 2 * x_41 * (1 - GaussPoints[1]) + 2 * x_32 * (1 + GaussPoints[1]);
-			double J22_22 = 2 * y_41 * (1 - GaussPoints[1]) + 2 * y_32 * (1 + GaussPoints[1]);
-			double J23_22 = 2 * z_41 * (1 - GaussPoints[1]) + 2 * z_32 * (1 + GaussPoints[1]);
+			double J11_22 = 0.25 * x_21 * (1 - GaussPoints[1]) - 0.25 * x_43 * (1 + GaussPoints[1]);
+			double J12_22 = 0.25 * y_21 * (1 - GaussPoints[1]) - 0.25 * y_43 * (1 + GaussPoints[1]);
+			double J13_22 = 0.25 * z_21 * (1 - GaussPoints[1]) - 0.25 * z_43 * (1 + GaussPoints[1]);
+			double J21_22 = 0.25 * x_41 * (1 - GaussPoints[1]) + 0.25 * x_32 * (1 + GaussPoints[1]);
+			double J22_22 = 0.25 * y_41 * (1 - GaussPoints[1]) + 0.25 * y_32 * (1 + GaussPoints[1]);
+			double J23_22 = 0.25 * z_41 * (1 - GaussPoints[1]) + 0.25 * z_32 * (1 + GaussPoints[1]);
+
 
 
 			double E_11 = J11_11 * J11_11 + J12_11 * J12_11 + J13_11 * J13_11;
@@ -1077,6 +1078,7 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 			f_Gamma[9] = N4_11 * Nitxi_11 * f11 + N4_12 * Nitxi_12 * f12 + N4_21 * Nitxi_21 * f21 + N4_22 * Nitxi_22 * f22;
 			f_Gamma[10] = N4_11 * Nityi_11 * f11 + N4_12 * Nityi_12 * f12 + N4_21 * Nityi_21 * f21 + N4_22 * Nityi_22 * f22;
 			f_Gamma[11] = N4_11 * Nitzi_11 * f11 + N4_12 * Nitzi_12 * f12 + N4_21 * Nitzi_21 * f21 + N4_22 * Nitzi_22 * f22;
+			
 			unsigned int dof[12] = {
 				nodes[ElementNode[0] - 1]->bcode[0],
 				nodes[ElementNode[0] - 1]->bcode[1],
