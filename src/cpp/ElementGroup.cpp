@@ -86,6 +86,10 @@ void CElementGroup::CalculateMemberSize()
             ElementSize_ = sizeof(CB31);
             MaterialSize_ = sizeof(CB31);
             break;
+        case ElementTypes::Tet4:
+            ElementSize_ = sizeof(CTet4);
+            MaterialSize_ = sizeof(CTet4Material);
+            break;
         case ElementTypes::H8:
             ElementSize_ = sizeof(CH8);
             MaterialSize_ = sizeof(CH8Material);
@@ -93,6 +97,14 @@ void CElementGroup::CalculateMemberSize()
         case ElementTypes::S8R5:
             ElementSize_ = sizeof(CS8R5);
             MaterialSize_ = sizeof(CS8R5Material);
+            break;
+        case ElementTypes::MP:
+            ElementSize_ = sizeof(CMP);
+            MaterialSize_ = sizeof(CMPMaterial);
+            break;
+        case ElementTypes::Plate:
+            ElementSize_ = sizeof(CPlate);
+            MaterialSize_ = sizeof(CPlateMaterial);
             break;
         default:
             std::cerr << "Type " << ElementType_ << " not available. See CElementGroup::CalculateMemberSize." << std::endl;
@@ -124,11 +136,20 @@ void CElementGroup::AllocateElements(std::size_t size)
         case ElementTypes::B31:
             ElementList_ = new CB31[size];
             break;
+        case ElementTypes::Tet4:
+            ElementList_ = new CTet4[size];
+            break;
         case ElementTypes::H8:
             ElementList_ = new CH8[size];
             break;
         case ElementTypes::S8R5:
             ElementList_ = new CS8R5[size];
+            break;
+        case ElementTypes::MP:
+            ElementList_ = new CMP[size];
+            break;
+        case ElementTypes::Plate:
+            ElementList_ = new CPlate[size];
             break;
         default:
             std::cerr << "Type " << ElementType_ << " not available. See CElementGroup::AllocateElement." << std::endl;
@@ -159,11 +180,20 @@ void CElementGroup::AllocateMaterials(std::size_t size)
         case ElementTypes::B31:
             MaterialList_ = new CB31Material[size];
             break;
+        case ElementTypes::Tet4:
+            MaterialList_ = new CTet4Material[size];
+            break;
         case ElementTypes::H8:
             MaterialList_ = new CH8Material[size];
             break;
         case ElementTypes::S8R5:
             MaterialList_ = new CS8R5Material[size];
+            break;
+        case ElementTypes::MP:
+            MaterialList_ = new CMPMaterial[size];
+            break;
+        case ElementTypes::Plate:
+            MaterialList_ = new CPlateMaterial[size];
             break;
         default:
             std::cerr << "Type " << ElementType_ << " not available. See CElementGroup::AllocateMaterial." << std::endl;
@@ -175,17 +205,17 @@ void CElementGroup::AllocateMaterials(std::size_t size)
 bool CElementGroup::Read(ifstream& Input)
 {
     Input >> (int&)ElementType_ >> NUME_ >> NUMMAT_;
-    
+
     CalculateMemberSize();
 
 //  Read material/section property lines
     AllocateMaterials(NUMMAT_);
-    
+
 //  Loop over for all material property sets in this element group
     for (unsigned int mset = 0; mset < NUMMAT_; mset++)
-    {
+    {    
         GetMaterial(mset).Read(Input);
-  
+   
         if (GetMaterial(mset).nset != mset + 1)
         {
             cerr << "*** Error *** Material sets must be inputted in order !" << endl

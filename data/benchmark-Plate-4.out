@@ -1,0 +1,135 @@
+TITLE : STAP90 input data for example 6.4 with 4 Plate elements
+        (20:5:54 on May 31, 2025, Saturday)
+
+C O N T R O L   I N F O R M A T I O N
+
+      NUMBER OF NODAL POINTS . . . . . . . . . . (NUMNP)  =     9
+      NUMBER OF ELEMENT GROUPS . . . . . . . . . (NUMEG)  =     1
+      NUMBER OF LOAD CASES . . . . . . . . . . . (NLCASE) =     1
+      SOLUTION MODE  . . . . . . . . . . . . . . (MODEX)  =     1
+         EQ.0, DATA CHECK
+         EQ.1, EXECUTION
+
+ N O D A L   P O I N T   D A T A
+
+    NODE       BOUNDARY                         NODAL POINT
+   NUMBER  CONDITION  CODES                     COORDINATES
+        1    1    1    1    1    1    1       0.00000e+00    0.00000e+00    0.00000e+00
+        2    1    1    1    1    1    1       4.00000e+00    0.00000e+00    0.00000e+00
+        3    1    1    1    1    1    1       8.00000e+00    0.00000e+00    0.00000e+00
+        4    1    1    1    1    1    1       0.00000e+00    4.00000e+00    0.00000e+00
+        5    1    1    0    0    0    1       4.00000e+00    4.00000e+00    0.00000e+00
+        6    1    1    1    1    1    1       8.00000e+00    4.00000e+00    0.00000e+00
+        7    1    1    1    1    1    1       0.00000e+00    8.00000e+00    0.00000e+00
+        8    1    1    1    1    1    1       4.00000e+00    8.00000e+00    0.00000e+00
+        9    1    1    1    1    1    1       8.00000e+00    8.00000e+00    0.00000e+00
+
+ EQUATION NUMBERS
+
+   NODE NUMBER   DEGREES 	OF 	FREEDOM
+        N           X    Y    Z    x    y    z
+        1           0    0    0    0    0    0
+        2           0    0    0    0    0    0
+        3           0    0    0    0    0    0
+        4           0    0    0    0    0    0
+        5           0    0    1    2    3    0
+        6           0    0    0    0    0    0
+        7           0    0    0    0    0    0
+        8           0    0    0    0    0    0
+        9           0    0    0    0    0    0
+
+ L O A D   C A S E   D A T A
+
+     LOAD CASE NUMBER . . . . . . . =     1
+     BODY FORCES OF Plate ELEMENTS . =     4
+
+ ELEMENT      BZ1-LOAD      BZ2-LOAD      BZ3-LOAD      BZ4-LOAD 
+ NUMBER       MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE
+   1      -1.00000e+00      -1.00000e+00      -1.00000e+00      -1.00000e+00
+   2      -1.00000e+00      -1.00000e+00      -1.00000e+00      -1.00000e+00
+   3      -1.00000e+00      -1.00000e+00      -1.00000e+00      -1.00000e+00
+   4      -1.00000e+00      -1.00000e+00      -1.00000e+00      -1.00000e+00
+
+ E L E M E N T   G R O U P   D A T A
+
+
+ E L E M E N T   D E F I N I T I O N
+
+ ELEMENT TYPE  . . . . . . . . . . . . .( NPAR(1) ) . . =   10
+     EQ.1, TRUSS ELEMENTS
+     EQ.2, ELEMENTS CURRENTLY
+     EQ.3, NOT AVAILABLE
+     EQ.4, Q8
+     EQ.7, H8
+
+ NUMBER OF ELEMENTS. . . . . . . . . . .( NPAR(2) ) . . =    4
+
+10 has not been implemented yet.
+   Ele =        Location Matrix
+        1    0    0    0    0    0    0    1    2    3    0    0    0
+        2    0    0    0    0    0    0    0    0    0    1    2    3
+        3    0    0    0    1    2    3    0    0    0    0    0    0
+        4    1    2    3    0    0    0    0    0    0    0    0    0
+
+*** _Debug_ *** Column Heights
+       0       1       2
+
+*** _Debug_ *** Address of Diagonal Element
+       1       2       4       7
+
+	TOTAL SYSTEM DATA
+
+     NUMBER OF EQUATIONS . . . . . . . . . . . . . .(NEQ) = 3
+     NUMBER OF MATRIX ELEMENTS . . . . . . . . . . .(NWK) = 6
+     MAXIMUM HALF BANDWIDTH  . . . . . . . . . . . .(MK ) = 3
+     MEAN HALF BANDWIDTH . . . . . . . . . . . . . .(MM ) = 2
+
+
+*** _Debug_ *** Banded stiffness matrix
+   4.83516e+04   1.11355e+05   1.81899e-12   1.11355e+05   0.00000e+00  -1.81899e-12
+
+
+*** _Debug_ *** Full stiffness matrix
+   4.83516e+04   1.81899e-12  -1.81899e-12
+   1.81899e-12   1.11355e+05   0.00000e+00
+  -1.81899e-12   0.00000e+00   1.11355e+05
+
+*** _Debug_ *** Banded stiffness matrix
+   4.83516e+04   1.11355e+05   3.76200e-17   1.11355e+05   6.14523e-34  -3.76200e-17
+
+
+*** _Debug_ *** Full stiffness matrix
+   4.83516e+04   3.76200e-17  -3.76200e-17
+   3.76200e-17   1.11355e+05   6.14523e-34
+  -3.76200e-17   6.14523e-34   1.11355e+05
+
+*** _Debug_ *** Displacement vector
+  -1.60000e+01  -1.33227e-15   3.55271e-15
+
+*** _Debug_ *** Displacement vector
+  -3.30909e-04  -6.55871e-21   2.64989e-20
+
+ D I S P L A C E M E N T S
+
+  NODE            X-DISPLACEMENT    Y-DISPLACEMENT    Z-DISPLACEMENT    X-ROTATION    Y-ROTATION    Z-ROTATION
+    1               0.00000e+00       0.00000e+00       0.00000e+00    0.00000e+00    0.00000e+00    0.00000e+00
+    2               0.00000e+00       0.00000e+00       0.00000e+00    0.00000e+00    0.00000e+00    0.00000e+00
+    3               0.00000e+00       0.00000e+00       0.00000e+00    0.00000e+00    0.00000e+00    0.00000e+00
+    4               0.00000e+00       0.00000e+00       0.00000e+00    0.00000e+00    0.00000e+00    0.00000e+00
+    5               0.00000e+00       0.00000e+00      -3.30909e-04   -6.55871e-21    2.64989e-20    0.00000e+00
+    6               0.00000e+00       0.00000e+00       0.00000e+00    0.00000e+00    0.00000e+00    0.00000e+00
+    7               0.00000e+00       0.00000e+00       0.00000e+00    0.00000e+00    0.00000e+00    0.00000e+00
+    8               0.00000e+00       0.00000e+00       0.00000e+00    0.00000e+00    0.00000e+00    0.00000e+00
+    9               0.00000e+00       0.00000e+00       0.00000e+00    0.00000e+00    0.00000e+00    0.00000e+00
+
+ S T R E S S  C A L C U L A T I O N S  F O R  E L E M E N T  G R O U P    1
+
+
+ S O L U T I O N   T I M E   L O G   I N   S E C 
+
+     TIME FOR INPUT PHASE = 9.90000e-02
+     TIME FOR CALCULATION OF STIFFNESS MATRIX = 3.30000e-02
+     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 7.50000e-02
+
+     T O T A L   S O L U T I O N   T I M E = 2.07000e-01
+

@@ -289,7 +289,7 @@ void CDomain::AssembleStiffnessMatrix()
             CElement& Element = ElementGrp[Ele];
             Element.ElementStiffness(Matrix);
             StiffnessMatrix->Assembly(Matrix, Element.GetLocationMatrix(), Element.GetND());		
-			
+
 			if (Element.GetNonHomo()) {
 				clear(NonForce, Element.GetND());
 				unsigned int* LocationMatrix = Element.GetLocationMatrix();
@@ -1097,11 +1097,7 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 		}
 		break;
 	}
-	// case 13:
-	// 	break;
-	// case 14:
-	// 	break;
-	case 15:	// All surface forces of S8R5 element
+	case 13:	// All surface forces of S8R5 element
 	{
 		unsigned int EleGrp = 0;
 		for (; EleGrp < NUMEG; EleGrp++)
@@ -1235,7 +1231,7 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 		}
 		break;
 	}
-	case 16:	// All body forces of S8R5 element
+	case 14:	// All body forces of S8R5 element
 	{
 		unsigned int EleGrp = 0;
 		for (; EleGrp < NUMEG; EleGrp++)
@@ -1371,6 +1367,338 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 				if (dof[i])	// The DOF is activated
 					Force[dof[i] - 1] += f_Omega[i];
 		}
+		break;
+	}
+	case 15:	// All body forces Mindlin-Reissner Plate element, except body moment
+	{	
+		unsigned int EleGrp = 0;
+		for (; EleGrp < NUMEG; EleGrp++)
+		{
+			CElementGroup& ElementGrp = EleGrpList[EleGrp];
+			unsigned int ElementType = ElementGrp.GetElementType();
+			if (ElementType == 9)
+				break;
+		}
+		CElementGroup& ElementGrp = EleGrpList[EleGrp];
+
+		for (unsigned int LoadOrder = 0; LoadOrder < LoadData->nloads; LoadOrder++)
+		{
+			unsigned int Ele = LoadData->node[LoadOrder];
+			double b[12] = {
+				0,
+				0,
+				LoadData->load[4*LoadOrder],
+				0,
+				0,
+				LoadData->load[4*LoadOrder+1],
+				0,
+				0,
+				LoadData->load[4*LoadOrder+2],
+				0,
+				0,
+				LoadData->load[4*LoadOrder+3],
+			};
+
+			CElement& Element = ElementGrp[Ele - 1];
+			CMP* Element_ = dynamic_cast<CMP*>(&Element);
+			CMaterial* ElementMaterial = Element.GetElementMaterial();
+			CMPMaterial* material_ = dynamic_cast<CMPMaterial*>(ElementMaterial);
+			CNode** nodes = Element.GetNodes();
+
+			double f_Omega[12] = {0};
+			double GaussPoints[2] = {
+				-sqrt(3) / 3.0,
+				sqrt(3) / 3.0,
+			};
+
+			for (unsigned int gp1 = 0; gp1 < 2; gp1++)	//  reduced integration
+			{
+				for (unsigned int gp2 = 0; gp2 < 2; gp2++)
+				{					
+					double Bb[3][12] = {0};
+					double Bs[2][12] = {0};
+					double det = 0;
+					Element_->ElementStrainFunction(Bb, Bs, &det, GaussPoints[gp1], GaussPoints[gp2]);
+					double N[3][12] = {0};
+					Element_->ElementShapeFunction(N, GaussPoints[gp1], GaussPoints[gp2]);
+					for (int i = 0; i < 12; i++)
+						for (int j = 0; j < 3; j++)
+							for (int k = 0; k < 12; k++)
+								f_Omega[i] += N[j][i] * N[j][k] * b[k] * det;  // Weight is 1					
+				}
+			}
+
+			unsigned int dof[12] = {
+				nodes[0]->bcode[3],
+				nodes[0]->bcode[4],
+				nodes[0]->bcode[2],
+				nodes[1]->bcode[3],
+				nodes[1]->bcode[4],
+				nodes[1]->bcode[2],
+				nodes[2]->bcode[3],
+				nodes[2]->bcode[4],
+				nodes[2]->bcode[2],
+				nodes[3]->bcode[3],
+				nodes[3]->bcode[4],
+				nodes[3]->bcode[2],
+			};
+
+			for (int i = 0; i < 12; i++)
+				if (dof[i])	// The DOF is activated
+					Force[dof[i] - 1] += f_Omega[i];
+		}
+		break;
+	}
+	case 16:	// All body forces of basic Plate element
+	{
+		unsigned int EleGrp = 0;
+		for (; EleGrp < NUMEG; EleGrp++)
+		{
+			CElementGroup& ElementGrp = EleGrpList[EleGrp];
+			unsigned int ElementType = ElementGrp.GetElementType();
+			if (ElementType == 10)
+				break;
+		}
+		CElementGroup& ElementGrp = EleGrpList[EleGrp];
+
+		for (unsigned int LoadOrder = 0; LoadOrder < LoadData->nloads; LoadOrder++)
+		{
+			unsigned int Ele = LoadData->node[LoadOrder];
+			double b[12] = {
+				LoadData->load[4*LoadOrder],
+				0,
+				0,
+				LoadData->load[4*LoadOrder+1],
+				0,
+				0,
+				LoadData->load[4*LoadOrder+2],
+				0,
+				0,
+				LoadData->load[4*LoadOrder+3],
+				0,
+				0,
+			};
+
+			CElement& Element = ElementGrp[Ele - 1];
+			CPlate* Element_ = dynamic_cast<CPlate*>(&Element);
+			CMaterial* ElementMaterial = Element.GetElementMaterial();
+			CPlateMaterial* material_ = dynamic_cast<CPlateMaterial*>(ElementMaterial);
+			CNode** nodes = Element.GetNodes();
+
+			double f_Omega[12] = {0};
+			double GaussPoints[3] = {
+				-sqrt(15) / 5.0,
+				0.0,
+				sqrt(15) / 5.0,
+			};
+
+			double Weight[3] = {
+				5.0 / 9.0,
+				8.0 / 9.0,
+				5.0 / 9.0,
+			};
+
+			for (unsigned int gp1 = 0; gp1 < 3; gp1++)	//  full integration
+			{
+				for (unsigned int gp2 = 0; gp2 < 3; gp2++)
+				{					
+					double B[3][12] = {0};
+					double det = 0;
+					Element_->ElementStrainFunction(B, &det, GaussPoints[gp1], GaussPoints[gp2]);
+					double N[1][12] = {0};
+					Element_->ElementShapeFunction(N, GaussPoints[gp1], GaussPoints[gp2]);
+					for (int i = 0; i < 12; i++)		
+						for (int j = 0; j < 12; j++)
+							f_Omega[i] += Weight[gp1] * Weight[gp2] * N[0][i] * N[0][j] * b[j] * det;  // Weight is 1					
+				}
+			}
+
+			unsigned int dof[12] = {
+				nodes[0]->bcode[2],
+				nodes[0]->bcode[3],
+				nodes[0]->bcode[4],
+				nodes[1]->bcode[2],
+				nodes[1]->bcode[3],
+				nodes[1]->bcode[4],
+				nodes[2]->bcode[2],
+				nodes[2]->bcode[3],
+				nodes[2]->bcode[4],
+				nodes[3]->bcode[2],
+				nodes[3]->bcode[3],
+				nodes[3]->bcode[4],
+			};
+
+			for (int i = 0; i < 12; i++)
+				if (dof[i])	// The DOF is activated
+					Force[dof[i] - 1] += f_Omega[i];
+		}
+		break;
+	}
+	case 17:	// All body forces of Tet4 element
+	{
+		unsigned int EleGrp = 0;
+		for (; EleGrp < NUMEG; EleGrp++)
+		{
+			CElementGroup& ElementGrp = EleGrpList[EleGrp];
+			unsigned int ElementType = ElementGrp.GetElementType();
+			if (ElementType == 11)
+				break;
+		}
+		CElementGroup& ElementGrp = EleGrpList[EleGrp];
+
+		for (unsigned int LoadOrder = 0; LoadOrder < LoadData->nloads; LoadOrder++)
+		{
+			unsigned int Ele = LoadData->node[LoadOrder];
+			double f_Omega[12] = {0};
+			double b_x1 = LoadData->load[12*LoadOrder];
+			double b_y1 = LoadData->load[12*LoadOrder+1];
+			double b_z1 = LoadData->load[12*LoadOrder+2];
+			double b_x2 = LoadData->load[12*LoadOrder+3];
+			double b_y2 = LoadData->load[12*LoadOrder+4];
+			double b_z2 = LoadData->load[12*LoadOrder+5];
+			double b_x3 = LoadData->load[12*LoadOrder+6];
+			double b_y3 = LoadData->load[12*LoadOrder+7];
+			double b_z3 = LoadData->load[12*LoadOrder+8];
+			double b_x4 = LoadData->load[12*LoadOrder+9];
+			double b_y4 = LoadData->load[12*LoadOrder+10];
+			double b_z4 = LoadData->load[12*LoadOrder+11];
+
+			// Calculate volume of the Tet4 element
+            CElement& Element = ElementGrp[Ele-1];
+
+			CNode** nodes = Element.GetNodes();
+
+			double X[4] = {
+				nodes[0]->XYZ[0],
+				nodes[1]->XYZ[0],
+				nodes[2]->XYZ[0],
+				nodes[3]->XYZ[0]
+			};
+			double Y[4] = {
+				nodes[0]->XYZ[1],
+				nodes[2]->XYZ[1],
+				nodes[2]->XYZ[1],
+				nodes[3]->XYZ[1],
+			};
+			double Z[4] = {
+				nodes[0]->XYZ[2],
+				nodes[2]->XYZ[2],
+				nodes[2]->XYZ[2],
+				nodes[3]->XYZ[2],
+			};
+			double V = fabs(X[1]*(Y[2]*Z[3]-Y[3]*Z[2]) - X[2]*(Y[1]*Z[3]-Y[3]*Z[1]) + X[3]*(Y[1]*Z[2]-Y[2]*Z[1]) - X[0]*(Y[2]*Z[3]-Y[3]*Z[2]) + X[2]*(Y[0]*Z[3]-Y[3]*Z[0]) - X[3]*(Y[0]*Z[2]-Y[2]*Z[0]) + X[0]*(Y[1]*Z[3]-Y[3]*Z[1]) - X[1]*(Y[0]*Z[3]-Y[3]*Z[0]) + X[3]*(Y[0]*Z[1]-Y[1]*Z[0]) - X[0]*(Y[1]*Z[2]-Y[2]*Z[1]) + X[1]*(Y[0]*Z[2]-Y[2]*Z[0]) - X[2]*(Y[0]*Z[1]-Y[1]*Z[0])) / 6.0;
+
+			f_Omega[0] = (2 * b_x1 + b_x2 + b_x3 + b_x4) * V / 20.0;
+			f_Omega[1] = (2 * b_y1 + b_y2 + b_y3 + b_y4) * V / 20.0;
+			f_Omega[2] = (2 * b_z1 + b_z2 + b_z3 + b_z4) * V / 20.0;
+			f_Omega[3] = (b_x1 + 2 * b_x2 + b_x3 + b_x4) * V / 20.0;
+			f_Omega[4] = (b_y1 + 2 * b_y2 + b_y3 + b_y4) * V / 20.0;
+			f_Omega[5] = (b_z1 + 2 * b_z2 + b_z3 + b_z4) * V / 20.0;
+			f_Omega[6] = (b_x1 + b_x2 + 2 * b_x3 + b_x4) * V / 20.0;
+			f_Omega[7] = (b_y1 + b_y2 + 2 * b_y3 + b_y4) * V / 20.0;
+			f_Omega[8] = (b_z1 + b_z2 + 2 * b_z3 + b_z4) * V / 20.0;
+			f_Omega[9] = (b_x1 + b_x2 + b_x3 + 2 * b_x4) * V / 20.0;
+			f_Omega[10] = (b_y1 + b_y2 + b_y3 + 2 * b_y4) * V / 20.0;
+			f_Omega[11] = (b_z1 + b_z2 + b_z3 + 2 * b_z4) * V / 20.0;
+
+			unsigned int dof[12] = {
+				nodes[0]->bcode[0],
+				nodes[0]->bcode[1],
+				nodes[0]->bcode[2],
+				nodes[1]->bcode[0],
+				nodes[1]->bcode[1],
+				nodes[1]->bcode[2],
+				nodes[2]->bcode[0],
+				nodes[2]->bcode[1],
+				nodes[2]->bcode[2],
+				nodes[3]->bcode[0],
+				nodes[3]->bcode[1],
+				nodes[3]->bcode[2],
+			};
+			for (int i = 0; i < 12; i++)
+				if (dof[i])	// The DOF is activated
+					Force[dof[i] - 1] += f_Omega[i];		
+		}
+		break;
+	}
+	case 18:	// All surface forces of Tet4 element
+	{
+		unsigned int EleGrp = 0;
+		for (; EleGrp < NUMEG; EleGrp++)
+		{
+			CElementGroup& ElementGrp = EleGrpList[EleGrp];
+        	unsigned int ElementType = ElementGrp.GetElementType();
+			if (ElementType == 11)
+				break;
+		}
+		CElementGroup& ElementGrp = EleGrpList[EleGrp];
+
+		for (unsigned int LoadOrder = 0; LoadOrder < LoadData->nloads; LoadOrder++)
+        {	
+			unsigned int Ele = LoadData->dof[LoadOrder];
+			double f_Gamma[9] = {0};
+			unsigned int ElementNode[3] = {
+    			LoadData->node[3*LoadOrder], 
+    			LoadData->node[3*LoadOrder+1],
+				LoadData->node[3*LoadOrder+2],
+			};
+			double t_x1 = LoadData->load[9*LoadOrder];
+			double t_y1 = LoadData->load[9*LoadOrder+1];
+			double t_z1 = LoadData->load[9*LoadOrder+2];
+			double t_x2 = LoadData->load[9*LoadOrder+3];
+			double t_y2 = LoadData->load[9*LoadOrder+4];
+			double t_z2 = LoadData->load[9*LoadOrder+5];
+			double t_x3 = LoadData->load[9*LoadOrder+6];
+			double t_y3 = LoadData->load[9*LoadOrder+7];
+			double t_z3 = LoadData->load[9*LoadOrder+8];
+
+			// Calculate area with surface force
+            CElement& Element = ElementGrp[Ele-1];
+
+			CNode** nodes = Element.GetNodes();
+
+			double X[3] = {
+				nodes[ElementNode[0]-1]->XYZ[0],
+				nodes[ElementNode[1]-1]->XYZ[0],
+				nodes[ElementNode[2]-1]->XYZ[0],
+			};
+			double Y[3] = {
+				nodes[ElementNode[0]-1]->XYZ[1],
+				nodes[ElementNode[1]-1]->XYZ[1],
+				nodes[ElementNode[2]-1]->XYZ[1],
+			};
+			double Z[3] = {
+				nodes[ElementNode[0]-1]->XYZ[2],
+				nodes[ElementNode[1]-1]->XYZ[2],
+				nodes[ElementNode[2]-1]->XYZ[2],
+			};
+			double A = sqrt(pow((Y[1]-Y[0])*(Z[2]-Z[0])-(Y[2]-Y[0])*(Z[1]-Z[0]),2) + pow((Z[1]-Z[0])*(X[2]-X[0])-(Z[2]-Z[0])*(X[1]-X[0]),2) + pow((X[1]-X[0])*(Y[2]-Y[0])-(X[2]-X[0])*(Y[1]-Y[0]),2)) / 2.0;
+
+			f_Gamma[0] = (2 * t_x1 + t_x2 + t_x3) * A / 12.0;
+			f_Gamma[1] = (2 * t_y1 + t_y2 + t_y3) * A / 12.0;
+			f_Gamma[2] = (2 * t_z1 + t_z2 + t_z3) * A / 12.0;
+			f_Gamma[3] = (t_x1 + 2 * t_x2 + t_x3) * A / 12.0;
+			f_Gamma[4] = (t_y1 + 2 * t_y2 + t_y3) * A / 12.0;
+			f_Gamma[5] = (t_z1 + 2 * t_z2 + t_z3) * A / 12.0;
+			f_Gamma[6] = (t_x1 + t_x2 + 2 * t_x3) * A / 12.0;
+			f_Gamma[7] = (t_y1 + t_y2 + 2 * t_y3) * A / 12.0;
+			f_Gamma[8] = (t_z1 + t_z2 + 2 * t_z3) * A / 12.0;
+
+			unsigned int dof[9] = {
+				nodes[ElementNode[0]-1]->bcode[0],
+				nodes[ElementNode[0]-1]->bcode[1],
+				nodes[ElementNode[0]-1]->bcode[2],
+				nodes[ElementNode[1]-1]->bcode[0],
+				nodes[ElementNode[1]-1]->bcode[1],
+				nodes[ElementNode[1]-1]->bcode[2],
+				nodes[ElementNode[2]-1]->bcode[0],
+				nodes[ElementNode[2]-1]->bcode[1],
+				nodes[ElementNode[2]-1]->bcode[2],
+			};
+			for (int i = 0; i < 9; i++)
+				if (dof[i])	// The DOF is activated
+					Force[dof[i] - 1] += f_Gamma[i];			
+		}	
 		break;
 	}
 	default:

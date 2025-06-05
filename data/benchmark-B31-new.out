@@ -1,5 +1,5 @@
 TITLE :  STAP90 input data for example with 20 B31 element, Timoshenko Beam theory
-        (10:33:59 on May 25, 2025, Sunday)
+        (19:39:21 on May 30, 2025, Friday)
 
 C O N T R O L   I N F O R M A T I O N
 
@@ -163,9 +163,9 @@ C O N T R O L   I N F O R M A T I O N
 
  S O L U T I O N   T I M E   L O G   I N   S E C 
 
-     TIME FOR INPUT PHASE = 1.24000e-01
-     TIME FOR CALCULATION OF STIFFNESS MATRIX = 4.00000e-03
-     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 4.60000e-02
+     TIME FOR INPUT PHASE = 1.38000e-01
+     TIME FOR CALCULATION OF STIFFNESS MATRIX = 1.00000e-03
+     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 5.00000e-02
 
-     T O T A L   S O L U T I O N   T I M E = 1.74000e-01
+     T O T A L   S O L U T I O N   T I M E = 1.89000e-01
 

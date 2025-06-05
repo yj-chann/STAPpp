@@ -14,22 +14,26 @@
 
 using namespace std;
 
-//! CST element class
-class CCST : public CElement
+//! Mindlin-Reissner Plate element class
+class CPlate : public CElement
 {
 public:
 
 //!	Constructor
-	CCST();
+	CPlate();
 
 //!	Desconstructor
-	~CCST();
+	~CPlate();
 
 //!	Read element data from stream Input
 	virtual bool Read(ifstream& Input, CMaterial* MaterialSets, CNode* NodeList);
 
 //!	Write element data to stream
 	virtual void Write(COutputter& output);
+
+//! Generate location matrix: the global equation number that corresponding to each DOF of the element
+//	Caution:  Equation number is numbered from 1 !
+    virtual void GenerateLocationMatrix() override;
 
 //!	Calculate element stiffness matrix
 	virtual void ElementStiffness(double* Matrix);
@@ -39,4 +43,10 @@ public:
 
 //!	Calculate element non-homogeneous essential boundary conditions
 	virtual void ElementNonHomo(double* Matrix, double* NonForce) override;
+
+//!	Calculate Mindlin-Reissner Plate element shape function matrix N
+	void ElementShapeFunction(double (&N)[1][12], double xi, double eta);
+
+//!	Calculate Mindlin-Reissner Plate element bending kinematic matrix Bb, shear kinematic matrix Bs and Jacobian determination
+	void ElementStrainFunction(double (&B)[3][12], double* det, double xi, double eta);
 };
