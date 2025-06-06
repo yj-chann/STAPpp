@@ -909,26 +909,26 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 		for (unsigned int LoadOrder = 0; LoadOrder < LoadData->nloads; LoadOrder++)
 		{
 			unsigned int Ele = LoadData->dof[LoadOrder];
-			double f_Gamma[12] = { 0 };
+			double f_Gamma[12] = {0};
 			unsigned int ElementNode[4] = {
-				LoadData->node[4 * LoadOrder],
-				LoadData->node[4 * LoadOrder + 1],
-				LoadData->node[4 * LoadOrder + 2],
-				LoadData->node[4 * LoadOrder + 3],
+				LoadData->node[4*LoadOrder],
+				LoadData->node[4*LoadOrder+1],
+				LoadData->node[4*LoadOrder+2],
+				LoadData->node[4*LoadOrder+3],
 			};
-			double t_x1 = LoadData->load[12 * LoadOrder];
-			double t_y1 = LoadData->load[12 * LoadOrder + 1];
-			double t_z1 = LoadData->load[12 * LoadOrder + 2];
-			double t_x2 = LoadData->load[12 * LoadOrder + 3];
-			double t_y2 = LoadData->load[12 * LoadOrder + 4];
-			double t_z2 = LoadData->load[12 * LoadOrder + 5];
-			double t_x3 = LoadData->load[12 * LoadOrder + 6];
-			double t_y3 = LoadData->load[12 * LoadOrder + 7];
-			double t_z3 = LoadData->load[12 * LoadOrder + 8];
-			double t_x4 = LoadData->load[12 * LoadOrder + 9];
-			double t_y4 = LoadData->load[12 * LoadOrder + 10];
-			double t_z4 = LoadData->load[12 * LoadOrder + 11];
 
+			double t_x1 = LoadData->load[12*LoadOrder];
+			double t_y1 = LoadData->load[12*LoadOrder+1];
+			double t_z1 = LoadData->load[12*LoadOrder+2];
+			double t_x2 = LoadData->load[12*LoadOrder+3];
+			double t_y2 = LoadData->load[12*LoadOrder+4];
+			double t_z2 = LoadData->load[12*LoadOrder+5];
+			double t_x3 = LoadData->load[12*LoadOrder+6];
+			double t_y3 = LoadData->load[12*LoadOrder+7];
+			double t_z3 = LoadData->load[12*LoadOrder+8];
+			double t_x4 = LoadData->load[12*LoadOrder+9];
+			double t_y4 = LoadData->load[12*LoadOrder+10];
+			double t_z4 = LoadData->load[12*LoadOrder+11];
 
 			CElement& Element = ElementGrp[Ele - 1];
 			CMaterial* ElementMaterial = Element.GetElementMaterial();
@@ -964,35 +964,36 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 			double x_43 = X[3] - X[2], y_43 = Y[3] - Y[2], z_43 = Z[3] - Z[2];
 			double x_41 = X[3] - X[0], y_41 = Y[3] - Y[0], z_41 = Z[3] - Z[0];
 			double x_32 = X[2] - X[1], y_32 = Y[2] - Y[1], z_32 = Z[2] - Z[1];
-
+			
 			// Jij_kl
-			double J11_11=  2 * x_21 * (1 - GaussPoints[0]) - 2 * x_43 * (1 + GaussPoints[0]);
-			double J12_11 = 2 * y_21 * (1 - GaussPoints[0]) - 2 * y_43 * (1 + GaussPoints[0]);
-			double J13_11 = 2 * z_21 * (1 - GaussPoints[0]) - 2 * z_43 * (1 + GaussPoints[0]);
-			double J21_11 = 2 * x_41 * (1 - GaussPoints[0]) + 2 * x_32 * (1 + GaussPoints[0]);
-			double J22_11 = 2 * y_41 * (1 - GaussPoints[0]) + 2 * y_32 * (1 + GaussPoints[0]);
-			double J23_11 = 2 * z_41 * (1 - GaussPoints[0]) + 2 * z_32 * (1 + GaussPoints[0]);
+			double J11_11 = 0.25 * x_21 * (1 - GaussPoints[0]) - 0.25 * x_43 * (1 + GaussPoints[0]);
+			double J12_11 = 0.25 * y_21 * (1 - GaussPoints[0]) - 0.25 * y_43 * (1 + GaussPoints[0]);
+			double J13_11 = 0.25 * z_21 * (1 - GaussPoints[0]) - 0.25 * z_43 * (1 + GaussPoints[0]);
+			double J21_11 = 0.25 * x_41 * (1 - GaussPoints[0]) + 0.25 * x_32 * (1 + GaussPoints[0]);
+			double J22_11 = 0.25 * y_41 * (1 - GaussPoints[0]) + 0.25 * y_32 * (1 + GaussPoints[0]);
+			double J23_11 = 0.25 * z_41 * (1 - GaussPoints[0]) + 0.25 * z_32 * (1 + GaussPoints[0]);
 
-			double J11_12 = 2 * x_21 * (1 - GaussPoints[1]) - 2 * x_43 * (1 + GaussPoints[1]);
-			double J12_12 = 2 * y_21 * (1 - GaussPoints[1]) - 2 * y_43 * (1 + GaussPoints[1]);
-			double J13_12 = 2 * z_21 * (1 - GaussPoints[1]) - 2 * z_43 * (1 + GaussPoints[1]);
-			double J21_12 = 2 * x_41 * (1 - GaussPoints[0]) + 2 * x_32 * (1 + GaussPoints[0]);
-			double J22_12 = 2 * y_41 * (1 - GaussPoints[0]) + 2 * y_32 * (1 + GaussPoints[0]);
-			double J23_12 = 2 * z_41 * (1 - GaussPoints[0]) + 2 * z_32 * (1 + GaussPoints[0]);
+			double J11_12 = 0.25 * x_21 * (1 - GaussPoints[1]) - 0.25 * x_43 * (1 + GaussPoints[1]);
+			double J12_12 = 0.25 * y_21 * (1 - GaussPoints[1]) - 0.25 * y_43 * (1 + GaussPoints[1]);
+			double J13_12 = 0.25 * z_21 * (1 - GaussPoints[1]) - 0.25 * z_43 * (1 + GaussPoints[1]);
+			double J21_12 = 0.25 * x_41 * (1 - GaussPoints[0]) + 0.25 * x_32 * (1 + GaussPoints[0]);
+			double J22_12 = 0.25 * y_41 * (1 - GaussPoints[0]) + 0.25 * y_32 * (1 + GaussPoints[0]);
+			double J23_12 = 0.25 * z_41 * (1 - GaussPoints[0]) + 0.25 * z_32 * (1 + GaussPoints[0]);
 
-			double J11_21 = 2 * x_21 * (1 - GaussPoints[0]) - 2 * x_43 * (1 + GaussPoints[0]);
-			double J12_21 = 2 * y_21 * (1 - GaussPoints[0]) - 2 * y_43 * (1 + GaussPoints[0]);
-			double J13_21 = 2 * z_21 * (1 - GaussPoints[0]) - 2 * z_43 * (1 + GaussPoints[0]);
-			double J21_21 = 2 * x_41 * (1 - GaussPoints[1]) + 2 * x_32 * (1 + GaussPoints[1]);
-			double J22_21 = 2 * y_41 * (1 - GaussPoints[1]) + 2 * y_32 * (1 + GaussPoints[1]);
-			double J23_21 = 2 * z_41 * (1 - GaussPoints[1]) + 2 * z_32 * (1 + GaussPoints[1]);
+			double J11_21 = 0.25 * x_21 * (1 - GaussPoints[0]) - 0.25 * x_43 * (1 + GaussPoints[0]);
+			double J12_21 = 0.25 * y_21 * (1 - GaussPoints[0]) - 0.25 * y_43 * (1 + GaussPoints[0]);
+			double J13_21 = 0.25 * z_21 * (1 - GaussPoints[0]) - 0.25 * z_43 * (1 + GaussPoints[0]);
+			double J21_21 = 0.25 * x_41 * (1 - GaussPoints[1]) + 0.25 * x_32 * (1 + GaussPoints[1]);
+			double J22_21 = 0.25 * y_41 * (1 - GaussPoints[1]) + 0.25 * y_32 * (1 + GaussPoints[1]);
+			double J23_21 = 0.25 * z_41 * (1 - GaussPoints[1]) + 0.25 * z_32 * (1 + GaussPoints[1]);
 
-			double J11_22 = 2 * x_21 * (1 - GaussPoints[1]) - 2 * x_43 * (1 + GaussPoints[1]);
-			double J12_22 = 2 * y_21 * (1 - GaussPoints[1]) - 2 * y_43 * (1 + GaussPoints[1]);
-			double J13_22 = 2 * z_21 * (1 - GaussPoints[1]) - 2 * z_43 * (1 + GaussPoints[1]);
-			double J21_22 = 2 * x_41 * (1 - GaussPoints[1]) + 2 * x_32 * (1 + GaussPoints[1]);
-			double J22_22 = 2 * y_41 * (1 - GaussPoints[1]) + 2 * y_32 * (1 + GaussPoints[1]);
-			double J23_22 = 2 * z_41 * (1 - GaussPoints[1]) + 2 * z_32 * (1 + GaussPoints[1]);
+			double J11_22 = 0.25 * x_21 * (1 - GaussPoints[1]) - 0.25 * x_43 * (1 + GaussPoints[1]);
+			double J12_22 = 0.25 * y_21 * (1 - GaussPoints[1]) - 0.25 * y_43 * (1 + GaussPoints[1]);
+			double J13_22 = 0.25 * z_21 * (1 - GaussPoints[1]) - 0.25 * z_43 * (1 + GaussPoints[1]);
+			double J21_22 = 0.25 * x_41 * (1 - GaussPoints[1]) + 0.25 * x_32 * (1 + GaussPoints[1]);
+			double J22_22 = 0.25 * y_41 * (1 - GaussPoints[1]) + 0.25 * y_32 * (1 + GaussPoints[1]);
+			double J23_22 = 0.25 * z_41 * (1 - GaussPoints[1]) + 0.25 * z_32 * (1 + GaussPoints[1]);
+
 
 
 			double E_11 = J11_11 * J11_11 + J12_11 * J12_11 + J13_11 * J13_11;
@@ -1077,6 +1078,7 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 			f_Gamma[9] = N4_11 * Nitxi_11 * f11 + N4_12 * Nitxi_12 * f12 + N4_21 * Nitxi_21 * f21 + N4_22 * Nitxi_22 * f22;
 			f_Gamma[10] = N4_11 * Nityi_11 * f11 + N4_12 * Nityi_12 * f12 + N4_21 * Nityi_21 * f21 + N4_22 * Nityi_22 * f22;
 			f_Gamma[11] = N4_11 * Nitzi_11 * f11 + N4_12 * Nitzi_12 * f12 + N4_21 * Nitzi_21 * f21 + N4_22 * Nitzi_22 * f22;
+			
 			unsigned int dof[12] = {
 				nodes[ElementNode[0] - 1]->bcode[0],
 				nodes[ElementNode[0] - 1]->bcode[1],
@@ -1699,6 +1701,183 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 				if (dof[i])	// The DOF is activated
 					Force[dof[i] - 1] += f_Gamma[i];			
 		}	
+		break;
+	}
+	case 19: // All surface forces of T6 element
+	{
+		unsigned int EleGrp = 0;
+		for (; EleGrp < NUMEG; EleGrp++)
+		{
+			CElementGroup &ElementGrp = EleGrpList[EleGrp];
+			unsigned int ElementType = ElementGrp.GetElementType();
+			if (ElementType == 12)
+				break;
+		}
+		CElementGroup &ElementGrp = EleGrpList[EleGrp];
+
+		for (unsigned int LoadOrder = 0; LoadOrder < LoadData->nloads; LoadOrder++)
+		{
+			unsigned int Ele = LoadData->dof[LoadOrder];
+			double f_Gamma[6] = {0}; // 3节点×2自由度
+
+			// T6单元的面力施加在3节点边上
+			unsigned int ElementNode[3] = {
+				LoadData->node[3 * LoadOrder],
+				LoadData->node[3 * LoadOrder + 1],
+				LoadData->node[3 * LoadOrder + 2]};
+
+			// 每个节点的面力分量
+			double t_x1 = LoadData->load[6 * LoadOrder];
+			double t_y1 = LoadData->load[6 * LoadOrder + 1];
+			double t_x2 = LoadData->load[6 * LoadOrder + 2];
+			double t_y2 = LoadData->load[6 * LoadOrder + 3];
+			double t_x3 = LoadData->load[6 * LoadOrder + 4];
+			double t_y3 = LoadData->load[6 * LoadOrder + 5];
+
+			// 获取单元信息
+			CElement &Element = ElementGrp[Ele - 1];
+			CMaterial *ElementMaterial = Element.GetElementMaterial();
+			CT6Material *material_ = dynamic_cast<CT6Material *>(ElementMaterial);
+			double t = material_->t;
+
+			CNode **nodes = Element.GetNodes();
+
+			// 获取节点坐标
+			double X[3] = {
+				nodes[ElementNode[0] - 1]->XYZ[0],
+				nodes[ElementNode[1] - 1]->XYZ[0],
+				nodes[ElementNode[2] - 1]->XYZ[0]};
+			double Y[3] = {
+				nodes[ElementNode[0] - 1]->XYZ[1],
+				nodes[ElementNode[1] - 1]->XYZ[1],
+				nodes[ElementNode[2] - 1]->XYZ[1]};
+
+			// 使用2点高斯积分计算曲线边上的面力
+			double GaussPoints[2] = {-sqrt(3) / 3.0, sqrt(3) / 3.0};
+			double weights[2] = {1.0, 1.0};
+
+			for (int gp = 0; gp < 2; gp++)
+			{
+				double xi = GaussPoints[gp];
+				double weight = weights[gp];
+
+				// 计算形函数及其导数
+				double N1 = 0.5 * xi * (xi - 1.0);
+				double N2 = 0.5 * xi * (xi + 1.0);
+				double N3 = 1.0 - xi * xi;
+
+				double N1_xi = xi - 0.5;
+				double N2_xi = xi + 0.5;
+				double N3_xi = -2.0 * xi;
+
+				// 计算雅可比(曲线边的长度变化率)
+				double dx_dxi = X[0] * N1_xi + X[1] * N2_xi + X[2] * N3_xi;
+				double dy_dxi = Y[0] * N1_xi + Y[1] * N2_xi + Y[2] * N3_xi;
+				double jac = sqrt(dx_dxi * dx_dxi + dy_dxi * dy_dxi);
+
+				// 插值得到当前点的面力
+				double tx = N1 * t_x1 + N2 * t_x2 + N3 * t_x3;
+				double ty = N1 * t_y1 + N2 * t_y2 + N3 * t_y3;
+
+				// 累加到节点力
+				f_Gamma[0] += N1 * tx * jac * t * weight;
+				f_Gamma[1] += N1 * ty * jac * t * weight;
+				f_Gamma[2] += N2 * tx * jac * t * weight;
+				f_Gamma[3] += N2 * ty * jac * t * weight;
+				f_Gamma[4] += N3 * tx * jac * t * weight;
+				f_Gamma[5] += N3 * ty * jac * t * weight;
+			}
+
+			unsigned int dof[6] = {
+				nodes[ElementNode[0] - 1]->bcode[0],
+				nodes[ElementNode[0] - 1]->bcode[1],
+				nodes[ElementNode[1] - 1]->bcode[0],
+				nodes[ElementNode[1] - 1]->bcode[1],
+				nodes[ElementNode[2] - 1]->bcode[0],
+				nodes[ElementNode[2] - 1]->bcode[1]};
+
+			for (int i = 0; i < 6; i++)
+				if (dof[i]) // 自由度被激活
+					Force[dof[i] - 1] += f_Gamma[i];
+		}
+		break;
+	}
+	break;
+	case 20: // All body forces of T6 element
+	{
+		unsigned int EleGrp = 0;
+		for (; EleGrp < NUMEG; EleGrp++)
+		{
+			CElementGroup &ElementGrp = EleGrpList[EleGrp];
+			unsigned int ElementType = ElementGrp.GetElementType();
+			if (ElementType == 12)
+				break;
+		}
+		CElementGroup &ElementGrp = EleGrpList[EleGrp];
+
+		for (unsigned int LoadOrder = 0; LoadOrder < LoadData->nloads; LoadOrder++)
+		{
+			unsigned int Ele = LoadData->node[LoadOrder];
+			double b[12] = {// 6节点×2自由度
+							LoadData->load[12 * LoadOrder],
+							LoadData->load[12 * LoadOrder + 1],
+							LoadData->load[12 * LoadOrder + 2],
+							LoadData->load[12 * LoadOrder + 3],
+							LoadData->load[12 * LoadOrder + 4],
+							LoadData->load[12 * LoadOrder + 5],
+							LoadData->load[12 * LoadOrder + 6],
+							LoadData->load[12 * LoadOrder + 7],
+							LoadData->load[12 * LoadOrder + 8],
+							LoadData->load[12 * LoadOrder + 9],
+							LoadData->load[12 * LoadOrder + 10],
+							LoadData->load[12 * LoadOrder + 11]};
+
+			CElement &Element = ElementGrp[Ele - 1];
+			CT6 *Element_ = dynamic_cast<CT6 *>(&Element);
+			CMaterial *ElementMaterial = Element.GetElementMaterial();
+			CT6Material *material_ = dynamic_cast<CT6Material *>(ElementMaterial);
+			double t = material_->t;
+			CNode **nodes = Element.GetNodes();
+
+			double f_Omega[12] = {0};
+
+			// 使用3点减缩积分方案
+			double GaussPoints[3][3] = {
+				{1.0 / 6.0, 1.0 / 6.0, 1.0 / 3.0}, // 权重为1/3
+				{2.0 / 3.0, 1.0 / 6.0, 1.0 / 3.0},
+				{1.0 / 6.0, 2.0 / 3.0, 1.0 / 3.0}};
+
+			for (unsigned int gp = 0; gp < 3; gp++)
+			{
+				double xi = GaussPoints[gp][0];
+				double eta = GaussPoints[gp][1];
+				double weight = GaussPoints[gp][2];
+
+				double B[3][12] = {0};
+				double det;
+				Element_->ElementStrainFunction(B, &det, xi, eta);
+
+				double N[2][12] = {0};
+				Element_->ElementShapeFunction(N, xi, eta);
+
+				for (int k = 0; k < 12; k++)
+					for (int l = 0; l < 2; l++)
+						for (int m = 0; m < 12; m++)
+							f_Omega[k] += t * N[l][k] * N[l][m] * b[m] * det * weight;
+			}
+
+			unsigned int dof[12] = {
+				nodes[0]->bcode[0], nodes[0]->bcode[1],
+				nodes[1]->bcode[0], nodes[1]->bcode[1],
+				nodes[2]->bcode[0], nodes[2]->bcode[1],
+				nodes[3]->bcode[0], nodes[3]->bcode[1],
+				nodes[4]->bcode[0], nodes[4]->bcode[1],
+				nodes[5]->bcode[0], nodes[5]->bcode[1]};
+
+			for (int i = 0; i < 12; i++)
+				if (dof[i]) // 自由度被激活
+					Force[dof[i] - 1] += f_Omega[i];
+		}
 		break;
 	}
 	default:

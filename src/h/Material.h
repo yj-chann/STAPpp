@@ -241,6 +241,22 @@ public:
 	virtual void Write(COutputter& output);
 };
 
+//!	Material class for T6 element
+class CT6Material : public CMaterial
+{
+public:
 
+	double nu;        //!< Poisson's ratio of a T6 element
+	double t;	      //!< Element thickness of a T6 element
+	int plane_strain; //!< Plane Strain or not
+
+public:
+	
+//!	Read material data from stream Input
+	virtual bool Read(ifstream& Input);
+
+//!	Write material data to Stream
+	virtual void Write(COutputter& output);
+};
 
 

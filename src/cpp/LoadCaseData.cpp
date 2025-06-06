@@ -144,6 +144,20 @@ void CLoadCaseData :: Allocate(unsigned int LL, unsigned int num)
 		coordinate = nullptr;	// In case 18, coordinate is useless
 		load = new double[9*nloads];	// In case 18, every element surface force must be input in order of element node number, t_x1 t_y1 t_z1 ...
 		break;
+	case 19:    // All body forces of Q4 element
+		nloads = num;
+		node = new unsigned int[nloads];	
+		dof = nullptr;  
+		coordinate = nullptr;	
+		load = new double[8*nloads];	
+		break;
+	case 20:	// All surface forces of Q4 element
+		nloads = num;
+		node = new unsigned int[2*nloads];
+		dof = new unsigned int[nloads];  
+		coordinate = nullptr;	
+		load = new double[4*nloads];	
+		break;
 	default:
 		std::cerr << "LodaCase " << LL << " not available. See CLoadCaseData::Allocate." << std::endl;
 		exit(5);
@@ -233,6 +247,14 @@ bool CLoadCaseData :: Read(unsigned int LL, ifstream& Input)
 		for (unsigned int i = 0; i < NL; i++)
 			Input >> dof[i] >> node[3*i] >> node[3*i+1] >> node[3*i+2]>> load[9*i] >> load[9*i+1] >> load[9*i+2] >> load[9*i+3] >> load[9*i+4] >> load[9*i+5] >> load[9*i+6] >> load[9*i+7] >> load[9*i+8];
 		break;
+	case 19:	// All body forces of T6 element
+		for (unsigned int i = 0; i < NL; i++)
+		Input >> node[i] >> load[12*i]   >> load[12*i+1] >> load[12*i+2] >> load[12*i+3] >> load[12*i+4] >> load[12*i+5] >> load[12*i+6] >> load[12*i+7] >> load[12*i+8] >> load[12*i+9] >> load[12*i+10]>> load[12*i+11];
+		break;
+	case 20:	// All surface forces of T6 element
+		for (unsigned int i = 0; i < NL; i++)
+		Input >> dof[i] >> node[3*i] >> node[3*i+1] >> node[3*i+2] >> load[6*i] >> load[6*i+1] >> load[6*i+2] >> load[6*i+3] >> load[6*i+4] >> load[6*i+5];
+		break;
 	default:
 		std::cerr << "LodaCase " << LL << " not available. See CLoadCaseData::Read." << std::endl;
 		exit(5);
@@ -314,6 +336,14 @@ void CLoadCaseData::Write(unsigned int lcase, COutputter& output)
 	case 18:	// All surface forces of Tet4 element
 		for (unsigned int i = 0; i < nloads; i++)
 			output << setw(4) << dof[i] << setw(13) << node[3*i] << setw(13) << node[3*i+1] << setw(13) << node[3*i+2] << setw(18) << load[9*i] << setw(18) << load[9*i+1] << setw(18) << load[9*i+2] << setw(18) << load[9*i+3] << setw(18) << load[9*i+4] << setw(18) << load[9*i+5] << setw(18) << load[9*i+6] << setw(18) << load[9*i+7] << setw(18) << load[9*i+8] << endl;
+		break;
+	case 19:	// All body forces of T6 element
+		for (unsigned int i = 0; i < nloads; i++)
+			output << setw(4) << node[i] << setw(18) << load[12*i] << setw(18) << load[12*i+1] << setw(18) << load[12*i+2] << setw(18) << load[12*i+3] << setw(18) << load[12*i+4] << setw(18) << load[12*i+5] << setw(18) << load[12*i+6] << setw(18) << load[12*i+7] << setw(18) << load[12*i+8] << setw(18) << load[12*i+9] << setw(18) << load[12*i+10] << setw(18) << load[12*i+11] << endl;
+		break;
+	case 20:	// All surface forces of T6 element
+		for (unsigned int i = 0; i < nloads; i++)
+			output << setw(4) << dof[i] << setw(13) << node[3*i] << setw(13) << node[3*i+1] << setw(13) << node[3*i+2] << setw(18) << load[6*i] << setw(18) << load[6*i+1] << setw(18) << load[6*i+2] << setw(18) << load[6*i+3] << setw(18) << load[6*i+4] << setw(18) << load[6*i+5] << endl;
 		break;
 	default:
 		std::cerr << "LodaCase " << lcase << " not available. See CLoadCaseData::Write." << std::endl;
