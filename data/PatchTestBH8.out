@@ -1,5 +1,5 @@
 TITLE :  STAP90 input data for Patch Test B of H8
-        (22:16:48 on May 31, 2025, Saturday)
+        (23:2:44 on June 5, 2025, Thursday)
 
 C O N T R O L   I N F O R M A T I O N
 
@@ -85,6 +85,7 @@ C O N T R O L   I N F O R M A T I O N
      EQ.3, Q4
      EQ.4, Q8
      EQ.7, H8
+     EQ.11, Tet4
 
  NUMBER OF ELEMENTS. . . . . . . . . . .( NPAR(2) ) . . =    8
 
@@ -92,9 +93,9 @@ C O N T R O L   I N F O R M A T I O N
 
  NUMBER OF DIFFERENT SETS OF MATERIAL    1
 
-  SET       YOUNG'S        POISSON'S        THICK        PLANE-
- NUMBER     MODULUS          RATIO          -NESS        STRAIN
-               E              nu              t           FLAG
+  SET       YOUNG'S        POISSON'S       
+ NUMBER     MODULUS          RATIO          
+               E              nu            
     1     1.00000e+03     3.00000e-01
 
 
@@ -221,9 +222,9 @@ GAUSSPOINT NUMBER
 
  S O L U T I O N   T I M E   L O G   I N   S E C 
 
-     TIME FOR INPUT PHASE = 8.10000e-02
-     TIME FOR CALCULATION OF STIFFNESS MATRIX = 4.00000e-03
-     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 2.13000e-01
+     TIME FOR INPUT PHASE = 1.19000e-01
+     TIME FOR CALCULATION OF STIFFNESS MATRIX = 6.00000e-03
+     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 2.53000e-01
 
-     T O T A L   S O L U T I O N   T I M E = 2.98000e-01
+     T O T A L   S O L U T I O N   T I M E = 3.78000e-01
 
