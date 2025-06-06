@@ -78,6 +78,9 @@ public:
 //!	Output B31EB element data
 	void OutputB31Elements(unsigned int EleGrp);
 
+//!	Output T6 element data
+	void OutputT6Elements(unsigned int EleGrp);
+
 //!	Output load data 
 	void OutputLoadInfo(); 
 

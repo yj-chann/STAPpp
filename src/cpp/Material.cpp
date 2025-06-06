@@ -201,3 +201,19 @@ void CPlateMaterial::Write(COutputter& output)
 {
 	output << setw(16) << E << setw(16) << G << setw(16) << t << endl;
 }
+
+//	Read material data from stream Input
+bool CT6Material::Read(ifstream& Input)
+{
+    Input >> nset;   
+
+    Input >> E >> nu >> t >> plane_strain;
+
+    return true;
+}
+
+//	Write material data to Stream
+void CT6Material::Write(COutputter& output)
+{
+    output << setw(16) << E << setw(16) << nu << setw(16) << t << setw(8) << plane_strain << endl;
+}

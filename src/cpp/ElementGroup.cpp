@@ -106,6 +106,10 @@ void CElementGroup::CalculateMemberSize()
             ElementSize_ = sizeof(CPlate);
             MaterialSize_ = sizeof(CPlateMaterial);
             break;
+        case ElementTypes::T6:
+            ElementSize_ = sizeof(CT6);
+            MaterialSize_ = sizeof(CT6Material);
+            break;
         default:
             std::cerr << "Type " << ElementType_ << " not available. See CElementGroup::CalculateMemberSize." << std::endl;
             exit(5);
@@ -151,6 +155,9 @@ void CElementGroup::AllocateElements(std::size_t size)
         case ElementTypes::Plate:
             ElementList_ = new CPlate[size];
             break;
+        case ElementTypes::T6:
+            ElementList_ = new CT6[size];
+            break;
         default:
             std::cerr << "Type " << ElementType_ << " not available. See CElementGroup::AllocateElement." << std::endl;
             exit(5);
@@ -194,6 +201,9 @@ void CElementGroup::AllocateMaterials(std::size_t size)
             break;
         case ElementTypes::Plate:
             MaterialList_ = new CPlateMaterial[size];
+            break;
+        case ElementTypes::T6:
+            MaterialList_ = new CT6Material[size];
             break;
         default:
             std::cerr << "Type " << ElementType_ << " not available. See CElementGroup::AllocateMaterial." << std::endl;
