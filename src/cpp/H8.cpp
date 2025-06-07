@@ -268,6 +268,8 @@ void CH8::ElementStrainFunction(double(&B)[6][24], double* det, double xi, doubl
         { -(1.0 - xi) * (1.0 - eta), -(1.0 + xi) * (1.0 - eta), -(1.0 + xi) * (1.0 + eta), -(1.0 - xi) * (1.0 + eta), (1.0 - xi) * (1.0 - eta), (1.0 + xi) * (1.0 - eta), (1.0 + xi) * (1.0 + eta), (1.0 - xi) * (1.0 + eta)}
     };
 
+
+
     // x and y and z coordinates
     double C[8][3];
     for (unsigned int i = 0; i < 8; i++)
@@ -357,13 +359,19 @@ void CH8::ElementStrainFunction(double(&B)[6][24], double* det, double xi, doubl
     J[2][2] = z51 * (1.0 - xi) * (1.0 - eta) + z62 * (1.0 + xi) * (1.0 - eta)
         + z73 * (1.0 + xi) * (1.0 + eta) + z84 * (1.0 - xi) * (1.0 + eta);
 
+
+
+
     // Calculate determinant of Jacobian
     *det = 1.0 / 512.0 * (J[0][0] * J[1][1] * J[2][2] + J[0][1] * J[1][2] * J[2][0] + J[0][2] * J[1][0] * J[2][1]
         - J[0][2] * J[1][1] * J[2][0] - J[0][1] * J[1][0] * J[2][2] - J[0][0] * J[1][2] * J[2][1]); // exact
 
+
+
+
     // Calculate inverse matrix of Jacobian
     double invJ[3][3];
-    double invDet = 1.0 / (512.0 * (*det));
+    double invDet = 1.0 / (512.0 * (*det));  //
 	invJ[0][0] = (J[1][1] * J[2][2] - J[1][2] * J[2][1]) * invDet;
 	invJ[0][1] = (J[0][2] * J[2][1] - J[0][1] * J[2][2]) * invDet;
 	invJ[0][2] = (J[0][1] * J[1][2] - J[0][2] * J[1][1]) * invDet;
@@ -373,6 +381,8 @@ void CH8::ElementStrainFunction(double(&B)[6][24], double* det, double xi, doubl
 	invJ[2][0] = (J[1][0] * J[2][1] - J[1][1] * J[2][0]) * invDet;
 	invJ[2][1] = (J[0][1] * J[2][0] - J[0][0] * J[2][1]) * invDet;
 	invJ[2][2] = (J[0][0] * J[1][1] - J[0][1] * J[1][0]) * invDet;
+
+
 
     // Calculate the Grad matrix, physical coordinate
     double G[3][8] = { 0 };

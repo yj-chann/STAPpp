@@ -35,6 +35,8 @@ protected:
 //! Location Matrix of the element
     unsigned int* LocationMatrix_;
 
+
+
 //! Dimension of the location matrix
     unsigned int ND_;
 
@@ -58,6 +60,7 @@ public:
         
         if (LocationMatrix_)
             delete [] LocationMatrix_;
+
     }
 
 //!	Read element data from stream Input
