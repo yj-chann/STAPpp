@@ -41,9 +41,9 @@ public:
 	virtual void ElementNonHomo(double* Matrix, double* NonForce) override;
 
 //!	Calculate H8 element shape function matrix N
-	void ElementShapeFunction(double(&N)[3][24], double xi, double eta ,double zeta);
+	void ElementShapeFunction(double(&N)[3][24], double xi, double eta , double zeta);
 
 //!	Calculate derivative of H8 element shape function matrix B and Jacobian determination
-	void ElementStrainFunction(double(&B)[6][24], double* det, double xi, double eta , double zeta);
+	void ElementStrainFunction(double(&B)[6][24], double* det, double xi, double eta, double zeta);
 };
 

@@ -877,6 +877,7 @@ C O N T R O L   I N F O R M A T I O N
      EQ.3, NOT AVAILABLE
      EQ.4, Q8
      EQ.7, H8
+     EQ.11, Tet4
 
  NUMBER OF ELEMENTS. . . . . . . . . . .( NPAR(2) ) . . =  224
 
@@ -1127,6 +1128,7 @@ C O N T R O L   I N F O R M A T I O N
      EQ.3, NOT AVAILABLE
      EQ.4, Q8
      EQ.7, H8
+     EQ.11, Tet4
 
  NUMBER OF ELEMENTS. . . . . . . . . . .( NPAR(2) ) . . =  268
 
