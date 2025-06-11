@@ -1702,7 +1702,7 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 		}	
 		break;
 	}
-	case 19: // All surface forces of T6 element
+	case 20: // All surface forces of T6 element
 	{
 		unsigned int EleGrp = 0;
 		for (; EleGrp < NUMEG; EleGrp++)
@@ -1802,7 +1802,7 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 		break;
 	}
 	break;
-	case 20: // All body forces of T6 element
+	case 19: // All body forces of T6 element
 	{
 		unsigned int EleGrp = 0;
 		for (; EleGrp < NUMEG; EleGrp++)
