@@ -805,7 +805,7 @@ void COutputter::OutputLoadInfo()
 			*this << " L O A D   C A S E   D A T A" << endl
 				<< endl;
 
-			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
+			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << LoadData->LoadCaseType_ << endl;
 			*this << "     BODY FORCES OF T6 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
 				<< endl;
 			*this << " ELEMENT      BX1-LOAD      BY1-LOAD      BX2-LOAD      BY2-LOAD      BX3-LOAD      BY3-LOAD      BX4-LOAD      BY4-LOAD      BX5-LOAD      BY5-LOAD      BX6-LOAD      BY6-LOAD" << endl
@@ -816,7 +816,7 @@ void COutputter::OutputLoadInfo()
 			*this << " L O A D   C A S E   D A T A" << endl
 				<< endl;
 
-			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
+			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << LoadData->LoadCaseType_ << endl;
 			*this << "     SURFACE  FORCES OF T6 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
 				<< endl;
 			*this << " ELEMENT       1-NODE        2-NODE        3-NODE        TX1-LOAD       TY1-LOAD       TX2-LOAD       TY2-LOAD       TX3-LOAD       TY3-LOAD" << endl

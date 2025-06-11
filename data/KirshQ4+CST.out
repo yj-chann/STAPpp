@@ -1,5 +1,13 @@
 TITLE : STAP90 input data for Kirsh of Q4+CST 
+<<<<<<< HEAD
         (21:59:47 on May 27, 2025, Tuesday)
+=======
+<<<<<<< HEAD
+        (21:39:43 on June 5, 2025, Thursday)
+=======
+        (21:59:47 on May 27, 2025, Tuesday)
+>>>>>>> 5b6ea1135ea0de42c3afbdc75b8fa3b1b7661f56
+>>>>>>> 4dc7d520aeea730c373cee6d21ad6cc35e2ac85b
 
 C O N T R O L   I N F O R M A T I O N
 
@@ -3005,9 +3013,23 @@ GAUSSPOINT NUMBER
 
  S O L U T I O N   T I M E   L O G   I N   S E C 
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+     TIME FOR INPUT PHASE = 5.51900e+00
+     TIME FOR CALCULATION OF STIFFNESS MATRIX = 9.00000e-03
+     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 1.48260e+01
+
+     T O T A L   S O L U T I O N   T I M E = 2.03540e+01
+=======
+>>>>>>> 4dc7d520aeea730c373cee6d21ad6cc35e2ac85b
      TIME FOR INPUT PHASE = 1.46900e+00
      TIME FOR CALCULATION OF STIFFNESS MATRIX = 6.00000e-03
      TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 3.60600e+00
 
      T O T A L   S O L U T I O N   T I M E = 5.08100e+00
+<<<<<<< HEAD
+=======
+>>>>>>> 5b6ea1135ea0de42c3afbdc75b8fa3b1b7661f56
+>>>>>>> 4dc7d520aeea730c373cee6d21ad6cc35e2ac85b
 

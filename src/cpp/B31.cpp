@@ -92,57 +92,176 @@ void CB31::ElementStiffness(double* Matrix)  // Local stiffness matrix can be de
 
     double Ke[12][12] = {0};
 
-    Ke[0][0] = E * Area / L;
-    Ke[0][6] = -E * Area / L;
+    switch (direction)
+    {
+        case 1: // Beam in the YOZ plane
+        {
+            Ke[1][1] = E * Area / L;
+            Ke[1][7] = -E * Area / L;
 
-    Ke[1][1] = k * G * Area / L;
-    Ke[1][5] = k * G * Area / 2.0;
-    Ke[1][7] = -k * G * Area / L;
-    Ke[1][11] = k * G * Area / 2.0;
+            Ke[2][2] = k * G * Area / L;
+            Ke[2][6] = k * G * Area / 2.0;
+            Ke[2][8] = -k * G * Area / L;
+            Ke[2][0] = k * G * Area / 2.0;
 
-    Ke[2][2] = k * G * Area / L;
-    Ke[2][4] = -k * G * Area / 2.0;
-    Ke[2][8] = -k * G * Area / L;
-    Ke[2][10] = -k * G * Area / 2.0;
+            Ke[3][3] = k * G * Area / L;
+            Ke[3][5] = -k * G * Area / 2.0;
+            Ke[3][9] = -k * G * Area / L;
+            Ke[3][11] = -k * G * Area / 2.0;
 
-    Ke[3][3] = G * J / L;
-    Ke[3][9] = -G * J / L;
+            Ke[4][4] = G * J / L;
+            Ke[4][10] = -G * J / L;
 
-    Ke[4][2] = -k * G * Area / 2.0;
-    Ke[4][4] = k * G * Area * L / 4.0 + E * Iy / L;
-    Ke[4][8] = k * G * Area / 2.0;
-    Ke[4][10] = k * G * Area * L / 4.0 - E * Iy / L;
+            Ke[5][3] = -k * G * Area / 2.0;
+            Ke[5][5] = k * G * Area * L / 4.0 + E * Iy / L;
+            Ke[5][9] = k * G * Area / 2.0;
+            Ke[5][11] = k * G * Area * L / 4.0 - E * Iy / L;
 
-    Ke[5][1] = k * G * Area / 2.0;
-    Ke[5][5] = k * G * Area * L / 4.0 + E * Iz / L;
-    Ke[5][7] = -k * G * Area / 2.0;
-    Ke[5][11] = k * G * Area * L / 4.0 - E * Iz / L;
+            Ke[6][2] = k * G * Area / 2.0;
+            Ke[6][6] = k * G * Area * L / 4.0 + E * Iz / L;
+            Ke[6][8] = -k * G * Area / 2.0;
+            Ke[6][0] = k * G * Area * L / 4.0 - E * Iz / L;
 
-    Ke[6][0] = -E * Area / L;
-    Ke[6][6] = E * Area / L;
+            Ke[7][1] = -E * Area / L;
+            Ke[7][7] = E * Area / L;
 
-    Ke[7][1] = -k * G * Area / L;
-    Ke[7][5] = -k * G * Area / 2.0;
-    Ke[7][7] = k * G * Area / L;
-    Ke[7][11] = -k * G * Area / 2.0;
+            Ke[8][2] = -k * G * Area / L;
+            Ke[8][6] = -k * G * Area / 2.0;
+            Ke[8][8] = k * G * Area / L;
+            Ke[8][0] = -k * G * Area / 2.0;
 
-    Ke[8][2] = -k * G * Area / L;
-    Ke[8][4] = k * G * Area / 2.0;
-    Ke[8][8] = k * G * Area / L;
-    Ke[8][10] = k * G * Area / 2.0;
+            Ke[9][3] = -k * G * Area / L;
+            Ke[9][5] = k * G * Area / 2.0;
+            Ke[9][9] = k * G * Area / L;
+            Ke[9][11] = k * G * Area / 2.0;
 
-    Ke[9][3] = -G * J / L;
-    Ke[9][9] = G * J / L;
+            Ke[10][4] = -G * J / L;
+            Ke[10][10] = G * J / L;
 
-    Ke[10][2] = -k * G * Area / 2.0;
-    Ke[10][4] = k * G * Area * L / 4.0 - E * Iy / L;
-    Ke[10][8] = k * G * Area / 2.0;
-    Ke[10][10] = k * G * Area * L / 4.0 + E * Iy / L;
+            Ke[11][3] = -k * G * Area / 2.0;
+            Ke[11][5] = k * G * Area * L / 4.0 - E * Iy / L;
+            Ke[11][9] = k * G * Area / 2.0;
+            Ke[11][11] = k * G * Area * L / 4.0 + E * Iy / L;
 
-    Ke[11][1] = k * G * Area / 2.0;
-    Ke[11][5] = k * G * Area * L / 4.0 - E * Iz / L;
-    Ke[11][7] = -k * G * Area / 2.0;
-    Ke[11][11] = k * G * Area * L / 4.0 + E * Iz / L;
+            Ke[0][2] = k * G * Area / 2.0;
+            Ke[0][6] = k * G * Area * L / 4.0 - E * Iz / L;
+            Ke[0][8] = -k * G * Area / 2.0;
+            Ke[0][0] = k * G * Area * L / 4.0 + E * Iz / L;
+            break;
+        }
+
+        case 2: // Beam in the ZOX plane
+        {
+            Ke[2][2] = E * Area / L;
+            Ke[2][8] = -E * Area / L;
+
+            Ke[3][3] = k * G * Area / L;
+            Ke[3][7] = k * G * Area / 2.0;
+            Ke[3][9] = -k * G * Area / L;
+            Ke[3][1] = k * G * Area / 2.0;
+
+            Ke[4][4] = k * G * Area / L;
+            Ke[4][6] = -k * G * Area / 2.0;
+            Ke[4][10] = -k * G * Area / L;
+            Ke[4][0] = -k * G * Area / 2.0;
+
+            Ke[5][5] = G * J / L;
+            Ke[5][11] = -G * J / L;
+
+            Ke[6][4] = -k * G * Area / 2.0;
+            Ke[6][6] = k * G * Area * L / 4.0 + E * Iy / L;
+            Ke[6][10] = k * G * Area / 2.0;
+            Ke[6][0] = k * G * Area * L / 4.0 - E * Iy / L;
+
+            Ke[7][3] = k * G * Area / 2.0;
+            Ke[7][7] = k * G * Area * L / 4.0 + E * Iz / L;
+            Ke[7][9] = -k * G * Area / 2.0;
+            Ke[7][1] = k * G * Area * L / 4.0 - E * Iz / L;
+
+            Ke[8][2] = -E * Area / L;
+            Ke[8][8] = E * Area / L;
+
+            Ke[9][3] = -k * G * Area / L;
+            Ke[9][7] = -k * G * Area / 2.0;
+            Ke[9][9] = k * G * Area / L;
+            Ke[9][1] = -k * G * Area / 2.0;
+
+            Ke[10][4] = -k * G * Area / L;
+            Ke[10][6] = k * G * Area / 2.0;
+            Ke[10][10] = k * G * Area / L;
+            Ke[10][0] = k * G * Area / 2.0;
+
+            Ke[11][5] = -G * J / L;
+            Ke[11][11] = G * J / L;
+
+            Ke[0][4] = -k * G * Area / 2.0;
+            Ke[0][6] = k * G * Area * L / 4.0 - E * Iy / L;
+            Ke[0][10] = k * G * Area / 2.0;
+            Ke[0][0] = k * G * Area * L / 4.0 + E * Iy / L;
+
+            Ke[1][3] = k * G * Area / 2.0;
+            Ke[1][7] = k * G * Area * L / 4.0 - E * Iz / L;
+            Ke[1][9] = -k * G * Area / 2.0;
+            Ke[1][1] = k * G * Area * L / 4.0 + E * Iz / L;
+            break;
+        }
+
+        case 3: // Beam in the XOY plane
+        {
+            Ke[0][0] = E * Area / L;
+            Ke[0][6] = -E * Area / L;
+
+            Ke[1][1] = k * G * Area / L;
+            Ke[1][5] = k * G * Area / 2.0;
+            Ke[1][7] = -k * G * Area / L;
+            Ke[1][11] = k * G * Area / 2.0;
+
+            Ke[2][2] = k * G * Area / L;
+            Ke[2][4] = -k * G * Area / 2.0;
+            Ke[2][8] = -k * G * Area / L;
+            Ke[2][10] = -k * G * Area / 2.0;
+
+            Ke[3][3] = G * J / L;
+            Ke[3][9] = -G * J / L;
+
+            Ke[4][2] = -k * G * Area / 2.0;
+            Ke[4][4] = k * G * Area * L / 4.0 + E * Iy / L;
+            Ke[4][8] = k * G * Area / 2.0;
+            Ke[4][10] = k * G * Area * L / 4.0 - E * Iy / L;
+
+            Ke[5][1] = k * G * Area / 2.0;
+            Ke[5][5] = k * G * Area * L / 4.0 + E * Iz / L;
+            Ke[5][7] = -k * G * Area / 2.0;
+            Ke[5][11] = k * G * Area * L / 4.0 - E * Iz / L;
+
+            Ke[6][0] = -E * Area / L;
+            Ke[6][6] = E * Area / L;
+
+            Ke[7][1] = -k * G * Area / L;
+            Ke[7][5] = -k * G * Area / 2.0;
+            Ke[7][7] = k * G * Area / L;
+            Ke[7][11] = -k * G * Area / 2.0;
+
+            Ke[8][2] = -k * G * Area / L;
+            Ke[8][4] = k * G * Area / 2.0;
+            Ke[8][8] = k * G * Area / L;
+            Ke[8][10] = k * G * Area / 2.0;
+
+            Ke[9][3] = -G * J / L;
+            Ke[9][9] = G * J / L;
+
+            Ke[10][2] = -k * G * Area / 2.0;
+            Ke[10][4] = k * G * Area * L / 4.0 - E * Iy / L;
+            Ke[10][8] = k * G * Area / 2.0;
+            Ke[10][10] = k * G * Area * L / 4.0 + E * Iy / L;
+
+            Ke[11][1] = k * G * Area / 2.0;
+            Ke[11][5] = k * G * Area * L / 4.0 - E * Iz / L;
+            Ke[11][7] = -k * G * Area / 2.0;
+            Ke[11][11] = k * G * Area * L / 4.0 + E * Iz / L;
+            break;
+        }
+    }
 
 // Calculate transformation Matrix
     double Te[12][12] = {0};
