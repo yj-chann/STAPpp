@@ -1,5 +1,9 @@
 TITLE :  STAP90 input data for Patch Test C of Q4
+<<<<<<< HEAD
         (22:28:25 on June 5, 2025, Thursday)
+=======
+        (14:21:52 on May 30, 2025, Friday)
+>>>>>>> 5b6ea1135ea0de42c3afbdc75b8fa3b1b7661f56
 
 C O N T R O L   I N F O R M A T I O N
 
@@ -131,9 +135,17 @@ GAUSSPOINT NUMBER
 
  S O L U T I O N   T I M E   L O G   I N   S E C 
 
+<<<<<<< HEAD
      TIME FOR INPUT PHASE = 1.96000e-01
      TIME FOR CALCULATION OF STIFFNESS MATRIX = 2.00000e-03
      TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 2.44000e-01
 
      T O T A L   S O L U T I O N   T I M E = 4.42000e-01
+=======
+     TIME FOR INPUT PHASE = 5.80000e-02
+     TIME FOR CALCULATION OF STIFFNESS MATRIX = 0.00000e+00
+     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 7.00000e-02
+
+     T O T A L   S O L U T I O N   T I M E = 1.28000e-01
+>>>>>>> 5b6ea1135ea0de42c3afbdc75b8fa3b1b7661f56
 

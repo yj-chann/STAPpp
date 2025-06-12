@@ -1,5 +1,5 @@
 TITLE :  STAP90 input data for Lame of Q8 8x16
-        (22:21:1 on May 30, 2025, Friday)
+        (0:30:54 on June 7, 2025, Saturday)
 
 C O N T R O L   I N F O R M A T I O N
 
@@ -888,7 +888,7 @@ C O N T R O L   I N F O R M A T I O N
 
  L O A D   C A S E   D A T A
 
-     LOAD CASE NUMBER . . . . . . . =     1
+     LOAD CASE NUMBER . . . . . . . =     8
      SURFACE  FORCES OF Q8 ELEMENTS . =    16
 
  ELEMENT       1-NODE        2-NODE        3-NODE        TX1-LOAD       TY1-LOAD       TX2-LOAD       TY2-LOAD       TX3-LOAD       TY3-LOAD
@@ -917,10 +917,12 @@ C O N T R O L   I N F O R M A T I O N
 
  ELEMENT TYPE  . . . . . . . . . . . . .( NPAR(1) ) . . =    4
      EQ.1, TRUSS ELEMENTS
-     EQ.2, ELEMENTS CURRENTLY
-     EQ.3, NOT AVAILABLE
+     EQ.2, CST
+     EQ.3, Q4
      EQ.4, Q8
      EQ.7, H8
+     EQ.11, Tet4
+     EQ.12, T6
 
  NUMBER OF ELEMENTS. . . . . . . . . . .( NPAR(2) ) . . =  128
 
@@ -2031,9 +2033,9 @@ GAUSSPOINT NUMBER
 
  S O L U T I O N   T I M E   L O G   I N   S E C 
 
-     TIME FOR INPUT PHASE = 3.36800e+00
+     TIME FOR INPUT PHASE = 4.43600e+00
      TIME FOR CALCULATION OF STIFFNESS MATRIX = 6.00000e-03
-     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 1.02400e+01
+     TIME FOR FACTORIZATION AND LOAD CASE SOLUTIONS = 1.02270e+01
 
-     T O T A L   S O L U T I O N   T I M E = 1.36140e+01
+     T O T A L   S O L U T I O N   T I M E = 1.46690e+01
 
