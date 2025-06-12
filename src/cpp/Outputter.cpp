@@ -783,8 +783,8 @@ void COutputter::OutputLoadInfo()
 			*this << " L O A D   C A S E   D A T A" << endl
 				<< endl;
 
-			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << LoadData->LoadCaseType_ << endl;
-			*this << "     BODY FORCES OF H8 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
+			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
+			*this << "     BODY FORCES OF Tet4 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
 				<< endl;
 			*this << " ELEMENT      BX1-LOAD      BY1-LOAD      BZ1-LOAD      BX2-LOAD      BY2-LOAD      BZ2-LOAD      BX3-LOAD      BY3-LOAD      BZ3-LOAD      BX4-LOAD      BY4-LOAD      BZ4-LOAD " << endl
 				<< " NUMBER       MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE     MAGNITUDE" << endl;
@@ -794,8 +794,8 @@ void COutputter::OutputLoadInfo()
 			*this << " L O A D   C A S E   D A T A" << endl
 				<< endl;
 
-			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << LoadData->LoadCaseType_ << endl;
-			*this << "     BODY FORCES OF H8 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
+			*this << "     LOAD CASE NUMBER . . . . . . . =" << setw(6) << lcase << endl;
+			*this << "     SURFACE  FORCES OF Tet4 ELEMENTS . =" << setw(6) << LoadData->nloads << endl
 				<< endl;
 			*this << " ELEMENT       1-NODE        2-NODE        3-NODE        TX1-LOAD       TY1-LOAD       TZ1-LOAD       TX2-LOAD       TY2-LOAD       TZ2-LOAD       TX3-LOAD       TY3-LOAD       TZ3-LOAD" << endl
 				<< " NUMBER        NUMBER        NUMBER        NUMBER        NUMBER        MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE      MAGNITUDE" << endl;

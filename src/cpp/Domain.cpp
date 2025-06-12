@@ -995,7 +995,6 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 			double J23_22 = 0.25 * z_41 * (1 - GaussPoints[1]) + 0.25 * z_32 * (1 + GaussPoints[1]);
 
 
-
 			double E_11 = J11_11 * J11_11 + J12_11 * J12_11 + J13_11 * J13_11;
 			double F_11 = J21_11 * J21_11 + J22_11 * J22_11 + J23_11 * J23_11;
 			double G_11 = J11_11 * J21_11 + J12_11 * J22_11 + J13_11 * J23_11;
@@ -1703,7 +1702,7 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 		}	
 		break;
 	}
-	case 19: // All surface forces of T6 element
+	case 20: // All surface forces of T6 element
 	{
 		unsigned int EleGrp = 0;
 		for (; EleGrp < NUMEG; EleGrp++)
@@ -1803,7 +1802,7 @@ bool CDomain::AssembleForce(unsigned int LoadCase)
 		break;
 	}
 	break;
-	case 20: // All body forces of T6 element
+	case 19: // All body forces of T6 element
 	{
 		unsigned int EleGrp = 0;
 		for (; EleGrp < NUMEG; EleGrp++)
